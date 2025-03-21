@@ -3,4 +3,3 @@ from pydantic import BaseModel, EmailStr
 import uvicorn
 
 app = FastAPI()
-
