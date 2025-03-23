@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>Злой Русский</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin:0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="img/zloy.png" alt="Злой Русский">
+        </div>
+        <div class="menu">
+            <span><b>ОГЭ</b></span>
+            <span>ЕГЭ</span>
+            <span>МАТЕРИАЛЫ ДЛЯ УРОКОВ</span>
+        </div>
+        <div class="buttons">
+            <button class="menu-button">ПЖ</button>
+            <button class="hamburger-button" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </button>
+        </div>
+    </div>
+    <div class="name">
+        <span>МАТЕРИАЛЫ ДЛЯ ПОДГОТОВКИ К ЭКЗАМЕНАМ</span>
+    </div>
+    <div class="arrows">
+        <img class="arrow" src="img/left_arrow.png" alt="Левая стрелка">
+        <img class="arrow" src="img/right_arrow.png" alt="Правая стрелка">
+    </div>
+    <div class="exam-container">
+            <img src="img/oge.jpg" alt="Картинка ОГЭ">
+            <img src="img/egee.jpg" alt="Картинка ЕГЭ">
+    </div>
+
+    <div>
+
+    </div>
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#">авторизация/личный кабинет</a>
+        <a href="#">отзывы</a>
+        <a href="#">о нас</a>
+        <a href="#">FAQ</a>
+        </div>
+    <div class="prepod">
+        <p>Информация о преподавателе</p>
+    </div>
+    <div class="results-container">
+        <div class="results-column">
+            <ul type="disc">
+                <p><b>ОГЭ</b></p>
+                <li>x</li>
+                <li>y</li>
+                <li>z</li>
+                <li>w</li>
+            </ul>
+        </div>
+        <div class="results-column">
+            <p><b>ЕГЭ</b></p>
+            <ul type="disc">
+                <li>x</li>
+                <li>y</li>
+                <li>z</li>
+                <li>w</li>
+            </ul>
+        </div>
+    </div>
+    <div class="name border-top">
+        ОТЗЫВЫ СТУДЕНТОВ
+    </div>
+    <div class="reviews-container">
+        <div class="review"></div>
+        <div class="review"></div>
+        <div class="review"></div>
+        <div class="review"></div>
+    </div>
+    <div class="name border-top">
+        <p>МАТЕРИАЛЫ ДЛЯ УРОКОВ</p>
+
+    </div>
+    <div class="name border-top">
+        <p>СЛУЖЕБНАЯ ИНФОРМАЦИЯ</p>
+    </div>
+    <div class="logo2">
+        <img src="img/zloy.png">
+    </div>
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown");
+    menu.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>
+
