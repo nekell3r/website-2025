@@ -1,4 +1,8 @@
-from fastapi import APIRouter
+import sys
+
+from fastapi import APIRouter, Path
+
+sys.path.append(str(Path(__file__).parent.parent))
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
 
