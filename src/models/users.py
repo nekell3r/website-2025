@@ -10,7 +10,6 @@ class UsersORM(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(25))
-    email: Mapped[str | None] = mapped_column(String(50))
-    telephone: Mapped[str] = mapped_column(String(15))
-    password: Mapped[str] = mapped_column(String(50))
     exam: Mapped[str] = mapped_column(String(10))
+    telephone: Mapped[str] = mapped_column()
+    email: Mapped[str] = mapped_column(nullable=True)
