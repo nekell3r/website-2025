@@ -9,7 +9,7 @@ class ReviewsORM(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(25))
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column()
     exam: Mapped[str] = mapped_column(String(10))
     result: Mapped[int] = mapped_column()
     review: Mapped[str] = mapped_column(String(500))

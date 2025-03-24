@@ -9,24 +9,25 @@ from typing_extensions import Annotated
 
 class ReviewSchema(BaseModel):
     name: Annotated[str, MinLen(2), MaxLen(30)]
-    exam: Literal = ["EGE", "OGE"]
-    score: Literal = [1, 2, 3]
+    exam: Annotated[str, MinLen(2), MaxLen(30)]
+    user_id: int
+    result: int
     review: Annotated[str, MinLen(10), MaxLen(1000)]
 
 
-class UserSchema(
-    BaseModel
-):  # нужно добавить в фронте, что надо указать, в какой класс поступаешь, а не из какого выпускаешься
-    name: Annotated[str, MinLen(2), MaxLen(30)]
-    exam: Literal = ["EGE", "OGE"]
-    _class: Literal = [
-        8,
-        9,
-        10,
-        11,
-    ]
-    number: PhoneNumber
-
-
-class UserWithEmailSchema(UserSchema):
-    email: EmailStr
+# class UserSchema(
+#     BaseModel
+# ):  # нужно добавить в фронте, что надо указать, в какой класс поступаешь, а не из какого выпускаешься
+#     name: Annotated[str, MinLen(2), MaxLen(30)]
+#     exam: Literal = ["EGE", "OGE"]
+#     _class: Literal = [
+#         8,
+#         9,
+#         10,
+#         11,
+#     ]
+#     number: PhoneNumber
+#
+#
+# class UserWithEmailSchema(UserSchema):
+#     email: EmailStr
