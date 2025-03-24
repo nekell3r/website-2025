@@ -15,7 +15,7 @@ class Settings(BaseSettings):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"  # нельзя логировать этот адрес - внутри пароль лежит
 
     model_config = SettingsConfigDict(
-        env_file=f"{Path(__file__).parent.parent / '.env'}"
+        env_file=f"{Path(__file__).parent.parent / '.env.example'}"
     )
 
 
