@@ -1,4 +1,17 @@
-.header {
+.header1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 20px;
+    border-bottom: 4px solid rgb(0, 0, 0);    
+}
+
+.header2 {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 98%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,6 +34,12 @@
     gap: 60px;
     font-weight: bold;
 }
+.menu a {
+    text-decoration: none;  
+    color: black;  
+    cursor: pointer; 
+}
+
 .buttons {
     display: flex;
     align-items: center;
@@ -30,7 +49,7 @@
 .menu-button, .hamburger-button {
     cursor: pointer;
     border: none;
-    background: lightgray;
+    background: #edd3fc;
     padding: 10px;
     border-radius: 90%;
     align-items: flex-start;
@@ -52,7 +71,7 @@
     position: absolute;
     top: 80px;
     right: 25px;
-    background: rgb(182, 181, 181);
+    background: #edd3fc;
     padding: 10px;
     border-radius: 20px;
 
@@ -64,7 +83,7 @@
 }
 .dropdown.active {
     opacity: 1;
-    transform: translateY(20px);
+    transform: translateY(0px);
     visibility: visible;
 }
 .dropdown a {
@@ -79,7 +98,6 @@
     float: right;
 }
 .name {
-background: rgb(255, 255, 255);
 display: flex;
 justify-content: center;
 align-items: center;
@@ -145,7 +163,9 @@ box-sizing: border-box;
 
 }
 .border-top {
-border-top: 4px solid rgb(0, 0, 0);
+    border-top: 4px solid rgb(0, 0, 0);
+    background: #edd3fc;
+    padding: 20px 0;
 }
 .reviews-container {
 display: grid;
@@ -153,16 +173,105 @@ grid-template-columns: repeat(2, 1fr);
 gap: 40px;
 justify-content: center;
 max-width: 600px;
-margin: 0 auto 30px auto;
+margin: 0 auto 0 auto;
+padding-bottom: 30px;
+border-bottom: 4px black;
 
 transform: translateX(0px);
 width: 55px;
-
-
 }
 .review {
 width: 150px;
 height: 150px;
-background: url('img/rewiev.jpg') center/cover no-repeat;
+background: url('../img/rewiev.jpg') center/cover no-repeat;
 border-radius: 5px;
 }
+
+.form-container {
+    border-bottom: 2px rgb(0, 0, 0);
+    min-height: 600px;
+    margin: 210px;
+    margin-bottom: 180px;
+
+
+}
+.form-container2 {
+    border-top: 2px black;
+    outline: 4px solid black;
+    min-height: 100vh;
+    height: auto;
+    width: 100%;
+    position: relative;
+    background-image: url(../img/backgtound.png);
+    background-position: fixed;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    border-bottom: 2px rgb(4, 4, 4);
+    margin: 0;
+    padding: 0;
+}
+.form-container2 * {
+    margin-bottom: 0;
+}
+
+.auth-container {
+    position: relative;
+    top: 80%;
+    left: 50%;
+    transform: translate(-750px,-100px);
+    background: #edd3fc;
+    padding: 20px;
+    border-radius: 10px;
+    width: 480px;
+    border-radius: 3%;
+    text-align: center;
+    margin-top:200px;
+    
+}
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.auth-container button {
+    width: 100%; 
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.auth-container input::placeholder {
+    font-weight: bold; 
+    color: #edd3fc;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+}
+
+input {
+    width: 96%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: black;
+    color: white;
+    font-weight: bold;
+}
+button {
+    font-weight: bold;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    background: purple;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+}
+span {
+    margin-left: 93px;
+}
+

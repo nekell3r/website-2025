@@ -14,14 +14,14 @@
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="header1">
         <div class="logo">
             <img src="img/zloy.png" alt="Злой Русский">
         </div>
         <div class="menu">
-            <span><b>ОГЭ</b></span>
-            <span>ЕГЭ</span>
-            <span>МАТЕРИАЛЫ ДЛЯ УРОКОВ</span>
+            <b>ОГЭ</b>
+            <a href="ege.html">ЕГЭ</a>
+            <b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b>
         </div>
         <div class="buttons">
             <button class="menu-button">ПЖ</button>
@@ -32,6 +32,7 @@
             </button>
         </div>
     </div>
+    <div style="background: #edd3fc;">
     <div class="name">
         <span>МАТЕРИАЛЫ ДЛЯ ПОДГОТОВКИ К ЭКЗАМЕНАМ</span>
     </div>
@@ -77,7 +78,20 @@
             </ul>
         </div>
     </div>
-    <div class="name border-top">
+    </div>
+    <div class="form-container2" style="margin-bottom: 30px; background-position: fixed;">
+        <div class="auth-container" style="position: relative;">
+            <p>Любой промо текст</p>
+            <form action="save_user.php" method="POST">
+                <input type="text" name="name" placeholder="Имя" required>
+                <input type="tel" name="phone" placeholder="Номер телефона" required>
+                <button type="submit">Отправить</button>
+            </form>
+            <p>Вам в <b>SMS</b>-сообщения поступит полная информация по предложению</p>
+        </div>
+        </div>
+        <div style="background: #edd3fc;">
+    <div class="name border-top" style="padding: 0; margin: 0; border-bottom: 4px black; ">
         ОТЗЫВЫ СТУДЕНТОВ
     </div>
     <div class="reviews-container">
@@ -86,11 +100,12 @@
         <div class="review"></div>
         <div class="review"></div>
     </div>
-    <div class="name border-top">
+    </div>
+    <div class="name border-top" style="background: white;">
         <p>МАТЕРИАЛЫ ДЛЯ УРОКОВ</p>
 
     </div>
-    <div class="name border-top">
+    <div class="name border-top" style="background: white">
         <p>СЛУЖЕБНАЯ ИНФОРМАЦИЯ</p>
     </div>
     <div class="logo2">

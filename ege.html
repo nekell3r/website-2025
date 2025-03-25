@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>ЕГЭ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin:0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header2">
+        <div class="logo">
+            <img src="img/zloy.png" alt="Злой Русский">
+        </div>
+        <div class="menu">
+            <b>ОГЭ</b>
+            <a href="ege.html">ЕГЭ</a>
+            <b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b>
+        </div>
+        <div class="buttons">
+            <button class="menu-button">ПЖ</button>
+            <button class="hamburger-button" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </button>
+        </div>
+    </div>
+    <div class="form-container">
+    <div class="auth-container">
+        <p>Любой промо текст</p>
+        <form action="save_user.php" method="POST">
+            <input type="text" name="name" placeholder="Имя" required>
+            <input type="tel" name="phone" placeholder="Номер телефона" required>
+            <button type="submit">Отправить</button>
+        </form>
+        <p>Вам в <b>SMS</b>-сообщения поступит полная информация по предложению</p>
+    </div>
+    </div>
+    <div>
+        <b><h2>Продукт тыры пыры ЕГЭ содержит следующие материалы</h2></b><br>
+        <span><b><em>1.Рабочая тетрадь для подготовки к Итоговому Сочинению(ИС)</em></b></span><br>
+        <br><span style="padding-left: 70px;">Какой-то текст с информацией про материал</span>
+        <img src="img/work_note.jpg" alt="Work note">
+    </div>
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#">авторизация/личный кабинет</a>
+        <a href="#">отзывы</a>
+        <a href="#">о нас</a>
+        <a href="#">FAQ</a>
+        </div>
