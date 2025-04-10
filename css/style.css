@@ -71,7 +71,7 @@
     position: absolute;
     top: 80px;
     right: 25px;
-    background: #edd3fc;
+    background: #fff;
     padding: 10px;
     border-radius: 20px;
 
@@ -203,6 +203,7 @@ border-radius: 5px;
     width: 100%;
     position: relative;
     background-image: url(../img/backgtound.png);
+    background-blend-mode: color;
     background-position: fixed;
     background-attachment: fixed;
     display: flex;
@@ -250,6 +251,8 @@ border-radius: 5px;
     font-family: Comic Sans MS, Comic Sans, cursive;
 }
 
+
+
 input {
     width: 96%;
     padding: 10px;
@@ -274,4 +277,52 @@ button {
 span {
     margin-left: 93px;
 }
-
+.payment-wrapper {
+    background-color: #f5e6ff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .payment-link {
+    text-decoration: none;
+  }
+  
+  .inner-button {
+    background-color: #000;
+    color: #fff;
+    font-weight: bold;
+    font-family: sans-serif;
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  
+  .price {
+    margin-top: 10px;
+    font-style: italic;
+    font-weight: bold;
+    font-family: sans-serif;
+    color: #000;
+  }
+  .info-block {
+    position: relative;
+    border-top: 4px solid #000;
+    margin-top: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .info-text {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .info-image {
+    position: absolute;
+    right: 10px;
+    height: 60px;
+  }
