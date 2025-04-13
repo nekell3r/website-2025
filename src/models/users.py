@@ -5,11 +5,9 @@ from sqlalchemy import String
 from src.database import Base
 
 
-class UsersORM(Base):
+class UsersOrm(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(25))
-    exam: Mapped[str] = mapped_column(String(10))
-    telephone: Mapped[str] = mapped_column()
-    email: Mapped[str] = mapped_column(nullable=True)
+    email: Mapped[str] = mapped_column(nullable=True, unique=True)
+    hashed_password: Mapped[str] = mapped_column(String(200), nullable=True)

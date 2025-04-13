@@ -7,8 +7,8 @@ from alembic import context
 
 from src.config import settings
 from src.database import Base
-from src.models.reviews import ReviewsORM
-from src.models.users import UsersORM
+from src.models.reviews import ReviewsOrm
+from src.models.users import UsersOrm
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
