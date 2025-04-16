@@ -8,7 +8,7 @@ from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-router = APIRouter(prefix="/reviews", tags=["reviews"])
+router = APIRouter(prefix="/reviews", tags=["Отзывы"])
 
 
 @router.get(
@@ -24,7 +24,7 @@ async def get_reviews(db: DBDep, pagination: PaginationDep):
 
 
 @router.get(
-    "/mine",
+    "/me",
     summary="Получение отзывов авторизованного пользователя",
     description="Получает отзыв пользователя, данные которого сохранены в куках - если данных нет, то возвращает ошибку 401 с описанием(это еще не сделано)",
 )
@@ -75,10 +75,11 @@ async def create_review(
         result=review_data.result,
     )
     review = await db.reviews.add(new_review_data)
+    await db.commit()
     return {"status": "OK, Review created", "review": review}
 
 
-@router.post(
+@router.patch(
     "/update",
     summary="Изменение отзыва",
     description="Изменение отзыва в таблице всех отзывов, обновляется значение момента последнего"
@@ -111,4 +112,14 @@ async def update_review(
     await db.reviews.edit(
         review_data, exclude_unset=True, id=review_id, user_id=user_id
     )
+    await db.commit()
     return {"status": "Ok, review is edited"}
+
+
+@router.delete("/delete/{review_id}", summary="Удаление отзыва")
+async def delete_review(db: DBDep, user_id: UserIdDep, review_id: int):
+    review = await db.reviews.get_one_or_none(id=review_id)
+    if review.user_id == user_id:
+        await db.reviews.delete(id=review_id)
+    await db.commit()
+    return {"status": "OK, review is deleted"}

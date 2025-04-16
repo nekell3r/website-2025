@@ -20,7 +20,7 @@ class BaseRepository:
         model = result.scalars().one_or_none()
         if model is None:
             return None
-        return self.schema.model_validate(model)
+        return self.schema.model_validate(model, from_attributes=True)
 
     async def add(self, data: BaseModel):
         add_data_stmt = (

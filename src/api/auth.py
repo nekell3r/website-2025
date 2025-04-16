@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, Response, HTTPException
 from pathlib import Path
 
 from src.api.dependencies import UserIdDep, DBDep
-from src.schemas.users import UserAdd, UserRequestAdd
+from src.schemas.users import UserAdd, UserRequestAdd, UserLogin
 from src.services.auth import AuthService
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -24,23 +24,19 @@ async def register_user(
             "1": {
                 "summary": "Пользователь 1",
                 "value": {
+                    "name": "Павел",
+                    "surname": "Жабский",
                     "email": "pashka@gmail.com",
                     "password": "my_password_pashka",
                 },
-            },
-            "2": {
-                "summary": "Пользователь 2",
-                "value": {
-                    "email": "katya@gmail.com",
-                    "password": "my_password_katya",
-                },
-            },
+            }
         }
     ),
 ):
     hashed_password = AuthService().hash_password(user_data.password)
-    new_user_data = UserAdd(email=user_data.email, hashed_password=hashed_password)
+    new_user_data = UserAdd(**user_data.model_dump(), hashed_password=hashed_password)
     await db.users.add(new_user_data)
+    await db.commit()
     return {"status": "OK, user is registered"}
 
 
@@ -52,20 +48,13 @@ async def register_user(
 async def login_user(
     db: DBDep,
     response: Response,
-    data: UserRequestAdd = Body(
+    data: UserLogin = Body(
         openapi_examples={
             "1": {
                 "summary": "Пользователь 1",
                 "value": {
                     "email": "pashka@gmail.com",
                     "password": "my_password_pashka",
-                },
-            },
-            "2": {
-                "summary": "Пользователь 2",
-                "value": {
-                    "email": "katya@gmail.com",
-                    "password": "my_password_katya",
                 },
             },
         }

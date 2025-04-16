@@ -1,26 +1,42 @@
-# from annotated_types import MinLen, MaxLen
-from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Annotated
+from annotated_types import MinLen, MaxLen, Ge, Le
 
-# from pydantic_extra_types.phone_numbers import PhoneNumber
-# from typing_extensions import Annotated
+from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
 class UserRequestAdd(BaseModel):
-    # name: Annotated[str, MinLen(2), MaxLen(25)]
-    # exam: Annotated[str, MinLen(2), MaxLen(30)]
-    # telephone: Annotated[str, PhoneNumber]
+    name: Annotated[str, MinLen(2), MaxLen(30)]
+    surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
+    telephone: PhoneNumber | None = None
+    email: EmailStr
+    grade: Annotated[int, Ge(7), Le(11)] | None = None
+    password: str
+
+
+class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
 
 class UserAdd(BaseModel):
+    name: Annotated[str, MinLen(2), MaxLen(30)]
+    surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
+    telephone: PhoneNumber | None = None
     email: EmailStr
+    grade: Annotated[int, Ge(7), Le(11)] | None = None
     hashed_password: str
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class User(BaseModel):
     id: int
+    name: Annotated[str, MinLen(2), MaxLen(30)]
+    surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
+    telephone: PhoneNumber | None = None
     email: EmailStr
+    grade: Annotated[int, Ge(7), Le(11)] | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
