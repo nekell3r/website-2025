@@ -3,9 +3,7 @@ import sys
 from fastapi import APIRouter, Body, Response, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep
-from src.database import async_session_maker
-from src.repositories.users import UsersRepository
+from src.api.dependencies import UserIdDep, DBDep
 from src.schemas.users import UserAdd, UserRequestAdd
 from src.services.auth import AuthService
 
@@ -20,6 +18,7 @@ router = APIRouter(prefix="/auth", tags=["Авторизация и аутент
     description="Первичная регистрация пользователя и добавление данных в бд - если зарегистрирован, упадет 500 ошибка(скоро изменю на кастомную с описанием)",
 )
 async def register_user(
+    db: DBDep,
     user_data: UserRequestAdd = Body(
         openapi_examples={
             "1": {
@@ -37,14 +36,11 @@ async def register_user(
                 },
             },
         }
-    )
+    ),
 ):
     hashed_password = AuthService().hash_password(user_data.password)
     new_user_data = UserAdd(email=user_data.email, hashed_password=hashed_password)
-    async with async_session_maker() as session:
-        await UsersRepository(session).add(new_user_data)
-        await session.commit()
-
+    await db.users.add(new_user_data)
     return {"status": "OK, user is registered"}
 
 
@@ -54,6 +50,7 @@ async def register_user(
     description="Логин пользователя - если пароль не найден или пользователь не найден, будут возвращены ошибки 401 с описанием",
 )
 async def login_user(
+    db: DBDep,
     response: Response,
     data: UserRequestAdd = Body(
         openapi_examples={
@@ -74,10 +71,7 @@ async def login_user(
         }
     ),
 ):
-    async with async_session_maker() as session:
-        user = await UsersRepository(session).get_user_with_hashed_password(
-            email=data.email
-        )
+    user = await db.users.get_user_with_hashed_password(email=data.email)
     if not user:
         raise HTTPException(status_code=401, detail="Пользователь не зарегистрирован")
     if not AuthService().verify_password(data.password, user.hashed_password):
@@ -93,11 +87,11 @@ async def login_user(
     description="Получение словаря с данными об id и email пользователя",
 )
 async def get_me(
+    db: DBDep,
     user_id: UserIdDep,
 ):
-    async with async_session_maker() as session:
-        user = await UsersRepository(session).get_one_or_none(id=user_id)
-        return user
+    user = await db.users.get_one_or_none(id=user_id)
+    return user
 
 
 @router.get("/logout", summary="Выход из системы", description="Очищение куков")

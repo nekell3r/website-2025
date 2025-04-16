@@ -3,9 +3,7 @@ import sys
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, PaginationDep
-from src.database import async_session_maker
-from src.repositories.reviews import ReviewsRepository
+from src.api.dependencies import UserIdDep, PaginationDep, DBDep
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -18,12 +16,11 @@ router = APIRouter(prefix="/reviews", tags=["reviews"])
     summary="Получение отзывов всех пользователей",
     description="Возвращает отзывы с пагинацией",
 )
-async def get_reviews(pagination: PaginationDep):
+async def get_reviews(db: DBDep, pagination: PaginationDep):
     per_page = pagination.per_page or 5
-    async with async_session_maker() as session:
-        return await ReviewsRepository(session).get_all(
-            limit=per_page, offset=per_page * (pagination.page - 1)
-        )
+    return await db.reviews.get_all(
+        limit=per_page, offset=per_page * (pagination.page - 1)
+    )
 
 
 @router.get(
@@ -31,14 +28,15 @@ async def get_reviews(pagination: PaginationDep):
     summary="Получение отзывов авторизованного пользователя",
     description="Получает отзыв пользователя, данные которого сохранены в куках - если данных нет, то возвращает ошибку 401 с описанием(это еще не сделано)",
 )
-async def get_current_user_reviews(user_id: UserIdDep, pagination: PaginationDep):
+async def get_current_user_reviews(
+    db: DBDep, user_id: UserIdDep, pagination: PaginationDep
+):
     per_page = pagination.per_page or 5
-    async with async_session_maker() as session:
-        return await ReviewsRepository(session).get_mine(
-            limit=per_page,
-            offset=per_page * (pagination.page - 1),
-            current_user_id=user_id,
-        )
+    return await db.reviews.get_mine(
+        limit=per_page,
+        offset=per_page * (pagination.page - 1),
+        current_user_id=user_id,
+    )
 
 
 @router.post(
@@ -47,6 +45,7 @@ async def get_current_user_reviews(user_id: UserIdDep, pagination: PaginationDep
     description="Добавление отзыва в таблицу всех отзывов, также сохраняется информация об авторе",
 )
 async def create_review(
+    db: DBDep,
     user_id: UserIdDep,
     review_data: ReviewAddRequest = Body(
         openapi_examples={
@@ -75,9 +74,7 @@ async def create_review(
         exam=review_data.exam,
         result=review_data.result,
     )
-    async with async_session_maker() as session:
-        review = await ReviewsRepository(session).add(new_review_data)
-        await session.commit()
+    review = await db.reviews.add(new_review_data)
     return {"status": "OK, Review created", "review": review}
 
 
@@ -89,6 +86,7 @@ async def create_review(
     "о том, когда можно обновить отзыв",
 )
 async def update_review(
+    db: DBDep,
     user_id: UserIdDep,
     review_id: int = Body(),
     review_data: ReviewPatch = Body(
@@ -110,9 +108,7 @@ async def update_review(
         }
     ),
 ):
-    async with async_session_maker() as session:
-        await ReviewsRepository(session).edit(
-            review_data, exclude_unset=True, id=review_id, user_id=user_id
-        )
-        await session.commit()
+    await db.reviews.edit(
+        review_data, exclude_unset=True, id=review_id, user_id=user_id
+    )
     return {"status": "Ok, review is edited"}
