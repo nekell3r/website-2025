@@ -1,0 +1,106 @@
+import sys
+
+from fastapi import APIRouter, Body, HTTPException
+from pathlib import Path
+
+from src.api.dependencies import UserIdDep, PaginationDep, DBDep, UserRoleDep
+from src.schemas.products import Product, ProductPatch, ProductAdd
+
+sys.path.append(str(Path(__file__).parent.parent))
+
+router = APIRouter(prefix="/products", tags=["Продукты"])
+
+
+@router.get("/all", summary="Все продукты")
+async def get_products(is_super_user: UserRoleDep, user_id: UserIdDep, db: DBDep):
+    if not is_super_user:
+        raise HTTPException(
+            409, detail="Неавторизованный для получения продуктов пользователь"
+        )
+    result = await db.products.get_all()
+    return {"status": "Ok", "result": result}
+
+
+@router.get("/{product_id}", summary="Определенный продукт")
+async def get_products(
+    is_super_user: UserRoleDep, user_id: UserIdDep, db: DBDep, product_id: int
+):
+    if not is_super_user:
+        raise HTTPException(
+            409, detail="Неавторизованный для получения продуктов пользователь"
+        )
+    result = await db.products.get_one_or_none(id=product_id)
+    return {"status": "Ok", "result": result}
+
+
+@router.post("/add", summary="Добавление продукта")
+async def add_product(
+    user_id: UserIdDep,
+    is_super_user: UserRoleDep,
+    db: DBDep,
+    data: ProductAdd = Body(
+        openapi_examples={
+            "1": {
+                "summary": "ОГЭ",
+                "value": {
+                    "name": "ОГЭ",
+                    "price": 2000,
+                    "download_link": "https://example.com/oge",
+                },
+            },
+            "2": {
+                "summary": "ЕГЭ",
+                "value": {
+                    "name": "ЕГЭ",
+                    "price": 3000,
+                    "download_link": "https://example.com/ege",
+                },
+            },
+        }
+    ),
+):
+    if not is_super_user:
+        raise HTTPException(
+            409, detail="Неавторизованный для добавления продукта пользователь"
+        )
+    result = await db.products.add(data)
+    await db.commit()
+    return {
+        "status": "Ok, product is added",
+        "data": db.products.mapper.map_to_domain_entity(result),
+    }
+
+
+@router.patch("/update/{product_id}", summary="Изменение продукта")
+async def update_product(
+    is_super_user: UserRoleDep,
+    user_id: UserIdDep,
+    db: DBDep,
+    product_id: int,
+    data: ProductPatch = Body(
+        openapi_examples={
+            "1": {
+                "summary": "ОГЭ",
+                "value": {
+                    "name": "ОГЭ",
+                    "price": 2000,
+                    "download_link": "https://example.com/oge",
+                },
+            },
+            "2": {
+                "summary": "ЕГЭ",
+                "value": {
+                    "name": "ЕГЭ",
+                    "price": 3000,
+                    "download_link": "https://example.com/ege",
+                },
+            },
+        }
+    ),
+) -> None:
+    if not is_super_user:
+        raise HTTPException(
+            409, detail="Неавторизованный для изменения продукта пользователь"
+        )
+    await db.products.edit(data, exclude_unset=True, id=product_id)
+    await db.commit()

@@ -3,12 +3,47 @@ import sys
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, PaginationDep, DBDep
+from src.api.dependencies import UserIdDep, PaginationDep, DBDep, UserRoleDep
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 sys.path.append(str(Path(__file__).parent.parent))
 
 router = APIRouter(prefix="/reviews", tags=["Отзывы"])
+
+super_user_router = APIRouter(
+    prefix="/superuser/reviews", tags=["Отзывы(доступ суперпользователя)"]
+)
+
+
+@super_user_router.get(
+    "/all", summary="Получение отзывов всех пользователей суперюзером"
+)
+async def superuser_get_reviews(
+    db: DBDep, is_super_user: UserRoleDep, pagination: PaginationDep
+):
+    if not is_super_user:
+        raise HTTPException(
+            409, detail="Неавторизованный для изменения продукта пользователь"
+        )
+    per_page = pagination.per_page or 5
+    return await db.reviews.superuser_get_all(
+        limit=per_page, offset=per_page * (pagination.page - 1)
+    )
+
+
+@super_user_router.delete(
+    "/delete/{review_id}", summary="Удаление определенного отзыва"
+)
+async def superuser_delete_review(
+    db: DBDep, review_id: int, is_super_user: UserRoleDep
+):
+    if not is_super_user:
+        raise HTTPException(
+            409, "Неавторизованный для удаления чужих отзывов пользователь"
+        )
+    await db.reviews.delete(id=review_id)
+    await db.commit()
+    return {"status": "Ok, review is deleted"}
 
 
 @router.get(
@@ -24,13 +59,21 @@ async def get_reviews(db: DBDep, pagination: PaginationDep):
 
 
 @router.get(
-    "/me",
+    "/{user_id}",
     summary="Получение отзывов авторизованного пользователя",
     description="Получает отзыв пользователя, данные которого сохранены в куках - если данных нет, то возвращает ошибку 401 с описанием(это еще не сделано)",
 )
 async def get_current_user_reviews(
-    db: DBDep, user_id: UserIdDep, pagination: PaginationDep
+    db: DBDep,
+    current_user_id: UserIdDep,
+    user_id: int,
+    is_super_user: UserRoleDep,
+    pagination: PaginationDep,
 ):
+    if current_user_id != user_id:
+        raise HTTPException(
+            409, "Неавторизованный на просмотр чужих отзывов пользователь"
+        )
     per_page = pagination.per_page or 5
     return await db.reviews.get_mine(
         limit=per_page,

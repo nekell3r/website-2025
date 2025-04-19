@@ -4,6 +4,7 @@ from fastapi import HTTPException
 
 from src.repositories.base import BaseRepository
 from src.models.reviews import ReviewsOrm
+from src.repositories.mappers.mappers import ReviewsMapper, SuperUserReviewsMapper
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, Review, ReviewPatch
 from sqlalchemy import select, func, insert, update
 
@@ -11,14 +12,25 @@ from sqlalchemy import select, func, insert, update
 class ReviewsRepository(BaseRepository):
     model = ReviewsOrm  # id, user_id, review
     schema = ReviewAdd  # user_id, review
+    mapper = ReviewsMapper
 
     async def get_all(self, limit, offset) -> list[ReviewAddRequest]:
         query = select(ReviewsOrm)
         query = query.limit(limit).offset(offset)
-        print(query.compile(compile_kwargs={"literal_binds": True}))
+        # print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
         return [
-            ReviewAddRequest.model_validate(review, from_attributes=True)
+            self.mapper.map_to_domain_entity(review)
+            for review in result.scalars().all()
+        ]
+
+    async def superuser_get_all(self, limit, offset) -> list[Review]:
+        query = select(ReviewsOrm)
+        query = query.limit(limit).offset(offset)
+        # print(query.compile(compile_kwargs={"literal_binds": True}))
+        result = await self.session.execute(query)
+        return [
+            SuperUserReviewsMapper.map_to_domain_entity(review)
             for review in result.scalars().all()
         ]
 
@@ -29,10 +41,10 @@ class ReviewsRepository(BaseRepository):
             .limit(limit)
             .offset(offset)
         )
-        print(query.compile(compile_kwargs={"literal_binds": True}))
+        # print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
         return [
-            Review.model_validate(review, from_attributes=True)
+            self.mapper.map_to_domain_entity(review)
             for review in result.scalars().all()
         ]
 
@@ -53,10 +65,13 @@ class ReviewsRepository(BaseRepository):
                 detail=f"Редактирование возможно только через {minutes_left} мин.",
             )
 
-        # Обновление
         update_stmt = (
             update(self.model)
             .filter_by(**filter_by)
-            .values(**data.model_dump(exclude_unset=exclude_unset))
+            .values(
+                ReviewPatch.map_to_persistence_entity_with_unset_filter(
+                    exclude_unset=exclude_unset
+                )
+            )
         )
         await self.session.execute(update_stmt)

@@ -31,6 +31,14 @@ def get_current_user_id(token: str = Depends(get_token)) -> int:
 UserIdDep = Annotated[int, Depends(get_current_user_id)]
 
 
+def get_current_user_role(token: str = Depends(get_token)) -> int:
+    data = AuthService().decode_token(token)
+    return data["is_super_user"]
+
+
+UserRoleDep = Annotated[bool, Depends(get_current_user_role)]
+
+
 async def get_db():
     async with DBManager(session_factory=async_session_maker) as db:
         yield db

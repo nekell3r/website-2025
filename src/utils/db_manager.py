@@ -1,3 +1,4 @@
+from src.repositories.products import ProductsRepository
 from src.repositories.reviews import ReviewsRepository
 from src.repositories.users import UsersRepository
 
@@ -11,6 +12,7 @@ class DBManager:
 
         self.users = UsersRepository(self.session)
         self.reviews = ReviewsRepository(self.session)
+        self.products = ProductsRepository(self.session)
 
         return self
 

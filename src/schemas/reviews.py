@@ -51,10 +51,6 @@ class ReviewPatch(BaseModel):
 class ReviewAdd(ReviewAddRequest):
     user_id: int
 
-    model_config = ConfigDict(from_attributes=True)
-
 
 class Review(ReviewAdd):
     id: int
-
-    model_config = ConfigDict(from_attributes=True)

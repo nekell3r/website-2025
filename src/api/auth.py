@@ -65,7 +65,9 @@ async def login_user(
         raise HTTPException(status_code=401, detail="Пользователь не зарегистрирован")
     if not AuthService().verify_password(data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Введён неверный пароль")
-    access_token = AuthService().create_access_token({"id": user.id})
+    access_token = AuthService().create_access_token(
+        {"id": user.id, "is_super_user": user.is_super_user}
+    )
     response.set_cookie("access_token", access_token)
     return {"status": "ok, user is logged in", "access_token": access_token}
 

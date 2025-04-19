@@ -20,6 +20,8 @@ class UserLogin(BaseModel):
 
 
 class UserAdd(BaseModel):
+    is_super_user: bool | None = False
+
     name: Annotated[str, MinLen(2), MaxLen(30)]
     surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
     telephone: PhoneNumber | None = None
@@ -32,8 +34,11 @@ class UserAdd(BaseModel):
 
 class User(BaseModel):
     id: int
+    is_super_user: bool
+
     name: Annotated[str, MinLen(2), MaxLen(30)]
     surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
+
     telephone: PhoneNumber | None = None
     email: EmailStr
     grade: Annotated[int, Ge(7), Le(11)] | None = None
