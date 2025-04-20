@@ -42,16 +42,21 @@
     justify-content: center;
     font-size: 19px;
     font-family: Comic Sans MS, Comic Sans, cursive;
+    color: #e42b9a
 }
+
 .hamburger-button {
     width: 48px;
     height: 42px;
+    color: #e42b9a
 }
 .hamburger-button div {
     width: 28px;
     height: 3px;
     background: rgb(255, 255, 255);
     margin: 3px 0;
+    color: #e42b9a
+
 }
 .dropdown {
     position: absolute;
@@ -352,7 +357,7 @@ input {
 
 
 .russ-liter {
-    color: #40D896;
+    color: #e42b9a;
     text-align: center;
     min-width: 250px;
 }
@@ -452,7 +457,7 @@ span {
   .login-input {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #40D896;
+    border: 2px solid #e42b9a;
     background: #3a3a3a;
     color: white;
     border-radius: 8px;
@@ -466,7 +471,7 @@ span {
   }
   
   .login-input:focus{
-    border-color:#40D896;
+    border-color:#e42b9a;
   }
   
   .password-container {
@@ -482,7 +487,7 @@ span {
     background: none;
     border: 2px solid #fdfdfd;
     border-radius: 50%;
-    color: #23ffa0;
+    color: #e42b9a;
     font-size: 20px;
     padding: 6px 12px;
     margin-left: 8px;
@@ -542,3 +547,64 @@ span {
     font-size: 14px;
     font-weight: bold;
   }
+
+  .profile-container {
+    display: flex;
+    align-items: center; /* Центрируем по вертикали */
+    margin-top: 20px;
+
+}
+.avatar {
+    width: 150px; /* Увеличенная ширина аватара */
+    height: 150px; /* Увеличенная высота аватара */
+    border-radius: 50%; /* Круглая форма */
+    margin-right: 20px; /* Отступ справа от аватара */
+    overflow: hidden; /* Скрываем лишнее содержимое */
+}
+.avatar img {
+    width: 100%; /* Заполняем контейнер по ширине */
+    height: 100%; /* Заполняем контейнер по высоте */
+    object-fit: cover; /* Сохраняем пропорции изображения без обрезки */
+}
+.info {
+    display: flex;
+    flex-direction: column; /* Вертикальное расположение строк информации */
+}
+.info-row {
+    display: flex;
+    justify-content: space-between; /* Распределяем элементы по краям строки */
+    margin-bottom: 10px; /* Отступ между строками информации */
+}
+.edit-button {
+    margin-top: 20px; /* Отступ сверху для кнопки */
+    padding: 10px 20px; /* Отступы внутри кнопки */
+    background-color: #e42b9a; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем рамку кнопки */
+    border-radius: 5px; /* Закругленные края кнопки */
+    cursor: pointer; /* Указатель при наведении на кнопку */
+}
+
+.reviews-header {
+    display: flex;
+    align-items: center;
+}
+.add-review-button {
+    border: 7px solid #e42b9a;;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px; /* Отступ слева от кнопки */
+}
+.add-review-button span {
+    font-size: 30px;
+    color: #e42b9a;
+    transform: translateX(-47px);
+ /* Цвет знака плюса */
+}
