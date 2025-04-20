@@ -5,11 +5,13 @@ from pydantic import BaseModel, field_validator, Field
 from typing import Literal
 
 
-class ReviewAddRequest(BaseModel):
+class ReviewBase(BaseModel):
     exam: Literal["ЕГЭ", "ОГЭ"]
     result: int = Field(..., ge=0)
     review: str
 
+
+class ReviewAddRequest(ReviewBase):
     @field_validator("result")
     @classmethod
     def validate_result(cls, value, info):
@@ -22,6 +24,10 @@ class ReviewAddRequest(BaseModel):
         return value
 
     model_config = ConfigDict(extra="ignore")
+
+
+class ReviewAdd(ReviewBase):
+    user_id: int
 
 
 class ReviewPatch(BaseModel):
@@ -48,9 +54,11 @@ class ReviewPatch(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
 
-class ReviewAdd(ReviewAddRequest):
+class ReviewsGetBySuperUser(ReviewBase):
     user_id: int
+    id: int
 
 
-class Review(ReviewAdd):
+class ReviewSelfGet(ReviewBase):
+    user_id: int
     id: int

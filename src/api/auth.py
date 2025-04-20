@@ -1,9 +1,11 @@
 import sys
 
-from fastapi import APIRouter, Body, Response, HTTPException
+import jwt
+from fastapi import APIRouter, Body, Response, HTTPException, Request
 from pathlib import Path
 
 from src.api.dependencies import UserIdDep, DBDep
+from src.config import settings
 from src.schemas.users import UserAdd, UserRequestAdd, UserLogin
 from src.services.auth import AuthService
 
@@ -29,7 +31,16 @@ async def register_user(
                     "email": "pashka@gmail.com",
                     "password": "my_password_pashka",
                 },
-            }
+            },
+            "2": {
+                "summary": "Пользователь 2",
+                "value": {
+                    "name": "Павел",
+                    "surname": "Жабский",
+                    "email": "pashok@gmail.com",
+                    "password": "my_password_pashok",
+                },
+            },
         }
     ),
 ):
@@ -45,6 +56,7 @@ async def register_user(
     summary="Логин пользователя",
     description="Логин пользователя - если пароль не найден или пользователь не найден, будут возвращены ошибки 401 с описанием",
 )
+@router.post("/login", summary="Авторизация пользователя")
 async def login_user(
     db: DBDep,
     response: Response,
@@ -57,19 +69,36 @@ async def login_user(
                     "password": "my_password_pashka",
                 },
             },
+            "2": {
+                "summary": "Пользователь 2",
+                "value": {
+                    "email": "pashok@gmail.com",
+                    "password": "my_password_pashok",
+                },
+            },
         }
     ),
 ):
+    # Получение пользователя по email или телефону
     user = await db.users.get_user_with_hashed_password(email=data.email)
     if not user:
         raise HTTPException(status_code=401, detail="Пользователь не зарегистрирован")
     if not AuthService().verify_password(data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Введён неверный пароль")
-    access_token = AuthService().create_access_token(
-        {"id": user.id, "is_super_user": user.is_super_user}
+
+    payload = {"id": user.id, "is_super_user": user.is_super_user}
+
+    access_token, refresh_token = AuthService().create_tokens(payload)
+
+    # Сохраняем оба токена в куки
+    response.set_cookie(
+        key="access_token", value=access_token, httponly=True, samesite="lax"
     )
-    response.set_cookie("access_token", access_token)
-    return {"status": "ok, user is logged in", "access_token": access_token}
+    response.set_cookie(
+        key="refresh_token", value=refresh_token, httponly=True, samesite="lax"
+    )
+
+    return {"status": "ok, user is logged in"}
 
 
 @router.get(
@@ -85,7 +114,11 @@ async def get_me(
     return user
 
 
+g
+
+
 @router.get("/logout", summary="Выход из системы", description="Очищение куков")
 async def logout_user(response: Response):
     response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
     return {"status": "ok, user is logged out"}

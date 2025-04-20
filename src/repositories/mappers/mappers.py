@@ -1,6 +1,12 @@
 from src.models.reviews import ReviewsOrm
 from src.repositories.mappers.base import DataMapper
-from src.schemas.reviews import Review, ReviewPatch, ReviewAddRequest
+from src.schemas.reviews import (
+    ReviewBase,
+    ReviewPatch,
+    ReviewAddRequest,
+    ReviewsGetBySuperUser,
+    ReviewSelfGet,
+)
 from src.models.users import UsersOrm
 from src.schemas.users import User
 from src.models.products import ProductsOrm
@@ -14,12 +20,17 @@ class UsersMapper(DataMapper):
 
 class SuperUserReviewsMapper(DataMapper):
     db_model = ReviewsOrm
-    schema = Review
+    schema = ReviewsGetBySuperUser
+
+
+class ReviewsSelfMapper(DataMapper):
+    db_model = ReviewsOrm
+    schema = ReviewSelfGet
 
 
 class ReviewsMapper(DataMapper):
     db_model = ReviewsOrm
-    schema = ReviewAddRequest
+    schema = ReviewBase
 
 
 class ReviewsPatchMapper(DataMapper):

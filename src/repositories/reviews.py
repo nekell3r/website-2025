@@ -4,17 +4,28 @@ from fastapi import HTTPException
 
 from src.repositories.base import BaseRepository
 from src.models.reviews import ReviewsOrm
-from src.repositories.mappers.mappers import ReviewsMapper, SuperUserReviewsMapper
-from src.schemas.reviews import ReviewAdd, ReviewAddRequest, Review, ReviewPatch
-from sqlalchemy import select, func, insert, update
+from src.repositories.mappers.mappers import (
+    ReviewsMapper,
+    SuperUserReviewsMapper,
+    ReviewsPatchMapper,
+    ReviewsSelfMapper,
+)
+from src.schemas.reviews import (
+    ReviewAddRequest,
+    ReviewBase,
+    ReviewPatch,
+    ReviewsGetBySuperUser,
+    ReviewSelfGet,
+)
+from sqlalchemy import select, func, insert, update, delete
 
 
 class ReviewsRepository(BaseRepository):
     model = ReviewsOrm  # id, user_id, review
-    schema = ReviewAdd  # user_id, review
+    schema = ReviewBase  # user_id, review
     mapper = ReviewsMapper
 
-    async def get_all(self, limit, offset) -> list[ReviewAddRequest]:
+    async def get_all(self, limit, offset) -> list[ReviewBase]:
         query = select(ReviewsOrm)
         query = query.limit(limit).offset(offset)
         # print(query.compile(compile_kwargs={"literal_binds": True}))
@@ -24,7 +35,7 @@ class ReviewsRepository(BaseRepository):
             for review in result.scalars().all()
         ]
 
-    async def superuser_get_all(self, limit, offset) -> list[Review]:
+    async def superuser_get_all(self, limit, offset) -> list[ReviewsGetBySuperUser]:
         query = select(ReviewsOrm)
         query = query.limit(limit).offset(offset)
         # print(query.compile(compile_kwargs={"literal_binds": True}))
@@ -34,7 +45,7 @@ class ReviewsRepository(BaseRepository):
             for review in result.scalars().all()
         ]
 
-    async def get_mine(self, limit, offset, current_user_id) -> list[ReviewAddRequest]:
+    async def get_mine(self, limit, offset, current_user_id) -> list[ReviewSelfGet]:
         query = (
             select(ReviewsOrm)
             .where(ReviewsOrm.user_id == current_user_id)
@@ -44,9 +55,17 @@ class ReviewsRepository(BaseRepository):
         # print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
         return [
-            self.mapper.map_to_domain_entity(review)
+            ReviewsSelfMapper.map_to_domain_entity(review)
             for review in result.scalars().all()
         ]
+
+    async def get_definite_mine(self, review_id: int):
+        query = select(ReviewsOrm).where(ReviewsOrm.id == review_id)
+        result = await self.session.execute(query)
+        result = result.scalars().one_or_none()
+        if result is None:
+            return None
+        return ReviewsSelfMapper.map_to_domain_entity(result)
 
     async def edit(
         self, data: ReviewPatch, exclude_unset: bool = False, **filter_by
@@ -69,8 +88,8 @@ class ReviewsRepository(BaseRepository):
             update(self.model)
             .filter_by(**filter_by)
             .values(
-                ReviewPatch.map_to_persistence_entity_with_unset_filter(
-                    exclude_unset=exclude_unset
+                ReviewsPatchMapper.map_to_persistence_entity_with_unset_filter(
+                    data=data, exclude_unset=exclude_unset
                 )
             )
         )

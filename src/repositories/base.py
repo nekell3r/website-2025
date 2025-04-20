@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import select, insert, update, delete
 from pydantic import BaseModel
 
@@ -46,5 +47,14 @@ class BaseRepository:
         await self.session.execute(update_stmt)
 
     async def delete(self, **filter_by) -> None:
+        # Сначала ищем объект
+        select_stmt = select(self.model).filter_by(**filter_by)
+        result = await self.session.execute(select_stmt)
+        instance = result.scalar_one_or_none()
+
+        if instance is None:
+            raise HTTPException(status_code=404, detail="Объект не найден")
+
+        # Если найден — удаляем
         delete_stmt = delete(self.model).filter_by(**filter_by)
         await self.session.execute(delete_stmt)

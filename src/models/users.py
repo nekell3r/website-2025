@@ -17,3 +17,9 @@ class UsersOrm(Base):
 
     grade: Mapped[int] = mapped_column(Integer, nullable=True)
     hashed_password: Mapped[str] = mapped_column(String(200), nullable=False)
+
+    has_product_1: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    has_product_2: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    has_product_3: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    has_product_4: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    has_product_5: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

@@ -43,7 +43,11 @@ class User(BaseModel):
     email: EmailStr
     grade: Annotated[int, Ge(7), Le(11)] | None = None
 
-    model_config = ConfigDict(from_attributes=True)
+    has_product_1: bool
+    has_product_2: bool
+    has_product_3: bool
+    has_product_4: bool
+    has_product_5: bool
 
 
 class UserWithHashedPassword(User):
