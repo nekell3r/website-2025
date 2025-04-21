@@ -1,11 +1,9 @@
 import sys
 
-import jwt
 from fastapi import APIRouter, Body, Response, HTTPException, Request
 from pathlib import Path
 
 from src.api.dependencies import UserIdDep, DBDep
-from src.config import settings
 from src.schemas.users import UserAdd, UserRequestAdd, UserLogin
 from src.services.auth import AuthService
 

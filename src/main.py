@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 
 
@@ -16,10 +16,10 @@ from src.api.products import router as products_router
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешить все домены
+    allow_origins=["*"],  # Разрешаем доступ с любых источников
     allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы (GET, POST и т.д.)
-    allow_headers=["*"],  # Разрешить все заголовки
+    allow_methods=["*"],  # Разрешаем любые HTTP методы
+    allow_headers=["*"],  # Разрешаем любые заголовки
 )
 app.include_router(products_router)
 app.include_router(reviews_router)
