@@ -26,7 +26,7 @@ async def get_token(request: Request, response: Response) -> str:
         raise HTTPException(status_code=401, detail="Access токен не найден")
 
     try:
-        AuthService().decode_token(access_token)
+        AuthService().decode_access_token(access_token)
         return access_token
 
     except ExpiredSignatureError:
@@ -35,7 +35,7 @@ async def get_token(request: Request, response: Response) -> str:
             raise HTTPException(status_code=401, detail="Refresh токен не найден")
 
         try:
-            payload = AuthService().decode_token(refresh_token)
+            payload = AuthService().decode_access_token(refresh_token)
             print("Новый access_token установлен в cookie")
             new_access_token = AuthService().create_access_token(payload)
             response.set_cookie(
@@ -64,7 +64,7 @@ def get_current_user_dp(dp: str):
         response: Response,
         token: str = Depends(get_token),
     ):
-        payload = AuthService().decode_token(token)
+        payload = AuthService().decode_access_token(token)
         return payload[dp]
 
     return dependency

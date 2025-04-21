@@ -18,12 +18,12 @@ class AuthService:
 
     def create_tokens(self, payload: dict):
         access_token = jwt.encode(
-            {**payload, "exp": datetime.utcnow() + timedelta(minutes=15)},
+            {**payload, "exp": datetime.now(timezone.utc) + timedelta(minutes=15)},
             settings.JWT_SECRET_KEY,
             algorithm=settings.JWT_ALGORITHM,
         )
         refresh_token = jwt.encode(
-            {**payload, "exp": datetime.utcnow() + timedelta(days=7)},
+            {**payload, "exp": datetime.now(timezone.utc) + timedelta(days=7)},
             settings.JWT_SECRET_KEY,
             algorithm=settings.JWT_ALGORITHM,
         )
@@ -36,7 +36,7 @@ class AuthService:
             algorithm=settings.JWT_ALGORITHM,
         )
 
-    def decode_token(self, token: str):
+    def decode_access_token(self, token: str):
         try:
             return jwt.decode(
                 token,
@@ -45,3 +45,13 @@ class AuthService:
             )
         except jwt.exceptions.DecodeError:
             raise HTTPException(status_code=401, detail="Неверный access токен")
+
+    def decode_refresh_token(self, token: str):
+        try:
+            return jwt.decode(
+                token,
+                settings.JWT_REFRESH_SECRET_KEY,
+                algorithms=[settings.JWT_ALGORITHM],
+            )
+        except jwt.exceptions.DecodeError:
+            raise HTTPException(status_code=401, detail="Неверный refresh токен")

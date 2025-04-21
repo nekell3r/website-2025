@@ -114,7 +114,29 @@ async def get_me(
     return user
 
 
-g
+@router.post(
+    "/refresh",
+    summary="Обновление access-токена",
+    description="Обновление access-токена с использованием refresh-токена."
+    "Необходимо выполнять запрос при поимке 401 ошибки на фронте.",
+)
+async def refresh_token(request: Request, response: Response):
+    refr_token = request.cookies.get("refresh_token")
+    if not refr_token:
+        raise HTTPException(401, detail="Не предоставлен refresh токен")
+    try:
+        payload = AuthService().decode_refresh_token(refr_token)
+        new_access_token = AuthService().create_access_token(payload=payload)
+        response.set_cookie(
+            key="access_token",
+            value=new_access_token,
+            httponly=True,
+            samesite="lax",  # или 'none' при cross-origin
+            secure=False,  # включи True для HTTPS
+        )
+        return {"status": "Ok, access-token is updated"}
+    except HTTPException:
+        raise HTTPException(401, detail="Ошибка декодирования refresh-токена")
 
 
 @router.get("/logout", summary="Выход из системы", description="Очищение куков")
