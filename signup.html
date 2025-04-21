@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin:0px;
+            padding: 0px;
+            background-color: #3A3A3A
+        }
+    </style>
+</head>
+<body>
+    <div class="header2">
+        <div class="logo">
+            <img src="img/злой рус.png" class="zloy" alt="Злой Русский">
+        </div>
+        <div class="menu">
+            <b>ОГЭ</b>
+            <a href="ege.html">ЕГЭ</a>
+            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button">
+                <img src="img/пж.jpg" style="width: 50px;" alt="ПЖ">
+            </button>
+            <button class="hamburger-button" onclick="toggleMenu()">
+                <img src="img/burger.jpg" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+            </button>
+        </div>
+    </div>
+    <div>
+        <br>
+        <br>
+        <br>
+        <div><b><h1 style="color: #e42b9a">Регистрация</h1></b></div>
+    </div>
+    <div class="login-form">
+        <input type="password" class="login-input" placeholder="Телефон">
+        <input type="password" class="login-input" placeholder="Email(необязательно)">
+        <input type="password" class="login-input" placeholder="Пароль">
+        <div class="password-container">
+          <input type="password" class="login-input" placeholder="Повторите пароль">
+          <button class="arrow-button">➜</button>
+        </div>
+        
+        <div class="links" style="transform: translateX(0px);">
+          <p>Хотите авторизоваться? <a href="#">Авторизация</a></p>
+          <p>Забыли пароль? <a href="#">Восстановить пароль</a></p>
+        </div>
+      </div>
+      <br><br><br><br><br><br><br><br>
+      <div class="the_end" style="padding-top: 20px; border-top: 4px solid #ffffff">
+        <h1 style="flex: 1;
+        text-align: center;">Служебная информация</h1>
+        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown");
+    menu.classList.toggle("active");
+        }
+    </script>
+
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#">авторизация/личный кабинет</a>
+        <a href="#">отзывы</a>
+        <a href="#">о нас</a>
+        <a href="#">FAQ</a>
+    </div>
+
+
+   
