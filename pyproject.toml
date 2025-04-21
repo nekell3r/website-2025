@@ -26,7 +26,11 @@ dependencies = [
 ]
 
 [tool.poetry]
-
+name = "website-2025"
+version = "0.1.0"
+description = ""
+authors = ["..."]
+package-mode = false
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 black = "^25.1.0"
