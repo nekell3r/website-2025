@@ -11,7 +11,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 router = APIRouter(prefix="/products", tags=["Продукты"])
 
 
-@router.get("/all", summary="Все продукты")
+@router.get("/all", summary="Все продукты. Используется в личном кабинете суперюзера")
 async def get_products(is_super_user: UserRoleDep, user_id: UserIdDep, db: DBDep):
     if not is_super_user:
         raise HTTPException(
@@ -71,7 +71,7 @@ async def add_product(
     }
 
 
-@router.patch("/update/{product_id}", summary="Изменение продукта")
+@router.patch("/update/{product_id}", summary="Изменение продукта. Используется в лк суперюзера при нажатии кнопки редактирования определенного отзыва")
 async def update_product(
     is_super_user: UserRoleDep,
     user_id: UserIdDep,

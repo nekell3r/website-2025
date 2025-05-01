@@ -15,7 +15,8 @@ router = APIRouter(prefix="/auth", tags=["Авторизация и аутент
 @router.post(
     "/register",
     summary="Регистрация пользователя",
-    description="Первичная регистрация пользователя и добавление данных в бд - если зарегистрирован, упадет 500 ошибка(скоро изменю на кастомную с описанием)",
+    description="Используется на странице регистрации"
+                "Первичная регистрация пользователя и добавление данных в бд - если зарегистрирован, упадет 500 ошибка(скоро изменю на кастомную с описанием)",
 )
 async def register_user(
     db: DBDep,
@@ -52,7 +53,8 @@ async def register_user(
 @router.post(
     "/login",
     summary="Логин пользователя",
-    description="Логин пользователя - если пароль не найден или пользователь не найден, будут возвращены ошибки 401 с описанием",
+    description="Используется на странице логина"
+                "Логин пользователя - если пароль не найден или пользователь не найден, будут возвращены ошибки 401 с описанием",
 )
 @router.post("/login", summary="Авторизация пользователя")
 async def login_user(
@@ -101,8 +103,8 @@ async def login_user(
 
 @router.get(
     "/me",
-    summary="Получение объекта пользователя",
-    description="Получение словаря с данными об id и email пользователя",
+    summary="Получение данных о пользователе",
+    description="Получение всех данных о пользователе в личном кабинете: купленные продукты, id, имя, телефон, почта, роль",
 )
 async def get_me(
     db: DBDep,
@@ -116,7 +118,7 @@ async def get_me(
     "/refresh",
     summary="Обновление access-токена",
     description="Обновление access-токена с использованием refresh-токена."
-    "Необходимо выполнять запрос при поимке 401 ошибки на фронте.",
+    "Необходимо выполнять запрос сюда при поимке 401 ошибки на фронте.",
 )
 async def refresh_token(request: Request, response: Response):
     refr_token = request.cookies.get("refresh_token")
@@ -137,7 +139,8 @@ async def refresh_token(request: Request, response: Response):
         raise HTTPException(401, detail="Ошибка декодирования refresh-токена")
 
 
-@router.get("/logout", summary="Выход из системы", description="Очищение куков")
+@router.get("/logout", summary="Выход из системы",
+            description="Очищение куков, происходит автоматически при просрочке refresh токена или по нажатию кнопки логаута в личном кабинете")
 async def logout_user(response: Response):
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")

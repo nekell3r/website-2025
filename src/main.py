@@ -16,10 +16,10 @@ from src.api.products import router as products_router
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешаем доступ с любых источников
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Разрешаем любые HTTP методы
-    allow_headers=["*"],  # Разрешаем любые заголовки
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
 app.include_router(products_router)
 app.include_router(reviews_router)
