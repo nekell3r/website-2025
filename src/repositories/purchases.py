@@ -1,0 +1,23 @@
+from pydantic import BaseModel
+from sqlalchemy import select, update
+
+from src.repositories.base import BaseRepository
+from src.models.purchases import PurchasesOrm
+from src.repositories.mappers.mappers import PurchasesMapper
+from src.schemas.payments import Purchase, PaymentWebhookData
+
+
+class PurchasesRepository(BaseRepository):
+    model = PurchasesOrm
+    schema = Purchase
+    mapper = PurchasesMapper
+
+    async def edit(
+        self, data: PaymentWebhookData, exclude_unset: bool = True, **filter_by
+    ) -> None:
+        update_stmt = (
+            update(self.model)
+            .filter_by(**filter_by)
+            .values(status=data.status, paid_at=data.paid_at, receipt_url=str(data.receipt_url))
+        )
+        await self.session.execute(update_stmt)

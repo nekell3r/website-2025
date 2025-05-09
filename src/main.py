@@ -14,6 +14,7 @@ import uvicorn
 sys.path.append(str(Path(__file__).parent.parent))
 
 from src.api.reviews import router as reviews_router
+from src.api.payments import router as purchases_router
 from src.api.reviews import super_user_router as superuser_reviews_router
 from src.api.auth import (
     router as users_router,
@@ -45,6 +46,7 @@ app.add_middleware(
 app.include_router(products_router)
 app.include_router(reviews_router)
 app.include_router(superuser_reviews_router)
+app.include_router(purchases_router)
 app.include_router(users_router)
 app.include_router(users_reset)
 app.include_router(users_register_router)

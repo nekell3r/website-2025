@@ -14,7 +14,7 @@ from src.schemas.users import (
     EmailInput,
     PhoneWithPassword,
     UserWithHashedPassword,
-    UserUpdate,
+    UserUpdate, EmailWithCode,
 )
 from src.services.auth import AuthService
 
@@ -36,6 +36,12 @@ async def send_phone_code(
                 "value": {
                     "phone": "+79282017042",
                 },
+            },
+            "2": {
+                "summary": "number 2",
+                "value": {
+                    "phone": "+79876543210",
+                },
             }
         }
     )
@@ -45,7 +51,7 @@ async def send_phone_code(
     return {"status": "Ok, code is sent"}
 
 
-@register.post(
+@router.post(
     "/send_email_code", summary="Отправка кода подтверждения регистрации на почту"
 )
 async def send_email_code(
@@ -64,6 +70,30 @@ async def send_email_code(
     await AuthService().generate_and_send_email_code(email)
     return {"status": "Ok"}
 
+@router.post(
+    "/verify_email_code",
+    summary="Подтверждение кода верификации"
+)
+async def verify_email(
+    db: DBDep,
+    user_id: UserIdDep,
+    data: EmailWithCode = Body(
+        openapi_examples={
+            "1": {
+                "summary": "number 1",
+                "value": {
+                    "email": "pashka@gmail.com",
+                    "code" : 0
+                },
+            }
+        }
+    )
+):
+    await AuthService().verify_code_email(data.email, data.code)
+    new_user_data = UserUpdate(email=data.email)
+    await db.users.edit(new_user_data, exclude_unset=True, id=user_id)
+    await db.commit()
+    return {"status" : "Ok, email добавлен"}
 
 @register.post(
     "/verify",
@@ -79,49 +109,40 @@ async def verify_register(
                 "summary": "Пользователь 1",
                 "value": {
                     "telephone": "+79282017042",
+                    "code_phone": 0,
+                    "password": "Test_password_123",
+                    "password_repeat": "Test_password_123",
+                },
+            },
+            "2": {
+                "summary": "Пользователь 2",
+                "value": {
+                    "telephone": "+79876543210",
                     "email": "pashka@gmail.com",
                     "code_phone": 0,
                     "code_email": 0,
-                    "password": "my_password_pashka",
-                    "password_repeat": "my_password_pashka",
+                    "password": "Test_password_12345",
+                    "password_repeat": "Test_password_12345",
                 },
             }
         }
     ),
 ):
-    key_phone = f"register:code:{data.telephone}"
-    try:
-        code_in_redis = int(await redis_manager.get(key_phone))
-    except:
-        raise HTTPException(
-            404, detail="Код для этого номера не существует, отправьте заново"
-        )
-    if code_in_redis != data.code_phone:
-        raise HTTPException(400, detail="Неверный код подтверждения по телефону")
+    await AuthService().verify_code_phone(data.telephone, data.code_phone, "register")
 
     if data.email:
-        key_email = f"email:code:{data.email}"
-        try:
-            email_code_in_redis = int(await redis_manager.get(key_email))
-        except:
-            raise HTTPException(
-                404, detail="Код для этого email не существует, отправьте заново"
-            )
-        if email_code_in_redis != data.code_email:
-            raise HTTPException(400, detail="Неверный код подтверждения по email")
+        await AuthService().verify_code_email(data.email, data.code_email)
 
     existing_user = await db.users.get_one_or_none(telephone=data.telephone)
     if existing_user:
         raise HTTPException(409, detail="Пользователь уже зарегистрирован")
 
+    AuthService().validate_password_strength(password=data.password)
     hashed_password = AuthService().hash_password(data.password)
     new_user_data = UserAdd(**data.model_dump(), hashed_password=hashed_password)
+
     await db.users.add(new_user_data)
     await db.commit()
-
-    await redis_manager.delete(key_phone)
-    if data.email:
-        await redis_manager.delete(key_email)
 
     return {"status": "Ok, пользователь успешно зарегистрирован"}
 
@@ -140,6 +161,12 @@ async def send_reset_code(
                 "value": {
                     "phone": "+79282017042",
                 },
+            },
+            "2": {
+                "summary": "number 2",
+                "value": {
+                    "phone": "+79876543210",
+                },
             }
         }
     ),
@@ -154,14 +181,26 @@ async def send_reset_code(
     return {"status": "Ok"}
 
 
-@reset.post("/verify", summary="проверка кода верификации")
+@reset.post("/verify",
+            summary="проверка кода верификации"
+)
 async def verify_code(
     db: DBDep,
     data: PhoneWithCode = Body(
         openapi_examples={
             "1": {
                 "summary": "number 1",
-                "value": {"phone": "+79282017042", "code": 9999},
+                "value": {
+                    "phone": "+79282017042",
+                    "code": 9999
+                },
+            },
+            "2": {
+                "summary": "number 2",
+                "value": {
+                    "phone": "+79876543210",
+                    "code": 9999
+                },
             }
         },
     ),
@@ -186,8 +225,16 @@ async def set_password(
                 "summary": "number 1",
                 "value": {
                     "phone": "+79282017042",
-                    "password": "12345678",
-                    "password_repeat": "12345678",
+                    "password": "Reset_password_123",
+                    "password_repeat": "Reset_passord_123",
+                },
+            },
+            "2": {
+                "summary": "number 1",
+                "value": {
+                    "phone": "+79876543210",
+                    "password": "Reset_password_12345",
+                    "password_repeat": "Reset_passord_12345",
                 },
             }
         },
@@ -202,14 +249,16 @@ async def set_password(
     user = await db.users.get_one_or_none(telephone=data.phone)
     if not user:
         raise HTTPException(404, detail="Пользователь не найден")
-
+    AuthService().validate_password_strength(data.password)
     hashed_password = AuthService().hash_password(data.password)
     await db.users.edit(
-        UserWithHashedPassword(**user.model_dump(), hashed_password=hashed_password),
-        telephone=data.phone,
+        UserWithHashedPassword(
+            **user.model_dump(), hashed_password=hashed_password),
+            telephone=data.phone
     )
     await db.commit()
     await redis_manager.delete(f"reset_verified:{data.phone}")
+    return {"status" : "Ok, пароль изменён"}
 
 
 @router.post(
@@ -227,7 +276,14 @@ async def login_user(
                 "summary": "Пользователь 1",
                 "value": {
                     "telephone": "+79282017042",
-                    "password": "my_password_pashka",
+                    "password": "Test_password_123",
+                },
+            },
+            "2": {
+                "summary": "Пользователь 2",
+                "value": {
+                    "telephone": "+79876543210",
+                    "password": "Test_password_12345",
                 },
             }
         }
@@ -295,7 +351,11 @@ async def update_data(
         openapi_examples={
             "1": {
                 "summary": "Пользователь 1",
-                "value": {"name": "Павел", "surname": "Жабский", "grade": 11},
+                "value": {
+                    "name": "Павел",
+                    "surname": "Жабский",
+                    "grade": 11
+                },
             }
         }
     ),

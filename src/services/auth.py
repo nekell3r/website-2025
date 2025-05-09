@@ -8,6 +8,7 @@ from pydantic import EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber
 from phonenumbers.phonenumberutil import NumberParseException
 from random import randint
+from password_strength import PasswordPolicy
 
 from src.config import settings
 from src.init import redis_manager
@@ -49,10 +50,10 @@ class AuthService:
                 status_code=429,
                 detail=f"Отправить код снова вы можете не ранее, чем через {ttl} секунд.",
             )
-        await redis_manager.set(key_limit, "1", expire=60)
+        await redis_manager.set(key_limit, "1", expire=120)
         code = randint(1000, 9999)
         key = f"{action}:code:{phone}"
-        await self.redis.set(key, code, expire=55)
+        await self.redis.set(key, code, expire=120)
         await self.test_send_sms(phone, code)
 
         return {"status": "Ok"}
@@ -65,16 +66,18 @@ class AuthService:
                 status_code=429,
                 detail=f"Отправить код снова вы можете не ранее, чем через {ttl} секунд.",
             )
-        await redis_manager.set(key_limit, "1", expire=60)
+        await redis_manager.set(key_limit, "1", expire=120)
         code = randint(1000, 9999)
         key = f"email:code:{email}"
-        await self.redis.set(key, code, expire=55)
+        await self.redis.set(key, code, expire=120)
         await self.test_send_mail(email, code)
 
         return {"status": "Ok"}
 
     async def verify_code_phone(self, phone: PhoneNumber, code: int, action: str):
         key = f"{action}:code:{phone}"
+        key_limit = f"rate_limit_{action}:{phone}"
+        stored_limit = await self.redis.get(key_limit)
         stored_code = await self.redis.get(key)
         if not stored_code:
             raise HTTPException(status_code=400, detail="Код не найден или истёк")
@@ -82,20 +85,37 @@ class AuthService:
         if stored_code != code:
             raise HTTPException(status_code=400, detail="Неверный код")
         await self.redis.delete(key)
-        await self.redis.set(f"reset_verified:{phone}", "true", expire=60)
+        if stored_limit:
+            await self.redis.delete(key_limit)
+        await self.redis.set(f"reset_verified:{phone}", "true", expire=120)
         return {"status": "Ok"}
 
-    async def verify_code_email(self, email: str, code: int):
+    async def verify_code_email(self, email: EmailStr, code: int):
         key = f"email:code:{email}"
         stored_code = await self.redis.get(key)
         if not stored_code:
             raise HTTPException(status_code=400, detail="Код не найден или истёк")
         stored_code = int(stored_code)
         if stored_code != code:
-            raise HTTPException(status_code=400, detail="Неверный код")
+            raise HTTPException(status_code=400, detail="Неверный код подтверждения email")
         await self.redis.delete(key)
         return True
 
+
+    def validate_password_strength(self, password: str):
+        policy = PasswordPolicy.from_names(
+            length=8,
+            uppercase=1,
+            numbers=1,
+            special=1,
+        )
+
+        errors = policy.test(password)
+        if errors:
+            raise HTTPException(
+                status_code=400,
+                detail="Пароль должен быть не менее 8 символов, содержать цифру, заглавную букву и специальный символ"
+            )
     def hash_password(self, password: str) -> str:
         return self.pwd_context.hash(password)
 

@@ -52,6 +52,7 @@ class User(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    email: EmailStr | None = None
     name: Annotated[str, MinLen(2), MaxLen(30)] | None = None
     surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
     grade: Annotated[int, Ge(7), Le(11)] | None = None
@@ -72,6 +73,8 @@ class PhoneWithCode(PhoneInput):
 class EmailInput(BaseModel):
     email: EmailStr
 
+class EmailWithCode(EmailInput):
+    code: int
 
 class PhoneWithPassword(PhoneInput):
     password: str

@@ -9,7 +9,9 @@ from src.schemas.reviews import (
 from src.models.users import UsersOrm
 from src.schemas.users import User
 from src.models.products import ProductsOrm
+from src.models.purchases import PurchasesOrm
 from src.schemas.products import Product
+from src.schemas.payments import Purchase
 
 
 class UsersMapper(DataMapper):
@@ -42,4 +44,6 @@ class ProductsMapper(DataMapper):
     schema = Product
 
 
-class PurchasesMapper(DataMapper): ...
+class PurchasesMapper(DataMapper):
+    db_model = PurchasesOrm
+    schema = Purchase

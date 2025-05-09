@@ -27,6 +27,7 @@ dependencies = [
     "fastapi-cache2 (>=0.2.2,<0.3.0)",
     "redis (>=6.0.0,<7.0.0)",
     "bcrypt (==3.2.2)",
+    "password-strength (>=0.0.3.post2,<0.0.4)",
 ]
 
 [tool.poetry]
