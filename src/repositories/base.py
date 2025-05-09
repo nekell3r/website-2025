@@ -47,7 +47,6 @@ class BaseRepository:
         await self.session.execute(update_stmt)
 
     async def delete(self, **filter_by) -> None:
-        # Сначала ищем объект
         select_stmt = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(select_stmt)
         instance = result.scalar_one_or_none()

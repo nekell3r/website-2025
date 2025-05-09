@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: int
 
+    REDIS_HOST: str
+    REDIS_PORT: int
     @property
     def DB_URL(self):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"  # нельзя логировать этот адрес - внутри пароль лежит
@@ -19,6 +21,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     JWT_REFRESH_SECRET_KEY: str
     REFRESH_TOKEN_EXPIRE_DAYS: int
+
+    SMSRU_API_ID: int
 
     model_config = SettingsConfigDict(
         env_file=f"{Path(__file__).parent.parent / '.env_example'}"

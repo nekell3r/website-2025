@@ -8,12 +8,12 @@ class UsersOrm(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    is_super_user: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    is_super_user: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=True)
     surname: Mapped[str] = mapped_column(String(100), nullable=True)
-    email: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
-    telephone: Mapped[str] = mapped_column(String(20), nullable=True)
+    email: Mapped[str] = mapped_column(String(100), nullable=True, unique=True)
+    telephone: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
 
     grade: Mapped[int] = mapped_column(Integer, nullable=True)
     hashed_password: Mapped[str] = mapped_column(String(200), nullable=False)
