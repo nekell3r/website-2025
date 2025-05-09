@@ -22,9 +22,7 @@ async def get_products(is_super_user: UserRoleDep, db: DBDep):
 
 
 @router.get("/{product_id}", summary="Определенный продукт")
-async def get_products(
-    is_super_user: UserRoleDep, db: DBDep, product_id: int
-):
+async def get_products(is_super_user: UserRoleDep, db: DBDep, product_id: int):
     if not is_super_user:
         raise HTTPException(
             409, detail="Неавторизованный для получения продуктов пользователь"
