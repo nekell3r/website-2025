@@ -14,6 +14,7 @@ from src.init import redis_manager
 
 phone_code_storage = {}
 
+
 class AuthService:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -46,7 +47,7 @@ class AuthService:
         if ttl > 0:
             raise HTTPException(
                 status_code=429,
-                detail=f"Отправить код снова вы можете не ранее, чем через {ttl} секунд."
+                detail=f"Отправить код снова вы можете не ранее, чем через {ttl} секунд.",
             )
         await redis_manager.set(key_limit, "1", expire=60)
         code = randint(1000, 9999)
@@ -54,7 +55,7 @@ class AuthService:
         await self.redis.set(key, code, expire=55)
         await self.test_send_sms(phone, code)
 
-        return {"status" : "Ok"}
+        return {"status": "Ok"}
 
     async def generate_and_send_email_code(self, email: EmailStr):
         key_limit = f"rate_limit_email:{email}"
@@ -62,7 +63,7 @@ class AuthService:
         if ttl > 0:
             raise HTTPException(
                 status_code=429,
-                detail=f"Отправить код снова вы можете не ранее, чем через {ttl} секунд."
+                detail=f"Отправить код снова вы можете не ранее, чем через {ttl} секунд.",
             )
         await redis_manager.set(key_limit, "1", expire=60)
         code = randint(1000, 9999)
@@ -82,7 +83,7 @@ class AuthService:
             raise HTTPException(status_code=400, detail="Неверный код")
         await self.redis.delete(key)
         await self.redis.set(f"reset_verified:{phone}", "true", expire=60)
-        return {"status" : "Ok"}
+        return {"status": "Ok"}
 
     async def verify_code_email(self, email: str, code: int):
         key = f"email:code:{email}"

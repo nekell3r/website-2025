@@ -15,9 +15,14 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from src.api.reviews import router as reviews_router
 from src.api.reviews import super_user_router as superuser_reviews_router
-from src.api.auth import router as users_router, register as users_register_router, reset as users_reset
+from src.api.auth import (
+    router as users_router,
+    register as users_register_router,
+    reset as users_reset,
+)
 from src.api.products import router as products_router
 from src.init import redis_manager
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,6 +30,8 @@ async def lifespan(app: FastAPI):
     FastAPICache.init(RedisBackend(redis_manager.redis), prefix="fastapi-cache")
     yield
     await redis_manager.close()
+
+
 app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
@@ -32,7 +39,7 @@ app.add_middleware(
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 app.include_router(products_router)

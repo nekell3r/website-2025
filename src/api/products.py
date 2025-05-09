@@ -71,7 +71,10 @@ async def add_product(
     }
 
 
-@router.patch("/update/{product_id}", summary="Изменение продукта. Используется в лк суперюзера при нажатии кнопки редактирования определенного отзыва")
+@router.patch(
+    "/update/{product_id}",
+    summary="Изменение продукта. Используется в лк суперюзера при нажатии кнопки редактирования определенного отзыва",
+)
 async def update_product(
     is_super_user: UserRoleDep,
     user_id: UserIdDep,

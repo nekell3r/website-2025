@@ -50,24 +50,29 @@ class User(BaseModel):
     has_product_4: bool | None = False
     has_product_5: bool | None = False
 
+
 class UserUpdate(BaseModel):
     name: Annotated[str, MinLen(2), MaxLen(30)] | None = None
     surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
     grade: Annotated[int, Ge(7), Le(11)] | None = None
 
+
 class UserWithHashedPassword(User):
     hashed_password: str
+
 
 class PhoneInput(BaseModel):
     phone: PhoneNumber
 
+
 class PhoneWithCode(PhoneInput):
     code: int
+
 
 class EmailInput(BaseModel):
     email: EmailStr
 
+
 class PhoneWithPassword(PhoneInput):
     password: str
     password_repeat: str
-

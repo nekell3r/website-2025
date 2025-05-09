@@ -22,7 +22,8 @@ super_user_router = APIRouter(
 
 
 @super_user_router.get(
-    "/all", summary="Получение отзывов всех пользователей суперюзером. На вход получает page и per_page"
+    "/all",
+    summary="Получение отзывов всех пользователей суперюзером. На вход получает page и per_page",
 )
 async def superuser_get_reviews(
     db: DBDep, is_super_user: UserRoleDep, pagination: PaginationDep
@@ -38,7 +39,8 @@ async def superuser_get_reviews(
 
 
 @super_user_router.delete(
-    "/delete/{review_id}", summary="Удаление определенного отзыва. На вход получает id отзыва"
+    "/delete/{review_id}",
+    summary="Удаление определенного отзыва. На вход получает id отзыва",
 )
 async def superuser_delete_review(
     db: DBDep, review_id: int, is_super_user: UserRoleDep
@@ -59,7 +61,7 @@ async def superuser_delete_review(
     "/all",
     summary="Получение отзывов всех пользователей",
     description="Принимает на вход per_page - количество отзывов за 1 прогрузку, page - номер прогрузки(страницы/блока отзывов). "
-                "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
+    "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
 async def get_reviews(db: DBDep, pagination: PaginationDep):
     per_page = pagination.per_page or 5
@@ -72,7 +74,7 @@ async def get_reviews(db: DBDep, pagination: PaginationDep):
     "/me",
     summary="Получение отзывов авторизованного пользователя",
     description="Получает отзывы авторизованного пользователя(данные которого хранятся в jwt-токене в куках. Если пользователь"
-                "не авторизован или если токен устарел/не валиден, вернется ошибка 401 с описанием",
+    "не авторизован или если токен устарел/не валиден, вернется ошибка 401 с описанием",
 )
 async def get_current_user_reviews(
     db: DBDep,
@@ -91,7 +93,7 @@ async def get_current_user_reviews(
     "/add",
     summary="Добавление отзыва",
     description="Добавление отзыва авторизованного пользователя в бд. Механизм проверки авторизации - аналогичный получению"
-                "Возвращает ответ формата {'status' : 'ok', 'review' : review}",
+    "Возвращает ответ формата {'status' : 'ok', 'review' : review}",
 )
 async def create_review(
     db: DBDep,
@@ -132,8 +134,8 @@ async def create_review(
     "/update",
     summary="Изменение отзывааа",
     description="Изменение отзыва в бд. Принимается id отзыва(из личного кабинета). Если с момента последнего"
-                " редактирования прошло меньше ЧАСА, то возвращается 409 ошибка с информацией о том, когда можно обновить отзыв."
-                " Если прошло больше часа, изменения вносятся и возвращается ответ формата {'status' : 'ok'}",
+    " редактирования прошло меньше ЧАСА, то возвращается 409 ошибка с информацией о том, когда можно обновить отзыв."
+    " Если прошло больше часа, изменения вносятся и возвращается ответ формата {'status' : 'ok'}",
 )
 async def update_review(
     db: DBDep,
@@ -167,9 +169,12 @@ async def update_review(
     return {"status": "Ok, review is edited"}
 
 
-@router.delete("/delete/{review_id}", summary="Удаление отзыва", description=
-               "Удаление отзыва по id из личного кабинета. Принимает на вход только id отзыва. Если отзыва не существует, вернется ошибка 404."
-               "Если удалено успешно, ответ формата {'status' : 'ok'}")
+@router.delete(
+    "/delete/{review_id}",
+    summary="Удаление отзыва",
+    description="Удаление отзыва по id из личного кабинета. Принимает на вход только id отзыва. Если отзыва не существует, вернется ошибка 404."
+    "Если удалено успешно, ответ формата {'status' : 'ok'}",
+)
 async def delete_review(db: DBDep, user_id: UserIdDep, review_id: int):
     review = await db.reviews.get_definite_mine(review_id=review_id)
     if review is None:
