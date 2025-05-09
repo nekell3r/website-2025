@@ -3,8 +3,8 @@ import sys
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, PaginationDep, DBDep, UserRoleDep
-from src.schemas.products import Product, ProductPatch, ProductAdd
+from src.api.dependencies import DBDep, UserRoleDep
+from src.schemas.products import ProductPatch, ProductAdd
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/products", tags=["Продукты"])
 
 
 @router.get("/all", summary="Все продукты. Используется в личном кабинете суперюзера")
-async def get_products(is_super_user: UserRoleDep, user_id: UserIdDep, db: DBDep):
+async def get_products(is_super_user: UserRoleDep, db: DBDep):
     if not is_super_user:
         raise HTTPException(
             409, detail="Неавторизованный для получения продуктов пользователь"
@@ -23,7 +23,7 @@ async def get_products(is_super_user: UserRoleDep, user_id: UserIdDep, db: DBDep
 
 @router.get("/{product_id}", summary="Определенный продукт")
 async def get_products(
-    is_super_user: UserRoleDep, user_id: UserIdDep, db: DBDep, product_id: int
+    is_super_user: UserRoleDep, db: DBDep, product_id: int
 ):
     if not is_super_user:
         raise HTTPException(
@@ -35,7 +35,6 @@ async def get_products(
 
 @router.post("/add", summary="Добавление продукта")
 async def add_product(
-    user_id: UserIdDep,
     is_super_user: UserRoleDep,
     db: DBDep,
     data: ProductAdd = Body(
@@ -77,7 +76,6 @@ async def add_product(
 )
 async def update_product(
     is_super_user: UserRoleDep,
-    user_id: UserIdDep,
     db: DBDep,
     product_id: int,
     data: ProductPatch = Body(

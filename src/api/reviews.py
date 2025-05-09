@@ -5,10 +5,8 @@ from pathlib import Path
 
 from src.api.dependencies import UserIdDep, PaginationDep, DBDep, UserRoleDep
 from src.schemas.reviews import (
-    ReviewBase,
     ReviewAddRequest,
     ReviewPatch,
-    ReviewsGetBySuperUser,
     ReviewAdd,
 )
 

@@ -1,9 +1,8 @@
 import sys
 
-from fastapi import APIRouter, Body, Response, HTTPException
+from fastapi import APIRouter
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, DBDep
 
 sys.path.append(str(Path(__file__).parent.parent))
 

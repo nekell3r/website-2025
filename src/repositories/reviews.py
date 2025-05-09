@@ -11,13 +11,12 @@ from src.repositories.mappers.mappers import (
     ReviewsSelfMapper,
 )
 from src.schemas.reviews import (
-    ReviewAddRequest,
     ReviewBase,
     ReviewPatch,
     ReviewsGetBySuperUser,
     ReviewSelfGet,
 )
-from sqlalchemy import select, func, insert, update, delete
+from sqlalchemy import select, update
 
 
 class ReviewsRepository(BaseRepository):

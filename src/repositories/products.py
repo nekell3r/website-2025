@@ -1,7 +1,7 @@
 from src.repositories.base import BaseRepository
 from src.models.products import ProductsOrm
 from src.repositories.mappers.mappers import ProductsMapper
-from src.schemas.products import Product, ProductAdd
+from src.schemas.products import ProductAdd
 
 
 class ProductsRepository(BaseRepository):

@@ -3,7 +3,6 @@ from src.repositories.mappers.base import DataMapper
 from src.schemas.reviews import (
     ReviewBase,
     ReviewPatch,
-    ReviewAddRequest,
     ReviewsGetBySuperUser,
     ReviewSelfGet,
 )

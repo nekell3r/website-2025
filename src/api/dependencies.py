@@ -1,13 +1,11 @@
-from typing import Annotated, Tuple, Optional
-
+from typing import Annotated
 from fastapi import Depends, Query, HTTPException, Request, Response
 from pydantic import BaseModel
-from jwt import ExpiredSignatureError, DecodeError, InvalidTokenError
+from jwt import ExpiredSignatureError, DecodeError
 
 from src.database import async_session_maker
 from src.services.auth import AuthService
 from src.utils.db_manager import DBManager
-from src.config import settings
 
 
 class PaginationParams(BaseModel):
