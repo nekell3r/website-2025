@@ -73,8 +73,10 @@ class PhoneWithCode(PhoneInput):
 class EmailInput(BaseModel):
     email: EmailStr
 
+
 class EmailWithCode(EmailInput):
     code: int
+
 
 class PhoneWithPassword(PhoneInput):
     password: str

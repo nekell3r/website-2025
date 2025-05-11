@@ -97,10 +97,11 @@ class AuthService:
             raise HTTPException(status_code=400, detail="Код не найден или истёк")
         stored_code = int(stored_code)
         if stored_code != code:
-            raise HTTPException(status_code=400, detail="Неверный код подтверждения email")
+            raise HTTPException(
+                status_code=400, detail="Неверный код подтверждения email"
+            )
         await self.redis.delete(key)
         return True
-
 
     def validate_password_strength(self, password: str):
         policy = PasswordPolicy.from_names(
@@ -114,8 +115,9 @@ class AuthService:
         if errors:
             raise HTTPException(
                 status_code=400,
-                detail="Пароль должен быть не менее 8 символов, содержать цифру, заглавную букву и специальный символ"
+                detail="Пароль должен быть не менее 8 символов, содержать цифру, заглавную букву и специальный символ",
             )
+
     def hash_password(self, password: str) -> str:
         return self.pwd_context.hash(password)
 

@@ -14,7 +14,8 @@ from src.schemas.users import (
     EmailInput,
     PhoneWithPassword,
     UserWithHashedPassword,
-    UserUpdate, EmailWithCode,
+    UserUpdate,
+    EmailWithCode,
 )
 from src.services.auth import AuthService
 
@@ -42,9 +43,9 @@ async def send_phone_code(
                 "value": {
                     "phone": "+79876543210",
                 },
-            }
+            },
         }
-    )
+    ),
 ):
     telephone = data.phone
     await AuthService().generate_and_send_phone_code(telephone, "register")
@@ -64,16 +65,14 @@ async def send_email_code(
                 },
             }
         }
-    )
+    ),
 ):
     email = data.email
     await AuthService().generate_and_send_email_code(email)
     return {"status": "Ok"}
 
-@router.post(
-    "/verify_email_code",
-    summary="Подтверждение кода верификации"
-)
+
+@router.post("/verify_email_code", summary="Подтверждение кода верификации")
 async def verify_email(
     db: DBDep,
     user_id: UserIdDep,
@@ -81,19 +80,17 @@ async def verify_email(
         openapi_examples={
             "1": {
                 "summary": "number 1",
-                "value": {
-                    "email": "pashka@gmail.com",
-                    "code" : 0
-                },
+                "value": {"email": "pashka@gmail.com", "code": 0},
             }
         }
-    )
+    ),
 ):
     await AuthService().verify_code_email(data.email, data.code)
     new_user_data = UserUpdate(email=data.email)
     await db.users.edit(new_user_data, exclude_unset=True, id=user_id)
     await db.commit()
-    return {"status" : "Ok, email добавлен"}
+    return {"status": "Ok, email добавлен"}
+
 
 @register.post(
     "/verify",
@@ -124,7 +121,7 @@ async def verify_register(
                     "password": "Test_password_12345",
                     "password_repeat": "Test_password_12345",
                 },
-            }
+            },
         }
     ),
 ):
@@ -167,7 +164,7 @@ async def send_reset_code(
                 "value": {
                     "phone": "+79876543210",
                 },
-            }
+            },
         }
     ),
 ):
@@ -181,27 +178,19 @@ async def send_reset_code(
     return {"status": "Ok"}
 
 
-@reset.post("/verify",
-            summary="проверка кода верификации"
-)
+@reset.post("/verify", summary="проверка кода верификации")
 async def verify_code(
     db: DBDep,
     data: PhoneWithCode = Body(
         openapi_examples={
             "1": {
                 "summary": "number 1",
-                "value": {
-                    "phone": "+79282017042",
-                    "code": 9999
-                },
+                "value": {"phone": "+79282017042", "code": 9999},
             },
             "2": {
                 "summary": "number 2",
-                "value": {
-                    "phone": "+79876543210",
-                    "code": 9999
-                },
-            }
+                "value": {"phone": "+79876543210", "code": 9999},
+            },
         },
     ),
 ):
@@ -236,7 +225,7 @@ async def set_password(
                     "password": "Reset_password_12345",
                     "password_repeat": "Reset_passord_12345",
                 },
-            }
+            },
         },
     ),
 ):
@@ -252,13 +241,12 @@ async def set_password(
     AuthService().validate_password_strength(data.password)
     hashed_password = AuthService().hash_password(data.password)
     await db.users.edit(
-        UserWithHashedPassword(
-            **user.model_dump(), hashed_password=hashed_password),
-            telephone=data.phone
+        UserWithHashedPassword(**user.model_dump(), hashed_password=hashed_password),
+        telephone=data.phone,
     )
     await db.commit()
     await redis_manager.delete(f"reset_verified:{data.phone}")
-    return {"status" : "Ok, пароль изменён"}
+    return {"status": "Ok, пароль изменён"}
 
 
 @router.post(
@@ -285,7 +273,7 @@ async def login_user(
                     "telephone": "+79876543210",
                     "password": "Test_password_12345",
                 },
-            }
+            },
         }
     ),
 ):
@@ -351,11 +339,7 @@ async def update_data(
         openapi_examples={
             "1": {
                 "summary": "Пользователь 1",
-                "value": {
-                    "name": "Павел",
-                    "surname": "Жабский",
-                    "grade": 11
-                },
+                "value": {"name": "Павел", "surname": "Жабский", "grade": 11},
             }
         }
     ),

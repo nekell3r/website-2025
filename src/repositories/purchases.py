@@ -1,5 +1,4 @@
-from pydantic import BaseModel
-from sqlalchemy import select, update
+from sqlalchemy import update
 
 from src.repositories.base import BaseRepository
 from src.models.purchases import PurchasesOrm
@@ -18,6 +17,10 @@ class PurchasesRepository(BaseRepository):
         update_stmt = (
             update(self.model)
             .filter_by(**filter_by)
-            .values(status=data.status, paid_at=data.paid_at, receipt_url=str(data.receipt_url))
+            .values(
+                status=data.status,
+                paid_at=data.paid_at,
+                receipt_url=str(data.receipt_url),
+            )
         )
         await self.session.execute(update_stmt)

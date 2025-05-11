@@ -14,10 +14,11 @@ class CreatePaymentResponse(BaseModel):
 
 
 class PaymentWebhookData(BaseModel):
-    invoice_id: str                 # InvoiceId всегда приходит
-    status: str                     # Status всегда приходит (Completed, Failed и т.д.)
-    paid_at: Optional[datetime] = None      # Только при успешной оплате
-    receipt_url: Optional[HttpUrl] = None   # Только при успешной оплате
+    invoice_id: str  # InvoiceId всегда приходит
+    status: str  # Status всегда приходит (Completed, Failed и т.д.)
+    paid_at: Optional[datetime] = None  # Только при успешной оплате
+    receipt_url: Optional[HttpUrl] = None  # Только при успешной оплате
+
 
 class Purchase(BaseModel):
     user_id: int

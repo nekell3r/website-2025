@@ -7,7 +7,7 @@ authors = [
     {name = "nekell3r",email = "pazhabskiy032007@gmail.com"}
 ]
 readme = "README.md"
-requires-python = "3.13.2"
+requires-python = ">=3.13.2,<4.0"
 dependencies = [
     "fastapi (>=0.115.11,<0.116.0)",
     "pydantic[email] (>=2.10.6,<3.0.0)",
@@ -24,10 +24,12 @@ dependencies = [
     "pyjwt (>=2.10.1,<3.0.0)",
     "psycopg2 (>=2.9.10,<3.0.0)",
     "starlette (>=0.46.2,<0.47.0)",
-    "fastapi-cache2 (>=0.2.2,<0.3.0)",
     "redis (>=6.0.0,<7.0.0)",
     "bcrypt (==3.2.2)",
     "password-strength (>=0.0.3.post2,<0.0.4)",
+    "fastapi-cache2 (>=0.2.2,<0.3.0)",
+    "ruff (>=0.11.9,<0.12.0)",
+    "mypy (>=1.15.0,<2.0.0)",
 ]
 
 [tool.poetry]

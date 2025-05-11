@@ -73,7 +73,7 @@ class ReviewsRepository(BaseRepository):
         result = await self.session.execute(stmt)
         obj = result.scalar_one_or_none()
         if obj is None:
-            raise HTTPException(status_code=409, detail=f"Такого отзыва не существует")
+            raise HTTPException(status_code=409, detail="Такого отзыва не существует")
         now_utc = datetime.now(timezone.utc)
         delta = now_utc - obj.edited_at
         if delta < timedelta(hours=1):
