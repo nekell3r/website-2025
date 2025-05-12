@@ -8,7 +8,7 @@ from src.schemas.products import ProductPatch, ProductAdd
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-router = APIRouter(prefix="/products", tags=["Продукты"])
+router = APIRouter(prefix="/products", tags=["Продукты(доступ суперюзера)"])
 
 
 @router.get("/all", summary="Все продукты. Используется в личном кабинете суперюзера")

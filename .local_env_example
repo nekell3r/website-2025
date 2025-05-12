@@ -1,0 +1,20 @@
+DB_NAME=website
+DB_USER=postgres
+DB_PASS=postgres
+DB_HOST=localhost
+DB_PORT=5432
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+TEST_PUBLIC_KEY = test_public_key
+TEST_SECRET_KEY = test_secret_key
+TEST_API_URL = https://api.cloudpayments.ru
+
+JWT_ALGORITHM=HS256
+JWT_SECRET_KEY=zloyrusskiy
+JWT_REFRESH_SECRET_KEY = somekey
+ACCESS_TOKEN_EXPIRE_MINUTES=10
+REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+SMSRU_API_ID=1

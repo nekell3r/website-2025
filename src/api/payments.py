@@ -103,7 +103,6 @@ async def payment_webhook(
     purchase = await db.purchases.get_one_or_none(invoice_id=data.invoice_id)
     if not purchase:
         raise HTTPException(404, detail="Покупка не найдена")
-
     if purchase.status == "Completed":
         return {"status": "br, already_paid"}
         # return {"status": "ok"}

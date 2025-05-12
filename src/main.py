@@ -20,6 +20,7 @@ from src.api.auth import (
     register as users_register_router,
     reset as users_reset,
 )
+from src.api.personal_info import router as personal_info_router
 from src.api.products import router as products_router
 from src.init import redis_manager
 
@@ -44,6 +45,7 @@ app.add_middleware(
 
 app.include_router(products_router)
 app.include_router(reviews_router)
+app.include_router(personal_info_router)
 app.include_router(superuser_reviews_router)
 app.include_router(purchases_router)
 app.include_router(users_router)

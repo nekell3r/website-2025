@@ -30,6 +30,7 @@ reset = APIRouter(prefix="/auth/reset", tags=["Сброс пароля"])
     "/send_phone_code", summary="Отправка кода подтверждения регистрации на телефон"
 )
 async def send_phone_code(
+    db: DBDep,
     data: PhoneInput = Body(
         openapi_examples={
             "1": {
@@ -47,15 +48,18 @@ async def send_phone_code(
         }
     ),
 ):
-    telephone = data.phone
-    await AuthService().generate_and_send_phone_code(telephone, "register")
+    existing_user = await db.users.get_one_or_none(telephone=data.phone)
+    if existing_user:
+        raise HTTPException(409, detail="Пользователь с таким телефоном уже зарегистрирован")
+    await AuthService().generate_and_send_phone_code(data.phone, "register")
     return {"status": "Ok, code is sent"}
 
 
-@router.post(
+@register.post(
     "/send_email_code", summary="Отправка кода подтверждения регистрации на почту"
 )
 async def send_email_code(
+    db: DBDep,
     data: EmailInput = Body(
         openapi_examples={
             "1": {
@@ -67,36 +71,21 @@ async def send_email_code(
         }
     ),
 ):
-    email = data.email
-    await AuthService().generate_and_send_email_code(email)
+    existing_user = await db.users.get_one_or_none(email=data.email)
+    if existing_user:
+        raise HTTPException(409, detail="Пользователь с такой почтой уже зарегистрирован")
+    await AuthService().generate_and_send_email_code(data.email)
     return {"status": "Ok"}
-
-
-@router.post("/verify_email_code", summary="Подтверждение кода верификации")
-async def verify_email(
-    db: DBDep,
-    user_id: UserIdDep,
-    data: EmailWithCode = Body(
-        openapi_examples={
-            "1": {
-                "summary": "number 1",
-                "value": {"email": "pashka@gmail.com", "code": 0},
-            }
-        }
-    ),
-):
-    await AuthService().verify_code_email(data.email, data.code)
-    new_user_data = UserUpdate(email=data.email)
-    await db.users.edit(new_user_data, exclude_unset=True, id=user_id)
-    await db.commit()
-    return {"status": "Ok, email добавлен"}
 
 
 @register.post(
     "/verify",
     summary="Регистрация пользователя",
-    description="Используется на странице регистрации"
-    "Первичная регистрация пользователя и добавление данных в бд - если зарегистрирован, упадет 500 ошибка(скоро изменю на кастомную с описанием)",
+    description=(
+        "Используется на странице регистрации. "
+        "Первичная регистрация пользователя и добавление данных в БД. "
+        "Если пользователь уже зарегистрирован — вернёт 409 ошибку."
+    ),
 )
 async def verify_register(
     db: DBDep,
@@ -125,28 +114,32 @@ async def verify_register(
         }
     ),
 ):
-    await AuthService().verify_code_phone(data.telephone, data.code_phone, "register")
+    existing_user_phone = await db.users.get_one_or_none(telephone=data.telephone)
+    existing_user_email = await db.users.get_one_or_none(email=data.email) if data.email else None
 
+    if existing_user_phone or existing_user_email:
+        raise HTTPException(409, detail="Пользователь уже зарегистрирован")
+
+    await AuthService().verify_code_phone(data.telephone, data.code_phone, "register")
     if data.email:
         await AuthService().verify_code_email(data.email, data.code_email)
 
-    existing_user = await db.users.get_one_or_none(telephone=data.telephone)
-    if existing_user:
-        raise HTTPException(409, detail="Пользователь уже зарегистрирован")
-
-    AuthService().validate_password_strength(password=data.password)
+    AuthService().validate_password_strength(data.password)
     hashed_password = AuthService().hash_password(data.password)
-    new_user_data = UserAdd(**data.model_dump(), hashed_password=hashed_password)
 
+    new_user_data = UserAdd(**data.model_dump(), hashed_password=hashed_password)
     await db.users.add(new_user_data)
     await db.commit()
 
-    return {"status": "Ok, пользователь успешно зарегистрирован"}
+    await AuthService().delete_verified_phone_code(data.telephone, "register")
+    if data.email:
+        await AuthService().delete_verified_email_code(data.email)
 
+    return {"status": "Ok, пользователь успешно зарегистрирован"}
 
 @reset.post(
     "/send_code",
-    summary="Отправка кода верификации",
+    summary="Отправка кода подтверждения сброса пароля",
     description="Отправляет код проверки на указанный телефон, позволяет отправлять раз в минуту",
 )
 async def send_reset_code(
@@ -168,13 +161,12 @@ async def send_reset_code(
         }
     ),
 ):
-    phone = data.phone
-    user = await db.users.get_one_or_none(telephone=phone)
+    user = await db.users.get_one_or_none(telephone=data.phone)
     if user is None:
         raise HTTPException(
             400, detail="Пользователь с таким телефоном не зарегистрирован в системе"
         )
-    await AuthService().generate_and_send_phone_code(phone, "refresh")
+    await AuthService().generate_and_send_phone_code(data.phone, "refresh")
     return {"status": "Ok"}
 
 
@@ -194,14 +186,12 @@ async def verify_code(
         },
     ),
 ):
-    phone = data.phone
-    code = data.code
-    user = await db.users.get_one_or_none(telephone=phone)
+    user = await db.users.get_one_or_none(telephone=data.phone)
     if user is None:
         raise HTTPException(
             400, detail="Пользователь с таким телефоном не зарегистрирован в системе"
         )
-    await AuthService().verify_code_phone(phone, code, "refresh")
+    await AuthService().verify_code_phone(data.phone, data.code, "refresh")
     return {"status": "OK, verification code is correct"}
 
 
@@ -215,21 +205,21 @@ async def set_password(
                 "value": {
                     "phone": "+79282017042",
                     "password": "Reset_password_123",
-                    "password_repeat": "Reset_passord_123",
+                    "password_repeat": "Reset_password_123",  # тут была опечатка
                 },
             },
             "2": {
-                "summary": "number 1",
+                "summary": "number 2",
                 "value": {
                     "phone": "+79876543210",
                     "password": "Reset_password_12345",
-                    "password_repeat": "Reset_passord_12345",
+                    "password_repeat": "Reset_password_12345",
                 },
             },
         },
     ),
 ):
-    is_verified = await redis_manager.get(f"reset_verified:{data.phone}")
+    is_verified = await redis_manager.get(f"refresh:code_verified:{data.phone}")
     if not is_verified:
         raise HTTPException(403, detail="Код не подтверждён или устарел")
     if data.password != data.password_repeat:
@@ -245,7 +235,7 @@ async def set_password(
         telephone=data.phone,
     )
     await db.commit()
-    await redis_manager.delete(f"reset_verified:{data.phone}")
+    await AuthService().delete_verified_phone_code(data.phone, "refresh")
     return {"status": "Ok, пароль изменён"}
 
 
@@ -331,41 +321,7 @@ async def refresh_token(request: Request, response: Response):
         raise HTTPException(401, detail="Ошибка декодирования refresh-токена")
 
 
-@router.post("/update", summary="Изменение данных о пользователе")
-async def update_data(
-    db: DBDep,
-    user_id: UserIdDep,
-    new_data: UserUpdate = Body(
-        openapi_examples={
-            "1": {
-                "summary": "Пользователь 1",
-                "value": {"name": "Павел", "surname": "Жабский", "grade": 11},
-            }
-        }
-    ),
-):
-    user = await db.users.get_one_or_none(id=user_id)
-    if user is None:
-        raise HTTPException(404, detail="Пользователь не найден")
-    await db.users.edit(new_data, exclude_unset=True, telephone=user.telephone)
-    await db.commit()
-    return {"status": "Ok, данные обновлены"}
-
-
-@router.get(
-    "/me",
-    summary="Получение данных о пользователе",
-    description="Получение всех данных о пользователе в личном кабинете: купленные продукты, id, имя, телефон, почта, роль",
-)
-async def get_me(
-    db: DBDep,
-    user_id: UserIdDep,
-):
-    user = await db.users.get_one_or_none(id=user_id)
-    return user
-
-
-@router.get(
+@router.post(
     "/logout",
     summary="Выход из системы",
     description="Очищение куков, происходит автоматически при просрочке refresh токена или по нажатию кнопки логаута в личном кабинете",

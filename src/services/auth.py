@@ -55,7 +55,6 @@ class AuthService:
         key = f"{action}:code:{phone}"
         await self.redis.set(key, code, expire=120)
         await self.test_send_sms(phone, code)
-
         return {"status": "Ok"}
 
     async def generate_and_send_email_code(self, email: EmailStr):
@@ -71,37 +70,43 @@ class AuthService:
         key = f"email:code:{email}"
         await self.redis.set(key, code, expire=120)
         await self.test_send_mail(email, code)
-
         return {"status": "Ok"}
 
     async def verify_code_phone(self, phone: PhoneNumber, code: int, action: str):
         key = f"{action}:code:{phone}"
-        key_limit = f"rate_limit_{action}:{phone}"
-        stored_limit = await self.redis.get(key_limit)
+        key_verified = f"{action}:code_verified:{phone}"
         stored_code = await self.redis.get(key)
+
         if not stored_code:
             raise HTTPException(status_code=400, detail="Код не найден или истёк")
-        stored_code = int(stored_code)
-        if stored_code != code:
+
+        if int(stored_code) != code:
             raise HTTPException(status_code=400, detail="Неверный код")
-        await self.redis.delete(key)
-        if stored_limit:
-            await self.redis.delete(key_limit)
-        await self.redis.set(f"reset_verified:{phone}", "true", expire=120)
-        return {"status": "Ok"}
+
+        await self.redis.set(key_verified, "true", expire=300)
+        return {"status": "Код подтверждён"}
 
     async def verify_code_email(self, email: EmailStr, code: int):
         key = f"email:code:{email}"
+        key_verified = f"email:code_verified:{email}"
         stored_code = await self.redis.get(key)
+
         if not stored_code:
             raise HTTPException(status_code=400, detail="Код не найден или истёк")
-        stored_code = int(stored_code)
-        if stored_code != code:
-            raise HTTPException(
-                status_code=400, detail="Неверный код подтверждения email"
-            )
-        await self.redis.delete(key)
-        return True
+
+        if int(stored_code) != code:
+            raise HTTPException(status_code=400, detail="Неверный код подтверждения email")
+
+        await self.redis.set(key_verified, "true", expire=300)
+        return {"status": "Код подтверждён"}
+
+    async def delete_verified_phone_code(self, phone: PhoneNumber, action: str):
+        await self.redis.delete(f"{action}:code_verified:{phone}")
+        await self.redis.delete(f"{action}:code:{phone}")
+
+    async def delete_verified_email_code(self, email: EmailStr):
+        await self.redis.delete(f"email:code_verified:{email}")
+        await self.redis.delete(f"email:code:{email}")
 
     def validate_password_strength(self, password: str):
         policy = PasswordPolicy.from_names(
