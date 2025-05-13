@@ -16,7 +16,7 @@ class PaginationParams(BaseModel):
 PaginationDep = Annotated[PaginationParams, Depends()]
 
 
-async def get_token(request: Request, response: Response) -> str:
+async def get_token(request: Request, response: Response) -> dict:
     access_token = request.cookies.get("access_token")
     refresh_token = request.cookies.get("refresh_token")
 
@@ -24,31 +24,23 @@ async def get_token(request: Request, response: Response) -> str:
         raise HTTPException(status_code=401, detail="Access токен не найден")
 
     try:
-        AuthService().decode_access_token(access_token)
-        return access_token
-
+        return AuthService().decode_access_token(access_token)
     except ExpiredSignatureError:
-        # Пробуем использовать refresh-токен
         if not refresh_token:
             raise HTTPException(status_code=401, detail="Refresh токен не найден")
-
         try:
-            payload = AuthService().decode_access_token(refresh_token)
-            print("Новый access_token установлен в cookie")
+            payload = AuthService().decode_refresh_token(refresh_token)
             new_access_token = AuthService().create_access_token(payload)
             response.set_cookie(
                 key="access_token",
                 value=new_access_token,
                 httponly=True,
-                samesite="lax",  # или 'none' при cross-origin
-                secure=False,  # включи True для HTTPS
+                samesite="lax",
+                secure=False,
             )
-
-            return new_access_token
-
+            return payload  # ✅ возвращаем payload сразу
         except ExpiredSignatureError:
             raise HTTPException(status_code=401, detail="Refresh токен истёк")
-
         except DecodeError:
             raise HTTPException(status_code=401, detail="Невалидный refresh токен")
 
@@ -58,14 +50,11 @@ async def get_token(request: Request, response: Response) -> str:
 
 def get_current_user_dp(dp: str):
     async def dependency(
-        request: Request,
-        response: Response,
-        token: str = Depends(get_token),
+        payload: dict = Depends(get_token),  # ✅ получаем уже готовый payload
     ):
-        payload = AuthService().decode_access_token(token)
         return payload[dp]
-
     return dependency
+
 
 
 UserIdDep = Annotated[int, Depends(get_current_user_dp("id"))]

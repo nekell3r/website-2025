@@ -1,13 +1,13 @@
 from sqlalchemy import update
 
 from src.repositories.base import BaseRepository
-from src.models.purchases import PurchasesOrm
+from src.models.purchases import PaymentOrm
 from src.repositories.mappers.mappers import PurchasesMapper
 from src.schemas.payments import Purchase, PaymentWebhookData
 
 
 class PurchasesRepository(BaseRepository):
-    model = PurchasesOrm
+    model = PaymentOrm
     schema = Purchase
     mapper = PurchasesMapper
 
@@ -20,7 +20,7 @@ class PurchasesRepository(BaseRepository):
             .values(
                 status=data.status,
                 paid_at=data.paid_at,
-                receipt_url=str(data.receipt_url),
+                fiscal_receipt_url=str(data.fiscal_receipt_url),
             )
         )
         await self.session.execute(update_stmt)

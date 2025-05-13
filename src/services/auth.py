@@ -131,7 +131,7 @@ class AuthService:
 
     def create_tokens(self, payload: dict):
         access_token = jwt.encode(
-            {**payload, "exp": datetime.now(timezone.utc) + timedelta(minutes=15)},
+            {**payload, "exp": datetime.now(timezone.utc) + timedelta(minutes=1)},
             settings.JWT_SECRET_KEY,
             algorithm=settings.JWT_ALGORITHM,
         )
@@ -144,7 +144,7 @@ class AuthService:
 
     def create_access_token(self, payload: dict):
         return jwt.encode(
-            {**payload, "exp": datetime.now(timezone.utc) + timedelta(minutes=15)},
+            {**payload, "exp": datetime.now(timezone.utc) + timedelta(minutes=1)},
             settings.JWT_SECRET_KEY,
             algorithm=settings.JWT_ALGORITHM,
         )

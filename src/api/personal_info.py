@@ -34,6 +34,7 @@ router = APIRouter(prefix="/me", tags=["Персональная информа�
 async def get_me(
     db: DBDep,
     user_id: UserIdDep,
+
 ):
     user = await db.users.get_one_or_none(id=user_id)
     return user

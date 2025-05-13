@@ -17,15 +17,15 @@ class Settings(BaseSettings):
     REDIS_HOST: str
     REDIS_PORT: int
 
-    TEST_PUBLIC_KEY: str
-    TEST_SECRET_KEY: str
-    TEST_API_URL: str
-
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     JWT_REFRESH_SECRET_KEY: str
     REFRESH_TOKEN_EXPIRE_DAYS: int
+
+    YOOKASSA_SHOP_ID: str
+    YOOKASSA_SECRET_KEY: str
+    YOOKASSA_API_URL: str
 
     SMSRU_API_ID: int
 
