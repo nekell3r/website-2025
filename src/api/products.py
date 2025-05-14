@@ -21,13 +21,19 @@ async def get_products(is_super_user: UserRoleDep, db: DBDep):
     return {"status": "Ok", "result": result}
 
 
-@router.get("/{product_id}", summary="Определенный продукт")
-async def get_product(is_super_user: UserRoleDep, db: DBDep, product_id: int):
+@router.get("/{slug}", summary="Определенный продукт")
+async def get_product(
+        is_super_user: UserRoleDep,
+        db: DBDep,
+        slug: str
+):
     if not is_super_user:
         raise HTTPException(
             409, detail="Неавторизованный для получения продуктов пользователь"
         )
-    result = await db.products.get_one_or_none(id=product_id)
+    result = await db.products.get_one_or_none(slug =  slug)
+    if result is None:
+        raise HTTPException(404, detail="Продукт не найден")
     return {"status": "Ok", "result": result}
 
 
@@ -43,6 +49,8 @@ async def add_product(
                     "name": "ОГЭ",
                     "price": 2000,
                     "download_link": "https://example.com/oge",
+                    "description": "Тестовое описание для ОГЭ",
+                    "slug": "oge",
                 },
             },
             "2": {
@@ -51,6 +59,8 @@ async def add_product(
                     "name": "ЕГЭ",
                     "price": 3000,
                     "download_link": "https://example.com/ege",
+                    "description": "Тестовое описание для ЕГЭ",
+                    "slug": "ege",
                 },
             },
         }
@@ -69,13 +79,13 @@ async def add_product(
 
 
 @router.patch(
-    "/update/{product_id}",
+    "/update/{slug}",
     summary="Изменение продукта. Используется в лк суперюзера при нажатии кнопки редактирования определенного отзыва",
 )
 async def update_product(
     is_super_user: UserRoleDep,
     db: DBDep,
-    product_id: int,
+    slug: str,
     data: ProductPatch = Body(
         openapi_examples={
             "1": {
@@ -84,6 +94,7 @@ async def update_product(
                     "name": "ОГЭ",
                     "price": 2000,
                     "download_link": "https://example.com/oge",
+                    "description": "Тестовое описание для ОГЭ",
                 },
             },
             "2": {
@@ -92,6 +103,7 @@ async def update_product(
                     "name": "ЕГЭ",
                     "price": 3000,
                     "download_link": "https://example.com/ege",
+                    "description": "Тестовое описание для ЕГЭ",
                 },
             },
         }
@@ -101,5 +113,8 @@ async def update_product(
         raise HTTPException(
             409, detail="Неавторизованный для изменения продукта пользователь"
         )
-    await db.products.edit(data, exclude_unset=True, id=product_id)
+    product = await db.products.get_one_or_none(slug=slug)
+    if product is None:
+        raise HTTPException(404, detail="Продукт не найден")
+    await db.products.edit(data, exclude_unset=True, slug=slug)
     await db.commit()

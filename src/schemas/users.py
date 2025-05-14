@@ -44,12 +44,6 @@ class User(BaseModel):
     email: EmailStr | None = None
     grade: Annotated[int, Ge(7), Le(11)] | None = None
 
-    has_product_1: bool | None = False
-    has_product_2: bool | None = False
-    has_product_3: bool | None = False
-    has_product_4: bool | None = False
-    has_product_5: bool | None = False
-
 
 class UserUpdate(BaseModel):
     email: EmailStr | None = None

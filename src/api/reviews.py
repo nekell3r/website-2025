@@ -67,26 +67,6 @@ async def get_reviews(db: DBDep, pagination: PaginationDep):
         limit=per_page, offset=per_page * (pagination.page - 1)
     )
 
-
-@router.get(
-    "/me",
-    summary="Получение отзывов авторизованного пользователя",
-    description="Получает отзывы авторизованного пользователя(данные которого хранятся в jwt-токене в куках. Если пользователь"
-    "не авторизован или если токен устарел/не валиден, вернется ошибка 401 с описанием",
-)
-async def get_current_user_reviews(
-    db: DBDep,
-    current_user_id: UserIdDep,
-    pagination: PaginationDep,
-):
-    per_page = pagination.per_page or 5
-    return await db.reviews.get_mine(
-        limit=per_page,
-        offset=per_page * (pagination.page - 1),
-        current_user_id=current_user_id,
-    )
-
-
 @router.post(
     "/add",
     summary="Добавление отзыва",
@@ -129,7 +109,7 @@ async def create_review(
 
 
 @router.patch(
-    "/update",
+    "/update/{review_id}",
     summary="Изменение отзывааа",
     description="Изменение отзыва в бд. Принимается id отзыва(из личного кабинета). Если с момента последнего"
     " редактирования прошло меньше ЧАСА, то возвращается 409 ошибка с информацией о том, когда можно обновить отзыв."
@@ -160,6 +140,9 @@ async def update_review(
         }
     ),
 ):
+    review = await db.reviews.get_definite_mine(review_id=review_id)
+    if review is None:
+        raise HTTPException(404, detail="Отзыв не найден")
     await db.reviews.edit(
         review_data, exclude_unset=True, id=review_id, user_id=user_id
     )

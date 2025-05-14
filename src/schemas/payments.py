@@ -26,7 +26,7 @@ class Purchase(BaseModel):
     payment_id: str
     status: str
     paid_at: Optional[datetime] = None
-    fiscal_receipt_url: Optional[HttpUrl] = None
+    fiscal_receipt_url: Optional[str] = None
 
 
 

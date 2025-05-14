@@ -9,7 +9,7 @@ from src.models.purchases import PaymentOrm
 from src.schemas.payments import CreatePaymentRequest, CreatePaymentResponse
 from src.services.payments import PaymentService
 
-router = APIRouter(prefix="/payments")
+router = APIRouter(prefix="/payments", tags=["Платежи"])
 
 @router.post("/create", response_model=CreatePaymentResponse)
 async def create_payment_endpoint(

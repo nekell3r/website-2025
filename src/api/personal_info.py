@@ -3,7 +3,7 @@ import sys
 from fastapi import APIRouter, Body, Response, HTTPException, Request
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, DBDep
+from src.api.dependencies import UserIdDep, DBDep, PaginationDep
 from src.init import redis_manager
 from src.schemas.personal_info import BoughtProduct
 from src.schemas.users import (
@@ -39,6 +39,27 @@ async def get_me(
     user = await db.users.get_one_or_none(id=user_id)
     return user
 
+@router.get(
+    "/reviews",
+    summary="Получение отзывов авторизованного пользователя",
+    description="Получает отзывы авторизованного пользователя(данные которого хранятся в jwt-токене в куках. Если пользователь"
+    "не авторизован или если токен устарел/не валиден, вернется ошибка 401 с описанием",
+)
+async def get_current_user_reviews(
+    db: DBDep,
+    current_user_id: UserIdDep,
+    pagination: PaginationDep,
+):
+    per_page = pagination.per_page or 5
+    data = await db.reviews.get_mine(
+        limit=per_page,
+        offset=per_page * (pagination.page - 1),
+        current_user_id=current_user_id,
+    )
+    if not data:
+        raise HTTPException(404, detail="Отзывы не найдены")
+    return {"status": "Ok", "result": data}
+
 
 @router.get(
     "/purchases",
@@ -48,7 +69,7 @@ async def get_user_purchases(
         user_id: UserIdDep,
         db: DBDep
 ):
-    purchases = await db.purchases.get_all(user_id=user_id)
+    purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
     if not purchases:
         raise HTTPException(404, detail="Покупки не найдены")
     names = {
