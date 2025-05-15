@@ -6,9 +6,10 @@ from uuid import uuid4
 import httpx
 
 
-from src.api.dependencies import DBDep, UserIdDep
+from src.dependencies.auth import UserIdDep
+from src.dependencies.db import DBDep
 from src.config import settings
-from src.schemas.payments import PaymentWebhookData, CreatePaymentRequest, CreatePaymentResponse, Purchase
+from src.schemas.payments import CreatePaymentRequest, CreatePaymentResponse, Purchase
 
 
 class PaymentService:
@@ -67,7 +68,7 @@ class PaymentService:
             )
         else:
             raise Exception(f"ЮKassa error: {response.status_code}, {response.text}")
-
+# кастомные исключения
 
     async def confirm_payment(self, payment_id: str):
         url = f"{settings.YOOKASSA_API_URL}/{payment_id}/capture"
@@ -97,7 +98,7 @@ class PaymentService:
 
         purchase = await db.purchases.get_one_or_none(payment_id=payment_id)
         if not purchase:
-            raise HTTPException(status_code=404, detail="Purchase not found")
+            raise HTTPException(status_code=200, detail="Purchase not found")
 
         if event == "payment.succeeded":
             purchase.status = "Paid"

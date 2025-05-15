@@ -3,12 +3,14 @@ import sys
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, PaginationDep, DBDep, UserRoleDep
+from src.dependencies.auth import UserIdDep, PaginationDep, UserRoleDep
+from src.dependencies.db import DBDep
 from src.schemas.reviews import (
     ReviewAddRequest,
     ReviewPatch,
     ReviewAdd,
 )
+from src.services.reviews import ReviewService
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -19,25 +21,8 @@ super_user_router = APIRouter(
 )
 
 
-@super_user_router.get(
-    "/all",
-    summary="Получение отзывов всех пользователей суперюзером. На вход получает page и per_page",
-)
-async def superuser_get_reviews(
-    db: DBDep, is_super_user: UserRoleDep, pagination: PaginationDep
-):
-    if not is_super_user:
-        raise HTTPException(
-            409, detail="Неавторизованный для изменения продукта пользователь"
-        )
-    per_page = pagination.per_page or 5
-    return await db.reviews.superuser_get_all(
-        limit=per_page, offset=per_page * (pagination.page - 1)
-    )
-
-
 @super_user_router.delete(
-    "/delete/{review_id}",
+    "/{review_id}",
     summary="Удаление определенного отзыва. На вход получает id отзыва",
 )
 async def superuser_delete_review(
@@ -56,19 +41,16 @@ async def superuser_delete_review(
 
 
 @router.get(
-    "/all",
+    "",
     summary="Получение отзывов всех пользователей",
     description="Принимает на вход per_page - количество отзывов за 1 прогрузку, page - номер прогрузки(страницы/блока отзывов). "
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
-async def get_reviews(db: DBDep, pagination: PaginationDep):
-    per_page = pagination.per_page or 5
-    return await db.reviews.get_all(
-        limit=per_page, offset=per_page * (pagination.page - 1)
-    )
+async def get_reviews(is_super: UserRoleDep, db: DBDep, pagination: PaginationDep):
+    return await ReviewService().get_reviews(is_super, db, pagination)
 
 @router.post(
-    "/add",
+    "",
     summary="Добавление отзыва",
     description="Добавление отзыва авторизованного пользователя в бд. Механизм проверки авторизации - аналогичный получению"
     "Возвращает ответ формата {'status' : 'ok', 'review' : review}",
@@ -97,19 +79,12 @@ async def create_review(
         }
     ),
 ):
-    new_review_data = ReviewAdd(
-        user_id=user_id,
-        review=review_data.review,
-        exam=review_data.exam,
-        result=review_data.result,
-    )
-    review = await db.reviews.add(new_review_data)
-    await db.commit()
-    return {"status": "OK, Review created", "review": review}
+    result = await ReviewService().create_review(db, user_id, review_data)
+    return result
 
 
 @router.patch(
-    "/update/{review_id}",
+    "/{review_id}",
     summary="Изменение отзывааа",
     description="Изменение отзыва в бд. Принимается id отзыва(из личного кабинета). Если с момента последнего"
     " редактирования прошло меньше ЧАСА, то возвращается 409 ошибка с информацией о том, когда можно обновить отзыв."
@@ -151,7 +126,7 @@ async def update_review(
 
 
 @router.delete(
-    "/delete/{review_id}",
+    "/{review_id}",
     summary="Удаление отзыва",
     description="Удаление отзыва по id из личного кабинета. Принимает на вход только id отзыва. Если отзыва не существует, вернется ошибка 404."
     "Если удалено успешно, ответ формата {'status' : 'ok'}",

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Request, Response
 from passlib.context import CryptContext
 import jwt
 import phonenumbers
@@ -9,9 +9,13 @@ from pydantic_extra_types.phone_numbers import PhoneNumber
 from phonenumbers.phonenumberutil import NumberParseException
 from random import randint
 from password_strength import PasswordPolicy
+from jwt import ExpiredSignatureError, DecodeError
 
+from src.dependencies.db import DBDep
 from src.config import settings
 from src.init import redis_manager
+from src.schemas.users import UserRequestAdd, UserAdd, PhoneInput, EmailInput, PhoneWithCode, PhoneWithPassword, \
+    UserWithHashedPassword
 
 phone_code_storage = {}
 
@@ -42,7 +46,7 @@ class AuthService:
     async def test_send_mail(self, email: EmailStr, code: int):
         print(f"[TEST MAIL] Отправляем код {code} на email {email}")
 
-    async def generate_and_send_phone_code(self, phone: PhoneNumber, action: str):
+    async def send_phone_code(self, phone: PhoneNumber, action: str):
         key_limit = f"rate_limit_{action}:{phone}"
         ttl = await redis_manager.redis.ttl(key_limit)
         if ttl > 0:
@@ -57,8 +61,8 @@ class AuthService:
         await self.test_send_sms(phone, code)
         return {"status": "Ok"}
 
-    async def generate_and_send_email_code(self, email: EmailStr):
-        key_limit = f"rate_limit_email:{email}"
+    async def send_email_code(self, email: EmailStr, action: str):
+        key_limit = f"rate_limit_{action}:{email}"
         ttl = await redis_manager.redis.ttl(key_limit)
         if ttl > 0:
             raise HTTPException(
@@ -67,10 +71,31 @@ class AuthService:
             )
         await redis_manager.set(key_limit, "1", expire=120)
         code = randint(1000, 9999)
-        key = f"email:code:{email}"
+        key = f"{action}:code:{email}"
         await self.redis.set(key, code, expire=120)
         await self.test_send_mail(email, code)
         return {"status": "Ok"}
+
+    async def send_registration_email_code(self, data: EmailInput, db: DBDep):
+        existing_user = await db.users.get_one_or_none(email=data.email)
+        if existing_user:
+            raise HTTPException(status_code=409, detail="Пользователь с такой почтой уже существует")
+        result = await self.send_email_code(data.email, action="registration")
+        return result
+
+    async def send_registration_phone_code(self, data: PhoneInput, db: DBDep):
+        existing_user = await db.users.get_one_or_none(phone=data.phone)
+        if existing_user:
+            raise HTTPException(status_code=409, detail="Пользователь с таким номером телефона уже существует")
+        result = await self.send_phone_code(data.phone, "registration")
+        return result
+
+    async def send_reset_phone_code(self, data: PhoneInput, db:DBDep):
+        existing_user = await db.users.get_one_or_none(phone=data.phone)
+        if not existing_user:
+            raise HTTPException(status_code=404, detail="Пользователь не найден")
+        result = await self.send_phone_code(data.phone, "reset")
+        return result
 
     async def verify_code_phone(self, phone: PhoneNumber, code: int, action: str):
         key = f"{action}:code:{phone}"
@@ -86,9 +111,9 @@ class AuthService:
         await self.redis.set(key_verified, "true", expire=300)
         return {"status": "Код подтверждён"}
 
-    async def verify_code_email(self, email: EmailStr, code: int):
-        key = f"email:code:{email}"
-        key_verified = f"email:code_verified:{email}"
+    async def verify_code_email(self, email: EmailStr, code: int, action: str):
+        key = f"{action}:code:{email}"
+        key_verified = f"{action}:code_verified:{email}"
         stored_code = await self.redis.get(key)
 
         if not stored_code:
@@ -100,13 +125,62 @@ class AuthService:
         await self.redis.set(key_verified, "true", expire=300)
         return {"status": "Код подтверждён"}
 
+    async def verify_registragion(self, data: UserRequestAdd, db:DBDep):
+        existing_user_phone = await db.users.get_one_or_none(phone=data.phone)
+        existing_user_email = await db.users.get_one_or_none(email=data.email) if data.email else None
+        if existing_user_phone or existing_user_email:
+            raise HTTPException(409, detail="Пользователь уже зарегистрирован")
+        if data.password != data.password_repeat:
+            raise HTTPException(400, detail="Пароли не совпадают")
+        await self.verify_code_phone(data.phone, data.code_phone, "registration")
+        if data.email:
+            await AuthService().verify_code_email(data.email, data.code_email, "registration")
+
+        AuthService().validate_password_strength(data.password)
+        hashed_password = AuthService().hash_password(data.password)
+
+        new_user_data = UserAdd(**data.model_dump(), hashed_password=hashed_password)
+        await db.users.add(new_user_data)
+        await db.commit()
+        return {"status": "OK, user created"}
+
+    async def verify_reset(self, data: PhoneWithCode, db:DBDep):
+        existing_user = await db.users.get_one_or_none(phone=data.phone)
+        if not existing_user:
+            raise HTTPException(status_code=404, detail="Пользователь не найден")
+
+        await self.verify_code_phone(data.phone, data.code, "reset")
+        return {"status": "OK, verification code is correct"}
+
     async def delete_verified_phone_code(self, phone: PhoneNumber, action: str):
         await self.redis.delete(f"{action}:code_verified:{phone}")
         await self.redis.delete(f"{action}:code:{phone}")
 
-    async def delete_verified_email_code(self, email: EmailStr):
-        await self.redis.delete(f"email:code_verified:{email}")
-        await self.redis.delete(f"email:code:{email}")
+    async def delete_verified_email_code(self, email: EmailStr, action: str):
+        await self.redis.delete(f"{action}:code_verified:{email}")
+        await self.redis.delete(f"{action}:code:{email}")
+
+    async def set_password(self, data: PhoneWithPassword, db:DBDep):
+
+        is_verified = await redis_manager.get(f"reset:code_verified:{data.phone}")
+        if not is_verified:
+            raise HTTPException(403, detail="Код не подтверждён или устарел")
+        if data.password != data.password_repeat:
+            raise HTTPException(400, detail="Пароли не совпадают")
+
+        user = await db.users.get_one_or_none(phone=data.phone)
+        if not user:
+            raise HTTPException(404, detail="Пользователь не найден")
+        AuthService().validate_password_strength(data.password)
+        hashed_password = AuthService().hash_password(data.password)
+        await db.users.edit(
+            UserWithHashedPassword(**user.model_dump(), hashed_password=hashed_password),
+            phone=data.phone,
+        )
+        await db.commit()
+
+        await AuthService().delete_verified_phone_code(data.phone, "reset")
+        return {"status": "OK, password changed"}
 
     def validate_password_strength(self, password: str):
         policy = PasswordPolicy.from_names(
@@ -128,6 +202,36 @@ class AuthService:
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
+
+    async def get_token(self, request: Request, response: Response) -> dict:
+        access_token = request.cookies.get("access_token")
+        refresh_token = request.cookies.get("refresh_token")
+
+        if not access_token:
+            raise HTTPException(status_code=401, detail="Access токен не найден")
+        try:
+            return AuthService().decode_access_token(access_token)
+        except ExpiredSignatureError:
+            if not refresh_token:
+                raise HTTPException(status_code=401, detail="Refresh токен не найден")
+            try:
+                payload = AuthService().decode_refresh_token(refresh_token)
+                new_access_token = AuthService().create_access_token(payload)
+                response.set_cookie(
+                    key="access_token",
+                    value=new_access_token,
+                    httponly=True,
+                    samesite="lax",
+                    secure=False,
+                )
+                return payload
+            except ExpiredSignatureError:
+                raise HTTPException(status_code=401, detail="Refresh токен истёк")
+            except DecodeError:
+                raise HTTPException(status_code=401, detail="Невалидный refresh токен")
+
+        except DecodeError:
+            raise HTTPException(status_code=401, detail="Невалидный access токен")
 
     def create_tokens(self, payload: dict):
         access_token = jwt.encode(

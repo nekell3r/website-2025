@@ -3,7 +3,8 @@ import sys
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import DBDep, UserRoleDep
+from src.dependencies.auth import UserRoleDep
+from src.dependencies.db import DBDep
 from src.schemas.products import ProductPatch, ProductAdd
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -11,7 +12,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 router = APIRouter(prefix="/products", tags=["Продукты(доступ суперюзера)"])
 
 
-@router.get("/all", summary="Все продукты. Используется в личном кабинете суперюзера")
+@router.get("", summary="Все продукты. Используется в личном кабинете суперюзера")
 async def get_products(is_super_user: UserRoleDep, db: DBDep):
     if not is_super_user:
         raise HTTPException(
@@ -37,7 +38,7 @@ async def get_product(
     return {"status": "Ok", "result": result}
 
 
-@router.post("/add", summary="Добавление продукта")
+@router.post("", summary="Добавление продукта")
 async def add_product(
     is_super_user: UserRoleDep,
     db: DBDep,
@@ -79,7 +80,7 @@ async def add_product(
 
 
 @router.patch(
-    "/update/{slug}",
+    "/{slug}",
     summary="Изменение продукта. Используется в лк суперюзера при нажатии кнопки редактирования определенного отзыва",
 )
 async def update_product(

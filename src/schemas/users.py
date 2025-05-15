@@ -6,7 +6,7 @@ from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
 class UserRequestAdd(BaseModel):
-    telephone: PhoneNumber
+    phone: PhoneNumber
     email: EmailStr | None = None
     code_phone: int
     code_email: int | None = None
@@ -15,7 +15,7 @@ class UserRequestAdd(BaseModel):
 
 
 class UserLogin(BaseModel):
-    telephone: PhoneNumber
+    phone: PhoneNumber
     password: str
 
 
@@ -25,7 +25,7 @@ class UserAdd(BaseModel):
     name: Optional[str] = Field(default=None, min_length=2, max_length=30)
     surname: Optional[str] = Field(default=None, min_length=2, max_length=30)
 
-    telephone: PhoneNumber
+    phone: PhoneNumber
     email: Optional[EmailStr] = None
     grade: Optional[int] = Field(default=None, ge=7, le=11)
     hashed_password: str
@@ -40,7 +40,7 @@ class User(BaseModel):
     name: Annotated[str, MinLen(2), MaxLen(30)] | None = None
     surname: Annotated[str, MinLen(2), MaxLen(30)] | None = None
 
-    telephone: PhoneNumber
+    phone: PhoneNumber
     email: EmailStr | None = None
     grade: Annotated[int, Ge(7), Le(11)] | None = None
 

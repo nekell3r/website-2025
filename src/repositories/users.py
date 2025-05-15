@@ -12,7 +12,7 @@ class UsersRepository(BaseRepository):
     mapper = UsersMapper
 
     async def get_user_with_hashed_password(self, phone: str):
-        query = select(self.model).filter_by(telephone=phone)
+        query = select(self.model).filter_by(phone=phone)
         result = await self.session.execute(query)
         model = result.scalars().one_or_none()
         if model is None:

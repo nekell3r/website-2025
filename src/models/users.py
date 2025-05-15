@@ -13,7 +13,7 @@ class UsersOrm(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=True)
     surname: Mapped[str] = mapped_column(String(100), nullable=True)
     email: Mapped[str] = mapped_column(String(100), nullable=True, unique=True)
-    telephone: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
+    phone: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
 
     grade: Mapped[int] = mapped_column(Integer, nullable=True)
     hashed_password: Mapped[str] = mapped_column(String(200), nullable=False)

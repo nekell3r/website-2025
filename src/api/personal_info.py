@@ -1,24 +1,14 @@
 import sys
 
-from fastapi import APIRouter, Body, Response, HTTPException, Request
+from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, DBDep, PaginationDep
-from src.init import redis_manager
+from src.dependencies.auth import UserIdDep, PaginationDep
+from src.dependencies.db import DBDep
 from src.schemas.personal_info import BoughtProduct
 from src.schemas.users import (
-    UserAdd,
-    UserRequestAdd,
-    UserLogin,
-    PhoneInput,
-    PhoneWithCode,
-    EmailInput,
-    PhoneWithPassword,
-    UserWithHashedPassword,
     UserUpdate,
-    EmailWithCode,
 )
-from src.services.auth import AuthService
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -86,7 +76,7 @@ async def get_user_purchases(
         for p in purchases
     ]
 
-@router.post("/update", summary="Изменение данных о пользователе")
+@router.patch("/info", summary="Изменение данных о пользователе")
 async def update_data(
     db: DBDep,
     user_id: UserIdDep,
@@ -102,7 +92,7 @@ async def update_data(
     user = await db.users.get_one_or_none(id=user_id)
     if user is None:
         raise HTTPException(404, detail="Пользователь не найден")
-    await db.users.edit(new_data, exclude_unset=True, telephone=user.telephone)
+    await db.users.edit(new_data, exclude_unset=True, phone=user.phone)
     await db.commit()
     return {"status": "Ok, данные обновлены"}
 

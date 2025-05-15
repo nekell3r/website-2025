@@ -3,19 +3,14 @@ import sys
 from fastapi import APIRouter, Body, Response, HTTPException, Request
 from pathlib import Path
 
-from src.api.dependencies import UserIdDep, DBDep
-from src.init import redis_manager
+from src.dependencies.db import DBDep
 from src.schemas.users import (
-    UserAdd,
     UserRequestAdd,
     UserLogin,
     PhoneInput,
     PhoneWithCode,
     EmailInput,
     PhoneWithPassword,
-    UserWithHashedPassword,
-    UserUpdate,
-    EmailWithCode,
 )
 from src.services.auth import AuthService
 
@@ -27,7 +22,7 @@ reset = APIRouter(prefix="/auth/reset", tags=["Сброс пароля"])
 
 
 @register.post(
-    "/send_phone_code", summary="Отправка кода подтверждения регистрации на телефон"
+    "/phone_code", summary="Отправка кода подтверждения регистрации на телефон"
 )
 async def send_phone_code(
     db: DBDep,
@@ -48,15 +43,12 @@ async def send_phone_code(
         }
     ),
 ):
-    existing_user = await db.users.get_one_or_none(telephone=data.phone)
-    if existing_user:
-        raise HTTPException(409, detail="Пользователь с таким телефоном уже зарегистрирован")
-    await AuthService().generate_and_send_phone_code(data.phone, "register")
-    return {"status": "Ok, code is sent"}
+    await AuthService().send_registration_phone_code(data=data, db=db)
+    return {"status": "Ok, код отправлен"}
 
 
 @register.post(
-    "/send_email_code", summary="Отправка кода подтверждения регистрации на почту"
+    "/email_code", summary="Отправка кода подтверждения регистрации на почту"
 )
 async def send_email_code(
     db: DBDep,
@@ -71,11 +63,8 @@ async def send_email_code(
         }
     ),
 ):
-    existing_user = await db.users.get_one_or_none(email=data.email)
-    if existing_user:
-        raise HTTPException(409, detail="Пользователь с такой почтой уже зарегистрирован")
-    await AuthService().generate_and_send_email_code(data.email)
-    return {"status": "Ok"}
+    await AuthService().send_registration_email_code(data=data, db=db)
+    return {"status": "Ok, код отправлен"}
 
 
 @register.post(
@@ -94,7 +83,7 @@ async def verify_register(
             "1": {
                 "summary": "Пользователь 1",
                 "value": {
-                    "telephone": "+79282017042",
+                    "phone": "+79282017042",
                     "code_phone": 0,
                     "password": "Test_password_123",
                     "password_repeat": "Test_password_123",
@@ -103,7 +92,7 @@ async def verify_register(
             "2": {
                 "summary": "Пользователь 2",
                 "value": {
-                    "telephone": "+79876543210",
+                    "phone": "+79876543210",
                     "email": "pashka@gmail.com",
                     "code_phone": 0,
                     "code_email": 0,
@@ -114,31 +103,11 @@ async def verify_register(
         }
     ),
 ):
-    existing_user_phone = await db.users.get_one_or_none(telephone=data.telephone)
-    existing_user_email = await db.users.get_one_or_none(email=data.email) if data.email else None
-
-    if existing_user_phone or existing_user_email:
-        raise HTTPException(409, detail="Пользователь уже зарегистрирован")
-
-    await AuthService().verify_code_phone(data.telephone, data.code_phone, "register")
-    if data.email:
-        await AuthService().verify_code_email(data.email, data.code_email)
-
-    AuthService().validate_password_strength(data.password)
-    hashed_password = AuthService().hash_password(data.password)
-
-    new_user_data = UserAdd(**data.model_dump(), hashed_password=hashed_password)
-    await db.users.add(new_user_data)
-    await db.commit()
-
-    await AuthService().delete_verified_phone_code(data.telephone, "register")
-    if data.email:
-        await AuthService().delete_verified_email_code(data.email)
-
+    await AuthService().verify_registragion(data=data, db=db)
     return {"status": "Ok, пользователь успешно зарегистрирован"}
 
 @reset.post(
-    "/send_code",
+    "",
     summary="Отправка кода подтверждения сброса пароля",
     description="Отправляет код проверки на указанный телефон, позволяет отправлять раз в минуту",
 )
@@ -161,13 +130,8 @@ async def send_reset_code(
         }
     ),
 ):
-    user = await db.users.get_one_or_none(telephone=data.phone)
-    if user is None:
-        raise HTTPException(
-            400, detail="Пользователь с таким телефоном не зарегистрирован в системе"
-        )
-    await AuthService().generate_and_send_phone_code(data.phone, "refresh")
-    return {"status": "Ok"}
+    await AuthService().send_reset_phone_code(data, db=db)
+    return {"status": "Ok, код сброса пароля отправлен"}
 
 
 @reset.post("/verify", summary="проверка кода верификации")
@@ -177,25 +141,27 @@ async def verify_code(
         openapi_examples={
             "1": {
                 "summary": "number 1",
-                "value": {"phone": "+79282017042", "code": 9999},
+                "value": {
+                    "phone": "+79282017042",
+                    "code": 9999
+                },
             },
             "2": {
                 "summary": "number 2",
-                "value": {"phone": "+79876543210", "code": 9999},
+                "value": {
+                    "phone": "+79876543210",
+                    "code": 9999
+                },
             },
         },
     ),
 ):
-    user = await db.users.get_one_or_none(telephone=data.phone)
-    if user is None:
-        raise HTTPException(
-            400, detail="Пользователь с таким телефоном не зарегистрирован в системе"
-        )
-    await AuthService().verify_code_phone(data.phone, data.code, "refresh")
+
+    await AuthService().verify_reset(data=data, db=db)
     return {"status": "OK, verification code is correct"}
 
 
-@reset.post("/set_password", summary="Установка нового пароля")
+@reset.post("/password", summary="Установка нового пароля")
 async def set_password(
     db: DBDep,
     data: PhoneWithPassword = Body(
@@ -219,23 +185,7 @@ async def set_password(
         },
     ),
 ):
-    is_verified = await redis_manager.get(f"refresh:code_verified:{data.phone}")
-    if not is_verified:
-        raise HTTPException(403, detail="Код не подтверждён или устарел")
-    if data.password != data.password_repeat:
-        raise HTTPException(400, detail="Пароли не совпадают")
-
-    user = await db.users.get_one_or_none(telephone=data.phone)
-    if not user:
-        raise HTTPException(404, detail="Пользователь не найден")
-    AuthService().validate_password_strength(data.password)
-    hashed_password = AuthService().hash_password(data.password)
-    await db.users.edit(
-        UserWithHashedPassword(**user.model_dump(), hashed_password=hashed_password),
-        telephone=data.phone,
-    )
-    await db.commit()
-    await AuthService().delete_verified_phone_code(data.phone, "refresh")
+    await AuthService().set_password(data=data, db=db)
     return {"status": "Ok, пароль изменён"}
 
 
@@ -253,21 +203,21 @@ async def login_user(
             "1": {
                 "summary": "Пользователь 1",
                 "value": {
-                    "telephone": "+79282017042",
+                    "phone": "+79282017042",
                     "password": "Test_password_123",
                 },
             },
             "2": {
                 "summary": "Пользователь 2",
                 "value": {
-                    "telephone": "+79876543210",
+                    "phone": "+79876543210",
                     "password": "Test_password_12345",
                 },
             },
         }
     ),
 ):
-    user = await db.users.get_user_with_hashed_password(phone=data.telephone)
+    user = await db.users.get_user_with_hashed_password(phone=data.phone)
     if not user:
         raise HTTPException(status_code=401, detail="Пользователь не зарегистрирован")
     if not AuthService().verify_password(data.password, user.hashed_password):
