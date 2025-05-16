@@ -3,12 +3,18 @@ import sys
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
 
+from mypy.reachability import assert_will_always_fail
+
 from src.dependencies.auth import UserIdDep, PaginationDep
 from src.dependencies.db import DBDep
 from src.schemas.personal_info import BoughtProduct
+from src.schemas.reviews import ReviewAdd
 from src.schemas.users import (
     UserUpdate,
 )
+from src.services.payments import PaymentsService
+from src.services.personal_info import InfoService
+from src.services.reviews import ReviewsService
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -26,8 +32,7 @@ async def get_me(
     user_id: UserIdDep,
 
 ):
-    user = await db.users.get_one_or_none(id=user_id)
-    return user
+    return await InfoService().get_user_info(user_id=user_id, db=db)
 
 @router.get(
     "/reviews",
@@ -37,14 +42,9 @@ async def get_me(
 )
 async def get_current_user_reviews(
     db: DBDep,
-    current_user_id: UserIdDep,
-    pagination: PaginationDep,
+    user_id: UserIdDep
 ):
-    per_page = pagination.per_page or 5
-    data = await db.reviews.get_all_filtered(limit=per_page, offset=per_page * (pagination.page - 1), user_id=current_user_id)
-    if not data:
-        raise HTTPException(404, detail="Отзывы не найдены")
-    return {"status": "Ok", "result": data}
+    return await ReviewsService().get_my_reviews(user_id=user_id, db=db)
 
 
 @router.get(
@@ -55,22 +55,7 @@ async def get_user_purchases(
         user_id: UserIdDep,
         db: DBDep
 ):
-    purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
-    if not purchases:
-        raise HTTPException(404, detail="Покупки не найдены")
-    names = {
-        "oge": "ОГЭ",
-        "ege": "ЕГЭ",
-        "lru": "Материалы для уроков(русский язык)",
-        "lli": "Материалы для уроков(литература)",
-        "lliru": "Материалы для уроков(лит+рус)"
-    }
-    return [
-        BoughtProduct(product_slug=p.product_slug,
-                      product_name=names.get(p.product_slug, "Unknown"),
-                      purchase_time=p.paid_at)
-        for p in purchases
-    ]
+    return await PaymentsService().get_purchases(user_id=user_id, db=db)
 
 @router.patch("/info", summary="Изменение данных о пользователе")
 async def update_data(
@@ -85,10 +70,12 @@ async def update_data(
         }
     ),
 ):
-    user = await db.users.get_one_or_none(id=user_id)
-    if user is None:
-        raise HTTPException(404, detail="Пользователь не найден")
-    await db.users.edit(new_data, exclude_unset=True, phone=user.phone)
-    await db.commit()
-    return {"status": "Ok, данные обновлены"}
+    return await InfoService().update_user_info(new_data=new_data, user_id=user_id, db=db)
 
+@router.get("/purchases/{slug}", summary="Получение информации о купленном продукт")
+async def get_product(
+    slug: str,
+    db: DBDep,
+    user_id: UserIdDep
+):
+    return await InfoService().get_product(slug=slug, user_id=user_id, db=db)

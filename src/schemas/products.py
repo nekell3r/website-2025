@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class ProductAdd(BaseModel):
+class Product(BaseModel):
     name: str
     price: int
     download_link: str
@@ -13,6 +13,3 @@ class ProductPatch(BaseModel):
     price: int | None = None
     download_link: str | None = None
     description: str | None
-
-class Product(ProductAdd):
-    description: str

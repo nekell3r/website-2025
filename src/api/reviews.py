@@ -10,7 +10,7 @@ from src.schemas.reviews import (
     ReviewPatch,
     ReviewAdd,
 )
-from src.services.reviews import ReviewService
+from src.services.reviews import ReviewsService
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -24,7 +24,7 @@ router = APIRouter(prefix="/reviews", tags=["Отзывы"])
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
 async def get_reviews(is_super: UserRoleDep, db: DBDep, pagination: PaginationDep):
-    return await ReviewService().get_reviews(is_super, db, pagination)
+    return await ReviewsService().get_reviews(is_super, db, pagination)
 
 @router.post(
     "",
@@ -56,7 +56,7 @@ async def create_review(
         }
     ),
 ):
-    result = await ReviewService().create_review(db, user_id, review_data)
+    result = await ReviewsService().create_review(db, user_id, review_data)
     return result
 
 
@@ -90,7 +90,7 @@ async def update_review(
         }
     ),
 ):
-    result = await ReviewService().edit_review(db, user_id, review_id, review_data)
+    result = await ReviewsService().edit_review(db, user_id, review_id, review_data)
     return result
 
 
@@ -106,5 +106,5 @@ async def delete_review(
         is_super: UserRoleDep,
         review_id: int
 ):
-    result = await ReviewService().delete_review(db,is_super, user_id, review_id)
+    result = await ReviewsService().delete_review(db, is_super, user_id, review_id)
     return result

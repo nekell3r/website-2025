@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 
-class ReviewService:
+class ReviewsService:
     async def get_reviews_without_id(
         self,
         db: DBDep,

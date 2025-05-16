@@ -10,9 +10,10 @@ from src.dependencies.auth import UserIdDep
 from src.dependencies.db import DBDep
 from src.config import settings
 from src.schemas.payments import CreatePaymentRequest, CreatePaymentResponse, Purchase
+from src.schemas.personal_info import BoughtProduct
 
 
-class PaymentService:
+class PaymentsService:
     async def create_payment(
             self,
             data: CreatePaymentRequest,
@@ -135,4 +136,13 @@ class PaymentService:
         await db.commit()
         return {"status": "ok"}
 
+    async def get_purchases(self, user_id: UserIdDep, db: DBDep):
+        purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
+        if not purchases:
+            raise HTTPException(status_code=404, detail="Purchases not found")
+
+        return [
+            BoughtProduct(**((await db.products.get_one_or_none(slug=p.product_slug)).model_dump()), paid_at=p.paid_at)
+            for p in purchases
+        ]
 

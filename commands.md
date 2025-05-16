@@ -5,8 +5,7 @@ cd ../src.. # переход в src из текущей директории
 docker build -t website_image:latest .
 
 Удаление образа
-
-docker rm website_image:latest
+docker rmi website_image:latest
 
 
 Запуск контейнера
@@ -32,3 +31,7 @@ docker run --name website_back \
     --network=myNetwork \
     website_image
 
+Остановка контейнера бэка
+
+docker stop website_back
+docker rm website_back

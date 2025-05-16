@@ -5,7 +5,8 @@ from pathlib import Path
 
 from src.dependencies.auth import UserRoleDep
 from src.dependencies.db import DBDep
-from src.schemas.products import ProductPatch, ProductAdd
+from src.schemas.products import ProductPatch, Product
+from src.services.products import ProductService
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -13,36 +14,24 @@ router = APIRouter(prefix="/products", tags=["Продукты(доступ су
 
 
 @router.get("", summary="Все продукты. Используется в личном кабинете суперюзера")
-async def get_products(is_super_user: UserRoleDep, db: DBDep):
-    if not is_super_user:
-        raise HTTPException(
-            409, detail="Неавторизованный для получения продуктов пользователь"
-        )
-    result = await db.products.get_all()
-    return {"status": "Ok", "result": result}
+async def get_products(is_super: UserRoleDep, db: DBDep):
+    return await ProductService().get_products(is_super=is_super, db=db)
 
 
 @router.get("/{slug}", summary="Определенный продукт")
 async def get_product(
-        is_super_user: UserRoleDep,
+        is_super: UserRoleDep,
         db: DBDep,
         slug: str
 ):
-    if not is_super_user:
-        raise HTTPException(
-            409, detail="Неавторизованный для получения продуктов пользователь"
-        )
-    result = await db.products.get_one_or_none(slug =  slug)
-    if result is None:
-        raise HTTPException(404, detail="Продукт не найден")
-    return {"status": "Ok", "result": result}
+    return await ProductService().get_product(slug=slug, is_super=is_super, db=db)
 
 
 @router.post("", summary="Добавление продукта")
 async def add_product(
-    is_super_user: UserRoleDep,
+    is_super: UserRoleDep,
     db: DBDep,
-    data: ProductAdd = Body(
+    data: Product = Body(
         openapi_examples={
             "1": {
                 "summary": "ОГЭ",
@@ -67,16 +56,7 @@ async def add_product(
         }
     ),
 ):
-    if not is_super_user:
-        raise HTTPException(
-            409, detail="Неавторизованный для добавления продукта пользователь"
-        )
-    result = await db.products.add(data)
-    await db.commit()
-    return {
-        "status": "Ok, product is added",
-        "data": db.products.mapper.map_to_domain_entity(result),
-    }
+    return await ProductService().add_product(data=data, is_super=is_super, db=db)
 
 
 @router.patch(
@@ -84,7 +64,7 @@ async def add_product(
     summary="Изменение продукта. Используется в лк суперюзера при нажатии кнопки редактирования определенного отзыва",
 )
 async def update_product(
-    is_super_user: UserRoleDep,
+    is_super: UserRoleDep,
     db: DBDep,
     slug: str,
     data: ProductPatch = Body(
@@ -109,13 +89,5 @@ async def update_product(
             },
         }
     ),
-) -> None:
-    if not is_super_user:
-        raise HTTPException(
-            409, detail="Неавторизованный для изменения продукта пользователь"
-        )
-    product = await db.products.get_one_or_none(slug=slug)
-    if product is None:
-        raise HTTPException(404, detail="Продукт не найден")
-    await db.products.edit(data, exclude_unset=True, slug=slug)
-    await db.commit()
+):
+    return await ProductService().edit_product(data=data, slug=slug, is_super=is_super, db=db)
