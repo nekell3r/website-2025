@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     SMSRU_API_ID: int
 
     model_config = SettingsConfigDict(
-        env_file=f"{Path(__file__).parent.parent / '.env'}"
+        env_file=f"{Path(__file__).parent.parent / '.env_example'}"
     )
 
 

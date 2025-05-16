@@ -1,3 +1,16 @@
+Создание образа
+
+cd ../src.. # переход в src из текущей директории
+
+docker build -t website_image:latest .
+
+Удаление образа
+
+docker rm website_image:latest
+
+
+Запуск контейнера
+
 docker network create myNetwork
 
 docker run --name website_db \
