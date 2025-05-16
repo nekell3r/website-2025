@@ -41,11 +41,7 @@ async def get_current_user_reviews(
     pagination: PaginationDep,
 ):
     per_page = pagination.per_page or 5
-    data = await db.reviews.get_mine(
-        limit=per_page,
-        offset=per_page * (pagination.page - 1),
-        current_user_id=current_user_id,
-    )
+    data = await db.reviews.get_all_filtered(limit=per_page, offset=per_page * (pagination.page - 1), user_id=current_user_id)
     if not data:
         raise HTTPException(404, detail="Отзывы не найдены")
     return {"status": "Ok", "result": data}
@@ -63,15 +59,15 @@ async def get_user_purchases(
     if not purchases:
         raise HTTPException(404, detail="Покупки не найдены")
     names = {
-        1: "ОГЭ",
-        2: "ЕГЭ",
-        3: "Материалы для уроков(русский язык)",
-        4: "Материалы для уроков(литература)",
-        5: "Материалы для уроков(лит+рус)"
+        "oge": "ОГЭ",
+        "ege": "ЕГЭ",
+        "lru": "Материалы для уроков(русский язык)",
+        "lli": "Материалы для уроков(литература)",
+        "lliru": "Материалы для уроков(лит+рус)"
     }
     return [
-        BoughtProduct(product_id=p.product_id,
-                      product_name=names.get(p.product_id, "Unknown"),
+        BoughtProduct(product_slug=p.product_slug,
+                      product_name=names.get(p.product_slug, "Unknown"),
                       purchase_time=p.paid_at)
         for p in purchases
     ]

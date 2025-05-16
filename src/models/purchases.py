@@ -9,8 +9,8 @@ class PaymentOrm(Base):
     __tablename__ = "payments"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=False)
-    product_id: Mapped[int | None] = mapped_column(ForeignKey("products.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    product_slug: Mapped[String] = mapped_column(ForeignKey("products.slug"), nullable=False)
 
     payment_id: Mapped[str] = mapped_column(String(255), unique=True)
     status: Mapped[str] = mapped_column(String(50), default="pending")

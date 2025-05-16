@@ -6,6 +6,6 @@ from annotated_types import MinLen, MaxLen, Ge, Le
 from datetime import datetime
 
 class BoughtProduct(BaseModel):
-    product_id: int
+    product_slug: str
     product_name: str
     purchase_time:Optional[datetime]

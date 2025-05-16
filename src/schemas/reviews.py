@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -10,6 +12,13 @@ class ReviewBase(BaseModel):
     result: int = Field(..., ge=0)
     review: str
 
+class Review(ReviewBase):
+    created_at: datetime
+    edited_at: datetime
+
+class ReviewWithId(Review):
+    user_id: int
+    id: int
 
 class ReviewAddRequest(ReviewBase):
     @field_validator("result")
@@ -31,7 +40,6 @@ class ReviewAdd(ReviewBase):
 
 
 class ReviewPatch(BaseModel):
-    exam: Literal["ЕГЭ", "ОГЭ"] | None = None
     result: int | None = None
     review: str | None = None
 
@@ -59,6 +67,6 @@ class ReviewsGetBySuperUser(ReviewBase):
     id: int
 
 
-class ReviewSelfGet(ReviewBase):
+class ReviewSelfGet(Review):
     user_id: int
     id: int

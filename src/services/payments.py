@@ -19,14 +19,31 @@ class PaymentService:
             db: DBDep,
             user_id: UserIdDep,
     ) -> CreatePaymentResponse:
+
         if data.email is None:
             raise HTTPException(status_code=400, detail="Email is required")
-        if data.product_id is None:
-            raise HTTPException(status_code=400, detail="Product ID is required")
-        payment_id = str(uuid4())
-        product = await db.products.get_one_or_none(id=data.product_id)
+        if data.product_slug is None:
+            raise HTTPException(status_code=400, detail="Product slug is required")
+
+        product = await db.products.get_one_or_none(slug=data.product_slug)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
+
+        existing_created_purchase = await db.purchases.get_one_or_none(
+            user_id=user_id,
+            product_slug=data.product_slug,
+            status="Created"
+        )
+        if existing_created_purchase:
+            raise HTTPException(status_code=400, detail="Payment already created")
+        existing_paid_purchase = await db.purchases.get_one_or_none(
+            user_id=user_id,
+            product_slug=data.product_slug,
+            status="Paid"
+        )
+        if existing_paid_purchase:
+            raise HTTPException(status_code=409, detail="Payment already paid")
+        payment_id = str(uuid4())
 
         headers = {
             "Content-Type": "application/json",
@@ -50,7 +67,7 @@ class PaymentService:
         await db.purchases.add(
             Purchase(
             user_id=user_id,
-            product_id=data.product_id,
+            product_slug=data.product_slug,
             email=data.email,
             payment_id=payment_id,
             status = "Created"

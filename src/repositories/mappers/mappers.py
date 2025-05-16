@@ -3,8 +3,7 @@ from src.repositories.mappers.base import DataMapper
 from src.schemas.reviews import (
     ReviewBase,
     ReviewPatch,
-    ReviewsGetBySuperUser,
-    ReviewSelfGet,
+    ReviewWithId, Review
 )
 from src.models.users import UsersOrm
 from src.schemas.users import User
@@ -19,19 +18,14 @@ class UsersMapper(DataMapper):
     db_model = UsersOrm
 
 
-class SuperUserReviewsMapper(DataMapper):
+class ReviewsIdMapper(DataMapper):
     db_model = ReviewsOrm
-    schema = ReviewsGetBySuperUser
-
-
-class ReviewsSelfMapper(DataMapper):
-    db_model = ReviewsOrm
-    schema = ReviewSelfGet
+    schema = ReviewWithId
 
 
 class ReviewsMapper(DataMapper):
     db_model = ReviewsOrm
-    schema = ReviewBase
+    schema = Review
 
 
 class ReviewsPatchMapper(DataMapper):

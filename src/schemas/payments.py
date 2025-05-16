@@ -4,7 +4,7 @@ from typing import Optional, Literal
 
 
 class CreatePaymentRequest(BaseModel):
-    product_id: int
+    product_slug: str
     email: EmailStr
 
 
@@ -21,7 +21,7 @@ class PaymentWebhookData(BaseModel):
 
 class Purchase(BaseModel):
     user_id: int
-    product_id: int
+    product_slug: str
     email: EmailStr
     payment_id: str
     status: str
