@@ -8,7 +8,7 @@ from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 
 class ReviewsService:
-    async def get_reviews_without_id(
+    async def get_reviews(
         self,
         db: DBDep,
         pagination: PaginationDep,
@@ -47,18 +47,6 @@ class ReviewsService:
             raise HTTPException(404, detail="Отзывы не найдены")
         return data
 
-    async def get_reviews(
-        self,
-        is_super: UserRoleDep,
-        db: DBDep,
-        pagination: PaginationDep,
-    ):
-        if is_super:
-            data = await self.get_reviews_with_id(db, pagination)
-        else:
-            data = await self.get_reviews_without_id(db, pagination)
-        return data
-
     async def create_review(
         self,
         db: DBDep,
@@ -75,6 +63,8 @@ class ReviewsService:
             raise HTTPException(400, detail="Неверный экзамен, возможные варианты - ЕГЭ, ОГЭ")
 
         product_slug = (await db.products.get_one_or_none(name=data.exam)).slug
+        print(product_slug)
+        print(user_id)
         purchase = await db.purchases.get_one_or_none(product_slug=product_slug, user_id=user_id, status="Paid")
         if not purchase:
             raise HTTPException(404, detail="Пользователь не купил данный продукт")
@@ -111,20 +101,48 @@ class ReviewsService:
     async def delete_review(
             self,
             db: DBDep,
-            is_super: UserRoleDep,
             user_id: int,
             review_id: int
     ):
         review = await db.reviews.get_one_or_none_with_id(id=review_id)
         if review is None:
             raise HTTPException(404, detail="Отзыв не найден")
-        if is_super:
-            await db.reviews.delete(id=review_id)
-        else:
-            if review.user_id != user_id:
-                raise HTTPException(
-                    403, "Неавторизованный для удаления чужих отзывов пользователь"
-                )
-            await db.reviews.delete(id=review_id)
+
+        if review.user_id != user_id:
+            raise HTTPException(
+                403, "Неавторизованный для удаления чужих отзывов пользователь"
+            )
+        await db.reviews.delete(id=review_id)
+        await db.commit()
+        return {"status": "ok"}
+
+    async def admin_get_reviews(
+        self,
+        is_super: UserRoleDep,
+        db: DBDep,
+        pagination: PaginationDep,
+    ):
+        per_page = pagination.per_page or 5
+        if not is_super:
+            raise HTTPException(403, detail="Неавторизованный пользователь")
+        data = await db.reviews.superuser_get_all(
+            limit=per_page, offset=per_page * (pagination.page - 1)
+        )
+        if not data:
+            raise HTTPException(404, detail="Отзывы не найдены")
+        return data
+
+    async def admin_delete_review(
+            self,
+            db: DBDep,
+            is_super: UserRoleDep,
+            review_id: int
+    ):
+        review = await db.reviews.get_one_or_none_with_id(id=review_id)
+        if review is None:
+            raise HTTPException(404, detail="Отзыв не найден")
+        if not is_super:
+            raise HTTPException(403, detail="Неавторизованный для удаления чужих отзывов пользователь")
+        await db.reviews.delete(id=review_id)
         await db.commit()
         return {"status": "ok"}

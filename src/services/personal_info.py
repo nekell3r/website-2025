@@ -1,9 +1,8 @@
 from fastapi import HTTPException
 
 
-from src.dependencies.auth import UserRoleDep, UserIdDep
+from src.dependencies.auth import UserIdDep
 from src.dependencies.db import DBDep
-from src.schemas.products import Product, ProductPatch
 from src.schemas.users import UserUpdate
 
 

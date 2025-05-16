@@ -13,13 +13,13 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from src.api.reviews import router as reviews_router
 from src.api.payments import router as purchases_router
+from src.api.admin import router as admin_router
 from src.api.auth import (
     router as users_router,
     register as users_register_router,
     reset as users_reset,
 )
 from src.api.personal_info import router as personal_info_router
-from src.api.products import router as products_router
 from src.init import redis_manager, init_yookassa
 from src.config import settings
 
@@ -43,7 +43,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(products_router)
+app.include_router(admin_router)
 app.include_router(reviews_router)
 app.include_router(personal_info_router)
 app.include_router(purchases_router)

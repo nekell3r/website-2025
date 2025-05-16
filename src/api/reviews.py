@@ -23,8 +23,8 @@ router = APIRouter(prefix="/reviews", tags=["Отзывы"])
     description="Принимает на вход per_page - количество отзывов за 1 прогрузку, page - номер прогрузки(страницы/блока отзывов). "
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
-async def get_reviews(is_super: UserRoleDep, db: DBDep, pagination: PaginationDep):
-    return await ReviewsService().get_reviews(is_super, db, pagination)
+async def get_reviews(db: DBDep, pagination: PaginationDep):
+    return await ReviewsService().get_reviews(db, pagination)
 
 @router.post(
     "",
@@ -103,8 +103,7 @@ async def update_review(
 async def delete_review(
         db: DBDep,
         user_id: UserIdDep,
-        is_super: UserRoleDep,
         review_id: int
 ):
-    result = await ReviewsService().delete_review(db, is_super, user_id, review_id)
+    result = await ReviewsService().delete_review(db, user_id, review_id)
     return result
