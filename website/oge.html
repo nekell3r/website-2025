@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <script src="scripts/payment.js"></script>
         <title>ОГЭ</title>
         <link rel="stylesheet" href="css/style.css">
         <style>
@@ -96,9 +97,12 @@
         <b><h1 style="display: flex;">Так же в качестве бонуса вам будет предоставлены ссылки на 
             есурсы для практики по всем заданиям тестовой части - onlinetestpad и edapp</h1></b>
     </div>
-
-    <a href="#"><img src="img/ссылка на оплату.png" style="width: 500px;" alt="ссылка на оплату"></a>
-
+    <div>
+        <input type="text" id="userInput" placeholder="email для отправки чека(обязательно)" onclick="clearPlaceholder()"> 
+    </div>
+    <div class="error-message" id="emailError">Пожалуйста, введите email!</div>
+    <button style="width: 15%;" class="payment-button" onclick="handlePayment('oge')">Страница оплаты</button>
+    
     <div class="text_and_line-container">
         <b><h1 style="display: flex;">Возможны способы оплаты - СБП, Карта МИР, Т-pay</h1></b>
     </div>
