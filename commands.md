@@ -1,14 +1,8 @@
-Создание образа
+Из src всё делать
 
-cd ../src.. # переход в src из текущей директории
+ngrok http 7777
 
 docker build -t website_image:latest .
-
-Удаление образа
-docker rmi website_image:latest
-
-
-Запуск контейнера
 
 docker network create myNetwork
 
@@ -31,7 +25,11 @@ docker run --name website_back \
     --network=myNetwork \
     website_image
 
+
 Остановка контейнера бэка
 
 docker stop website_back
 docker rm website_back
+
+Удаление образа
+docker rmi website_image:latest
