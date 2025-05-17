@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>АВТОРИЗАЦИЯ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin:0px;
+            padding: 0px;
+            background-color: #3A3A3A
+        }
+    </style>
+</head>
+<body>
+    <div class="header2">
+        <div class="logo">
+            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+        </div>
+        <div class="menu">
+            <a href="oge.html">ОГЭ</a>
+            <a href="ege.html">ЕГЭ</a>
+            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button">
+                <img src="img/пж.png" style="width: 50px;" alt="ПЖ">
+            </button>
+            <button class="hamburger-button" onclick="toggleMenu()">
+                <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+            </button>
+        </div>
+    </div>
+
+    <b><h1 style="color: #DA1984;font-family: 'Arial', sans-serif;">Авторизация</h1></b>
+
+    <div class="form-group">
+        <input 
+            type="email" 
+            id="email" 
+            class="text-input" 
+            placeholder="Email (необязательно)"
+            data-placeholder-focus="example@mail.com"
+        >
+    </div>
+
+    <div style="display: flex; margin-left: 130px;">
+        <div class="form-group">
+            <div class="password-container">
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="text-input password-input" 
+                    placeholder="Пароль"
+                >
+                <button class="toggle-password" aria-label="Показать пароль" type="button">
+                    <span class="eye-icon">👁️</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="button" id="submit-data" class="submit-icon-btn" style="margin-left: 50px; margin-bottom: 15px;">
+                <img src="img/кнопкарег.png" alt="Завершить регистрацию">
+            </button>
+        </div>
+    </div>
+        
+    <div style="display: flex;">
+    <b><h2 class="but_reg">Еще не зарегистрированы?</h2></b>
+    <a class="but_reg" href="registr.html" style="color:#DA1984; margin-left: 30px;"><b><h2>Регистрация</h2></b></a>
+    </div>
+
+    <div style="display: flex; margin-bottom: 20px;">
+        <b><h2 class="but_reg">Забыли пароль?</h2></b>
+        <a class="but_reg" href="passrec.html" style="margin-left: 30px;
+        color: #DA1984;"><b><h2>Восстановить пароль</h2></b></a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    <script src="script.js"></script>
+
+
+    <div class="full-width-line"></div>
+
+    <div class="the_end" style="padding-top: 20px">
+        <h1 style="flex: 1;
+        text-align: center;"
+        >Служебная информация</h1>
+        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+    </div>
+    
+    
+
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown");
+    menu.classList.toggle("active");
+        }
+    </script>
+
+
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#">авторизация/личный кабинет</a>
+        <a href="questions.html">отзывы</a>
+        <a href="#">о нас</a>
+        <a href="#">FAQ</a>
+    </div>
+
+
+</body>
