@@ -208,6 +208,7 @@ class AuthService:
         refresh_token = request.cookies.get("refresh_token")
 
         if not access_token:
+            print("нет токена")
             raise HTTPException(status_code=401, detail="Access токен не найден")
         try:
             return AuthService().decode_access_token(access_token)

@@ -12,9 +12,9 @@ router = APIRouter(prefix="/payments", tags=["Платежи"])
 async def create_payment_endpoint(
     request: CreatePaymentRequest,
     db: DBDep,
-    user_id: UserIdDep,
+    #user_id: UserIdDep,
 ):
-    data = await PaymentsService().create_payment(data = request, db=db, user_id=user_id)
+    data = await PaymentsService().test_create_payment(data = request, db=db)
     return data
 
 @router.post("/webhook")

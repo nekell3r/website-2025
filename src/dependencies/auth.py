@@ -16,6 +16,7 @@ PaginationDep = Annotated[PaginationParams, Depends()]
 def get_current_user_dp(dp: str):
     async def dependency(
         payload: dict = Depends(AuthService().get_token),
+
     ):
         return payload[dp]
     return dependency
