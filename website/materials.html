@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-        <script src="scripts/payment.js"></script>
+        <script src="scripts/payment.js" defer></script>
         <title>МАТЕРИАЛЫ ДЛЯ УРОКОВ</title>
         <link rel="stylesheet" href="css/style.css">
         <style>
@@ -54,20 +54,22 @@
             <img src="img/znaki.png" alt="Левое изображение">
             <b><h2 class="russ-liter">Стоимость продукта - x рублей</h2></b>
             <div>
-                <input style="width:109%; transform: translateX(-22px); padding: 8px 10px; margin-bottom: 10px"  type="text" id="userInput" placeholder="email для отправки чека(обязательно)" onclick="clearPlaceholder()">
+                <input style="width:109%; transform: translateX(-22px); padding: 8px 10px; margin-bottom: 10px"  type="text" id="userInput-lru" placeholder="email для отправки чека" onclick="clearPlaceholder(this)">
             </div>
-            <button style="width: 39%;" class="payment-button" onclick="handlePayment('lru')">Страница оплаты</button>
+            <div class="error-message" id="emailError-lru">Пожалуйста, введите email!</div>
+            <button style="width: 39%; margin-top: 17px;" class="payment-button" data-product-slug="lru" data-input-id="userInput-lru" data-error-id="emailError-lru">Страница оплаты</button>
         </div>
         
         <div class="column">
-            <b><h1 class="russ-liter">Литература</h1></b>
+            <b><h1 class="russ-liter">Литература</h1></b> 
             <img src="img/belgorod.png" alt="Правое изображение">
             <img src="img/klassiz.png" alt="Правое изображение">
             <b><h2 class="russ-liter">Стоимость продукта - x рублей</h2></b>
             <div>
-                <input style="width:109%; transform: translateX(-22px); padding: 8px 10px; margin-bottom: 10px"  type="text" id="userInput" placeholder="email для отправки чека(обязательно)" onclick="clearPlaceholder()">
+                <input style="width:109%; transform: translateX(-22px); padding: 8px 10px; margin-bottom: 10px"  type="text" id="userInput-llit" placeholder="email для отправки чека" onclick="clearPlaceholder(this)">
             </div>
-        <button style="width: 39%;" class="payment-button" onclick="handlePayment('lli')">Страница оплаты</button>
+            <div class="error-message" id="emailError-llit">Пожалуйста, введите email!</div>
+            <button style="width: 39%; margin-top: 17px;" class="payment-button" data-product-slug="llit" data-input-id="userInput-llit" data-error-id="emailError-llit">Страница оплаты</button>
         </div>
     </div>
 
@@ -76,11 +78,14 @@
     text-align: center;">
         <b><h2>Так же вы можете приобрести оба продукта по сниженной цене - в личном кабинете они будут отображаться отдельно.</h2></b><br>
         <b><h2>Стоимость пары продуктов - y рублей</h2></b>
-        <div>
-            <input style="width:17%; transform: translateX(0px);"  type="text" id="userInput" placeholder="email для отправки чека(обязательно)" onclick="clearPlaceholder()">
-        </div>
-        <button style="width: 20%;" class="payment-button" onclick="handlePayment('ege')">Страница оплаты</button>
-    </div>
+        <div class="column">
+                <input style="width:16%; transform: translateX(-4px); padding: 15px 10px; margin-bottom: 10px"  type="text" id="userInput-llitru" placeholder="email для отправки чека" onclick="clearPlaceholder(this)">
+            </div>
+            <div class="error-message" id="emailError-llitru">Пожалуйста, введите email!</div>
+            <button style="width: 23%; margin-top: 17px;" class="payment-button" data-product-slug="llitru" data-input-id="userInput-llitru" data-error-id="emailError-llitru">Страница оплаты</button>
+        </div>    
+        </div>  
+
 
     <div class="text_and_line-container">
         <b><h1 style="display: flex;">Возможны способы оплаты - СБП, Карта МИР, Т-pay</h1></b>
@@ -93,10 +98,7 @@
     </div>
 
     <script>
-        function toggleMenu() {
-            var menu = document.getElementById("dropdown");
-    menu.classList.toggle("active");
-        }
+
         const inputField = document.getElementById('userInput');
     const originalPlaceholder = inputField.placeholder;
     
@@ -116,12 +118,84 @@
     </script>
 
     <div class="dropdown" id="dropdown">
-        <span class="close" onclick="toggleMenu()">&times;</span>
-        <a href="#">авторизация/личный кабинет</a>
-        <a href="#">отзывы</a>
-        <a href="#">о нас</a>
-        <a href="#">FAQ</a>
-    </div>
+    <span class="close" onclick="toggleMenu()">&times;</span>
+    <a href="#" id="auth-link">авторизация/личный кабинет</a>
+    <a href="#">отзывы</a>
+    <a href="#">о нас</a>
+    <a href="#">FAQ</a>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdown");
+        menu.classList.toggle("active");
+    }
+    
+    // Добавляем обработчик для кнопки авторизации
+    document.getElementById('auth-link').addEventListener('click', async function(e) {
+    e.preventDefault();
+    
+    try {
+        const response = await fetch('https://5112-185-153-181-236.ngrok-free.app/me/info', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true' // Обход предупреждения ngrok
+            }
+        });
+        
+        if (response.status === 401) {
+            // Пользователь не авторизован
+            window.location.href = '/auto.html';
+            return;
+        }
+
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const userData = await response.json();
+        handleUserData(userData);
+        if (userData && userData.id && userData.name) {
+            // Сохраняем данные пользователя перед переходом
+            sessionStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Перенаправляем в личный кабинет
+            window.location.href = 'lk.html';
+        } else {
+            throw new Error('Получены некорректные данные пользователя');
+        }
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        // Попробуем альтернативный подход без credentials
+        tryAlternativeApproach();
+    }
+});
+
+async function tryAlternativeApproach() {
+    try {
+        const response = await fetch('https://5112-185-153-181-236.ngrok-free.app/me/info', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+        
+        const data = await response.json();
+        console.log('Успешно (без куки):', data);
+        handleUserData(data);
+    } catch (error) {
+        console.error('Ошибка альтернативного запроса:', error);
+        alert('Не удалось получить данные. Пожалуйста, войдите в систему.');
+        window.location.href = 'auto.html';
+    }
+}
+</script>
 
 
 </body>
