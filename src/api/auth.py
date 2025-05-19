@@ -231,14 +231,14 @@ async def login_user(
         key="access_token",
         value=access_token,
         httponly=True,
-        samesite="none",  # заменить на strict в проде
+        samesite="lax",  # заменить на strict в проде
         secure=False,  # заменить на True в проде
     )
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        samesite="none",  # заменить на strict в проде
+        samesite="lax",  # заменить на strict в проде
         secure=False,  # заменить на True в проде
     )
 
