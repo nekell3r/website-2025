@@ -32,7 +32,7 @@ class PaymentsService:
             raise HTTPException(status_code=404, detail="Product not found")
 
         existing_created_purchase = await db.purchases.get_one_or_none(
-            user_id=31,
+            user_id=1,
             product_slug=data.product_slug,
             status="Created"
         )
@@ -40,7 +40,7 @@ class PaymentsService:
             print("purchase")
             raise HTTPException(status_code=400, detail="Payment already created")
         existing_paid_purchase = await db.purchases.get_one_or_none(
-            user_id=31,
+            user_id=1,
             product_slug=data.product_slug,
             status="Paid"
         )
@@ -69,7 +69,7 @@ class PaymentsService:
         }
         await db.purchases.add(
             Purchase(
-                user_id=31,
+                user_id=1,
                 product_slug=data.product_slug,
                 email=data.email,
                 payment_id=payment_id,

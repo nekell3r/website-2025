@@ -11,6 +11,7 @@ import uvicorn
 
 sys.path.append(str(Path(__file__).parent.parent))
 
+from src.api.root import router as root_router
 from src.api.reviews import router as reviews_router
 from src.api.payments import router as purchases_router
 from src.api.admin import router as admin_router
@@ -37,12 +38,13 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:63342"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+app.include_router(root_router)
 app.include_router(admin_router)
 app.include_router(reviews_router)
 app.include_router(personal_info_router)
@@ -50,5 +52,7 @@ app.include_router(purchases_router)
 app.include_router(users_router)
 app.include_router(users_reset)
 app.include_router(users_register_router)
+
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0" ,reload=True)
