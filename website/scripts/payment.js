@@ -52,7 +52,7 @@ async function handlePayment(product_slug) {
 
     try {
         // Проверка доступности сервера
-        const apiUrl = new URL('https://5112-185-153-181-236.ngrok-free.app/payments');
+        const apiUrl = new URL('https://0219-185-153-181-236.ngrok-free.app/payments');
         apiUrl.searchParams.append('t', Date.now());
 
         // Улучшенная проверка соединения
