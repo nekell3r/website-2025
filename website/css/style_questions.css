@@ -226,3 +226,13 @@ b {
     margin-top: 15px;
     border-top: 1px solid #eee;
 }
+.full-width-line {
+    width: 100vw;
+    height: 4px;
+    background: #ffffff;
+    margin: 30px 0;
+    position: relative;
+    left: 50%;
+    margin-bottom: 0px;
+    transform: translateX(-50%);
+  }
