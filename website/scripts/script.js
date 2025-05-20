@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function(){
-    $('#number').inputmask('+7(999)-999-9999');
+    $('#phone-input').inputmask('+7(999)-999-9999');
 });
 
 $(document).ready(function() {
-    $('#email').on('focus', function() {
+    $('#email-input').on('focus', function() {
         this.setAttribute('placeholder', this.getAttribute('data-placeholder-focus'));
     }).on('blur', function() {
         if(!this.value) {
@@ -45,17 +45,18 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
+/*$(document).ready(function() {
     $('#submit-data').click(function() {
 
         const formData = {
-            phone: $('#number').val(),
-            email: $('#email').val(),
-            password: $('#password').val()
+            phone: $('#phone-input').val(),
+            email: $('#email-input').val(),
+            password: $('#password').val(),
+            password_repeat: $('#password-repeat').val()
         };
 
 
-        if (!formData.phone || !formData.email || !formData.password) {
+        if (!formData.phone || !formData.password || !formData.password_repeat) {
             alert('Заполните все поля!');
             return;
         }
@@ -76,3 +77,5 @@ $(document).ready(function() {
         alert(`Данные для отправки:\nТелефон: ${formData.phone}\nEmail: ${formData.email}`);
     });
 });
+
+ */
