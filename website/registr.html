@@ -139,12 +139,27 @@
     
 
 
-    <script>
-        function toggleMenu() {
-            var menu = document.getElementById("dropdown");
-    menu.classList.toggle("active");
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdown");
+        menu.classList.toggle("active");
+    }
+
+    // Закрытие dropdown при клике вне его
+    document.addEventListener("click", function(event) {
+        const menu = document.getElementById("dropdown");
+        const hamburger = document.querySelector(".hamburger-button");
+
+        // Проверка: открыт ли dropdown и был ли клик вне dropdown и кнопки
+        if (
+            menu.classList.contains("active") &&
+            !menu.contains(event.target) &&
+            !hamburger.contains(event.target)
+        ) {
+            menu.classList.remove("active");
         }
-    </script>
+    });
+</script>
 
 
     <div class="dropdown" id="dropdown">
