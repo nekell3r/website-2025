@@ -27,7 +27,7 @@ async def get_reviews(
     "/reviews/{review_id}",
     summary="Удаление отзыва",
     description="Удаляет отзыв по id. id передается в теле запроса в формате json. "
-                "Пример: {\"id\": 1}. Возвращает статус 200 и сообщение об ус��ешном удалении",
+                "Пример: {\"id\": 1}. Возвращает статус 200 и сообщение об успешном удалении",
 )
 async def delete_review(
     is_super: UserRoleDep,
