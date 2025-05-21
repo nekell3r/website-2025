@@ -7,10 +7,7 @@ from alembic import context
 
 from src.config import settings
 from src.database import Base
-from src.models.purchases import PaymentOrm  # noqa
-from src.models.products import ProductsOrm  # noqa
-from src.models.reviews import ReviewsOrm  # noqa
-from src.models.users import UsersOrm  # noqa
+from src.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

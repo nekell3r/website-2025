@@ -1,9 +1,12 @@
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    MODE: Literal["TEST", "LOCAL", "DEV", "PROD"]
+
     DB_NAME: str
     DB_USER: str
     DB_PASS: str
@@ -16,6 +19,10 @@ class Settings(BaseSettings):
 
     REDIS_HOST: str
     REDIS_PORT: int
+
+    @property
+    def REDIS_URL(self):
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
