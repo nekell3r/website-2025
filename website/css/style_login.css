@@ -15,6 +15,27 @@ body {
     min-height: 100vh;
 }
 
+input[type="text"] {
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    font-size: 14px;
+    transform: translateX(-30px);
+    height: 50%;
+    width: 117%;
+    padding: 15px 12px;
+    margin-top: 20px;
+    border: 1px solid  #e42b9a;
+    border-radius: 20px;
+    background-color: #333; /* Темный фон поля ввода */
+    color: white; /* Цвет текста в поле ввода */
+}
+input[type="text"]::placeholder {
+    color: #aaa; /* Цвет текста-подсказки */
+}
+
+input.error {
+    border-color: #ff0000;
+    box-shadow: 0 0 5px rgba(255,0,0,0.5);
+}
 
 .main-content {
     flex: 1;
