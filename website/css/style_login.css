@@ -1,21 +1,57 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* по желанию — чтобы контент был по центру */
+}
+main {
+  flex: 1; /* Занимает всё доступное пространство между header и footer */
+
+  display: flex;          /* Включаем флексбокс */
+  justify-content: center; /* Горизонтальное центрирование */
+  align-items: center;     /* Вертикальное центрирование */
+  flex-direction: column;
+  /* Если нужно, чтобы контент не растягивался по ширине */
+  text-align: center;
+  padding: 20px; /* Отступы по желанию */
+}
+
 .header2 {
-    width: 98%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 2px 20px;
-    border-bottom: 4px solid rgb(255, 255, 255);
+    border-bottom: 2px solid rgb(255, 255, 255);
 }
 
 .menu {
     display: flex;
-    gap: 60px;
+    gap: 30px;
     font-weight: bold;
 }
 .menu a {
-    text-decoration: none;  
-    color: black;  
-    cursor: pointer; 
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
 }
 
 .buttons {
@@ -24,12 +60,12 @@
     gap: 14px;
     font-family: Comic Sans MS, Comic Sans, cursive;
 }
-.menu-button, .hamburger-button {
+.menu-button{
     cursor: pointer;
     border: none;
     background: #3a3a3a;
     padding: 10px;
-    border-radius: 90%;
+    border-radius: 100%;
     align-items: flex-start;
     justify-content: center;
     font-size: 19px;
@@ -37,12 +73,12 @@
     color: #e42b9a
 }
 
-.hamburger-button {
+.menu-button {
     width: 48px;
     height: 42px;
     color: #e42b9a
 }
-.hamburger-button div {
+.menu-button div {
     width: 28px;
     height: 3px;
     background: rgb(255, 255, 255);
@@ -82,7 +118,7 @@
 }
 .zloy_ru {
     display: inline-block;
-    width: 180px;
+    width: 50%;
     height: auto;
     border-radius: 3%;
 }
@@ -96,6 +132,19 @@
     margin-bottom: 0px;
     transform: translateX(-50%);
   }
+.wrapper { /* обертка всего блока */
+  display: flex;
+  margin-left: 130px;
+  min-width: 350px; /* минимальная ширина всей конструкции */
+  gap: 50px; /* расстояние между полем и кнопкой */
+  flex-wrap: nowrap; /* запретить перенос элементов на новую строку */
+}
+.help_info{
+    display: flex;
+    min-width: 400px;
+    gap: 50px;
+    flex-direction: column;
+}
 .form-group {
     display: flex;
     gap: 100px;
@@ -147,7 +196,7 @@
     width: 30px;
     height: 30px;
     color: #DA1984;
-    font-size: 26px; 
+    font-size: 26px;
 }
 
 .toggle-password:hover {
@@ -189,6 +238,7 @@
 }
 .but_reg {
     font-family: 'Arial', sans-serif;
+    flex-wrap: nowrap;
 } 
 .the_end {
     display: flex;
