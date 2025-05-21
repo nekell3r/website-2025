@@ -1,258 +1,284 @@
 .header2 {
-width: 98%;
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 2px 20px;
-border-bottom: 4px solid rgb(255, 255, 255);
+  width: 98%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 20px;
+  border-bottom: 4px solid rgb(255, 255, 255);
 }
 
 .menu {
-display: flex;
-gap: 60px;
-font-weight: bold;
+  display: flex;
+  gap: 60px;
+  font-weight: bold;
 }
 .menu a {
-text-decoration: none;  
-color: white;  
-cursor: pointer; 
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+#sentinel {
+  padding: 20px;
+  color: #d83787;
+  font-size: 24px;
+}
+#sentinel::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: white;
+  margin-top: 2px; /* необязательно, просто для отступа */
 }
 
 .buttons {
-display: flex;
-align-items: center;
-gap: 14px;
-font-family: Comic Sans MS, Comic Sans, cursive;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: Comic Sans MS, Comic Sans, cursive;
 }
 .menu-button, .hamburger-button {
-cursor: pointer;
-border: none;
-background: #3a3a3a;
-padding: 10px;
-border-radius: 90%;
-align-items: flex-start;
-justify-content: center;
-font-size: 19px;
-font-family: Comic Sans MS, Comic Sans, cursive;
-color: #d83787;
+  cursor: pointer;
+  border: none;
+  background: #3a3a3a;
+  padding: 10px;
+  border-radius: 90%;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 19px;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+  color: #d83787;
 }
 
 .hamburger-button {
-width: 48px;
-height: 42px;
-color: #d83787;
+  width: 48px;
+  height: 42px;
+  color: #d83787;
 }
 .hamburger-button div {
-width: 28px;
-height: 3px;
-background: rgb(255, 255, 255);
-margin: 3px 0;
-color: #d83787;
-
+  width: 28px;
+  height: 3px;
+  background: rgb(255, 255, 255);
+  margin: 3px 0;
+  color: #d83787;
 }
 
 .container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    justify-items: center;
-    align-items: start;
-
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1280px;
+  padding: 20px;
+  box-sizing: border-box;
+  justify-items: center;
+  align-items: start;
 }
 
 .card {
-
-    border-radius: 20px;
-    color: white;
-    border: 2px solid #444;
-    margin: 25px 0px;
-    width: 85%;
-    border: 7px #ffff solid;
-
+  background-color: #3a3a3a; /* Чёрный фон */
+  color: #fff;              /* Белый текст */
+  border: 1px solid #fff;   /* Белая граница */
+  border-radius: 20px;
+  padding: 7px;
+  margin: 20px;
+  width: 100%;
 }
 
 .card-header {
-    background-color: #d83787;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 20px;
-    border-radius: 20px;
-    margin: -8px;
+  background-color: #d83787;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  border-radius: 20px;
+  margin: -8px;
+  margin-bottom: 12px;
+}
 
+.card-header img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
 }
 
 .card-header .info {
-    display: flex;
-    flex-direction: column;
-
+  max-width: 70%; /* или 60%, или 300px — по ситуации */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .name {
-    color: black;
+  color: black;
+  font-weight: bold;
 }
 
 .exam {
-    margin-top: 4px;
-    color: black;
+  margin-top: 4px;
+  color: black;
 }
 
 .date {
-    color: #1e1e1e;
-
+  color: #1e1e1e;
+  white-space: nowrap;       /* запрещает перенос текста */
+  overflow: hidden;          /* скрывает выходящий за границу текст */
+  text-overflow: ellipsis;
+}
+.date strong {
+  display: block;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
-    background-color: #1e1e1e;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #1e1e1e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
 }
 
 .card-body {
-    padding: 20px;
-    font-size: 18px;
-    line-height: 1.5;
-    position: relative;
-}
-
-.read-more {
-    display: block;
-    margin-top: 10px;
-    color: #bfbfbf;
-    font-style: italic;
-    font-size: 13px;
-    display: none;
-}
-
-.first {
-    display:grid;
-    grid-auto-flow: column;
-    align-items: center;
-    gap: 40px;
-    padding: 20px;
-
-}
-
-.first_1 {
-    color:#d83787;
-    border-bottom: 1px rgb(255, 255, 255) solid;
-    font-size: 20px;
-
-
-}
-
-.first_2 {
-    color:rgb(255, 255, 255);
-    font-size: 20px;
-    border-radius: 23px;
-    padding: 12px 7px;
-    font-weight: 800;
-    font-size: 28px;
-
-}
-
-img {
-    width:80px;
-    height:auto;
+  padding: 20px;
+  font-size: 18px;
+  line-height: 1.5;
+  position: relative;
 }
 
 .review-container {
-    position: relative;
+  position: relative;
 }
 
 .review-text {
-    line-height: 1.5;
-    max-height: 6em; /* Ограничение по высоте (примерно 4 строки) */
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+  color: #ffffff;
+  max-height: 100px;       /* Ограничение по высоте по умолчанию */
+  overflow: hidden;        /* Скрываем лишний текст */
+  transition: max-height 0.3s ease;
 }
 
-.review-text.truncated {
-    position: relative;
+.review-text.expanded {
+  max-height: none;        /* Убираем ограничение при разворачивании */
+  overflow: visible;
 }
-
-
 
 .read-more {
-    background-color: #3A3A3A;
-    color: rgb(160, 156, 156);
-    border-bottom: 1px #d83787 solid; 
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-top: 8px;
-    font-size: 14px;
-    display: none;
-    font-family: Comic Sans MS, Comic Sans, cursive;
+  background-color: #3A3A3A;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-bottom: 1px #d83787 solid;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 14px;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+  display: inline-block;
+}
+
+.first {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 40px;
+  padding: 20px;
+}
+
+.first_1 {
+  color: #d83787;
+  border-bottom: 1px rgb(255, 255, 255) solid;
+  font-size: 20px;
+}
+
+.first_2 {
+  color: rgb(255, 255, 255);
+  font-size: 28px;
+  border-radius: 23px;
+  padding: 12px 7px;
+  font-weight: 800;
+}
+
+img {
+  width: 80px;
+  height: auto;
 }
 
 .the_end {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    width: 98%;
-    color:#ffff;
-    border-top: 4px #ffff solid;
-    margin-top:30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 98%;
+  color: #ffff;
+  border-top: 4px #ffff solid;
+  margin-top: 30px;
 }
 
 .zloy {
-    display: inline-block;
-    width: 180px;
-    height: auto;
-    border-radius: 3%;
+  display: inline-block;
+  width: 180px;
+  height: auto;
+  border-radius: 3%;
 }
-.dropdown {
-    position: absolute;
-    top: 80px;
-    right: 25px;
-    background: #d83787;
-    padding: 10px;
-    border-radius: 20px;
-    border: 4px #ffff solid;
-    opacity: 0.5;
-    transform: translateY(-50px);
-    visibility:collapse;
-    transition: opacity 0.3s ease, transform 0.3s ease;
 
+.dropdown {
+  position: absolute;
+  top: 80px;
+  right: 25px;
+  background: #d83787;
+  padding: 10px;
+  border-radius: 20px;
+  border: 4px #ffff solid;
+  opacity: 0.5;
+  transform: translateY(-50px);
+  visibility: collapse;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
 .dropdown.active {
-    opacity: 1;
-    transform: translateY(0px);
-    visibility: visible;
+  opacity: 1;
+  transform: translateY(0px);
+  visibility: visible;
 }
+
 .dropdown a {
-    display: block;
-    margin: 6px 10px;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
+  display: block;
+  margin: 6px 10px;
+  text-decoration: none;
+  color: rgb(0, 0, 0);
 }
+
 .close {
-    cursor: pointer;
-    font-size: 20px;
-    float: right;
+  cursor: pointer;
+  font-size: 20px;
+  float: right;
 }
+
 .delete-button {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    color: rgb(153, 153, 153); /* Цвет как в дизайне */
-    cursor: pointer;
-    font-size: 14px;
-    transition: color 0.3s;
-    border-bottom: 1px #d83787 solid;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  color: rgb(153, 153, 153); /* Цвет как в дизайне */
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s;
+  border-bottom: 1px #d83787 solid;
 }
 
 .delete-button:hover {
-    color: #ff0000; /* Красный при наведении */
-    text-decoration: underline;
+  color: #ff0000; /* Красный при наведении */
+  text-decoration: underline;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+  margin: 0;
+  padding: 0;
+  background-color: #3a3a3a;
 }
