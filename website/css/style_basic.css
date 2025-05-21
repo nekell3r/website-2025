@@ -218,3 +218,147 @@ input.error {
       margin-bottom: 0;
     }
   }
+
+.container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+
+}
+
+.card {
+
+    border-radius: 20px;
+    color: white;
+    border: 2px solid #444;
+    margin: 25px 0px;
+    width: 85%;
+    border: 7px #ffff solid;
+
+}
+
+.card-header {
+    background-color: #d83787;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 20px;
+    margin: -8px;
+
+}
+
+.card-header .info {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.name {
+    color: black;
+}
+
+.exam {
+    margin-top: 4px;
+    color: black;
+}
+
+.date {
+    color: #1e1e1e;
+
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+}
+
+.card-body {
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.read-more {
+    display: block;
+    margin-top: 10px;
+    color: #bfbfbf;
+    font-style: italic;
+    font-size: 13px;
+    display: none;
+}
+
+.first {
+    display:grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+
+}
+
+.first_1 {
+    color:#d83787;
+    border-bottom: 1px rgb(255, 255, 255) solid;
+    font-size: 20px;
+
+
+}
+
+.first_2 {
+    color:rgb(255, 255, 255);
+    font-size: 20px;
+    border-radius: 23px;
+    padding: 12px 7px;
+    font-weight: 800;
+    font-size: 28px;
+
+}
+
+img {
+    width:80px;
+    height:auto;
+}
+
+.review-container {
+    position: relative;
+}
+
+.review-text {
+    line-height: 1.5;
+    max-height: 6em; /* Ограничение по высоте (примерно 4 строки) */
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.review-text.truncated {
+    position: relative;
+}
+
+
+
+.read-more {
+    background: #d83787;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 14px;
+    display: none;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+}
