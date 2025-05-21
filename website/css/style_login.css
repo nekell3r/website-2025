@@ -9,7 +9,7 @@
 
 .menu {
     display: flex;
-    gap: 60px;
+    gap: 30px;
     font-weight: bold;
 }
 .menu a {

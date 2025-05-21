@@ -183,11 +183,10 @@ img {
 
 
 .read-more {
-    background: #d83787;
-    color: white;
-    border: none;
+    background-color: #3A3A3A;
+    color: rgb(160, 156, 156);
+    border-bottom: 1px #d83787 solid; 
     padding: 5px 10px;
-    border-radius: 4px;
     cursor: pointer;
     margin-top: 8px;
     font-size: 14px;
@@ -241,4 +240,19 @@ img {
     cursor: pointer;
     font-size: 20px;
     float: right;
+}
+.delete-button {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    color: rgb(153, 153, 153); /* Цвет как в дизайне */
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.3s;
+    border-bottom: 1px #d83787 solid;
+}
+
+.delete-button:hover {
+    color: #ff0000; /* Красный при наведении */
+    text-decoration: underline;
 }
