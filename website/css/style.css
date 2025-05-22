@@ -555,38 +555,35 @@ span {
 
 }
 .avatar {
-    width: 150px; /* Увеличенная ширина аватара */
-    height: 150px; /* Увеличенная высота аватара */
-    border-radius: 50%; /* Круглая форма */
-    margin-right: 20px; /* Отступ справа от аватара */
-    overflow: hidden; /* Скрываем лишнее содержимое */
+    width:130px;
+    height:auto;
+
 }
-.avatar img {
-    width: 100%; /* Заполняем контейнер по ширине */
-    height: 100%; /* Заполняем контейнер по высоте */
-    object-fit: cover; /* Сохраняем пропорции изображения без обрезки */
-}
+
 .info {
     display: flex;
     flex-direction: column; /* Вертикальное расположение строк информации */
 }
 .info-row {
     display: flex;
-    justify-content: space-between; /* Распределяем элементы по краям строки */
+    justify-content: space-between;
+    gap: 70px; /* Распределяем элементы по краям строки */
     margin-bottom: 10px; /* Отступ между строками информации */
 }
 .edit-button {
     margin-top: 20px; /* Отступ сверху для кнопки */
-    padding: 10px 20px; /* Отступы внутри кнопки */
+    padding: 10px 15px; /* Отступы внутри кнопки */
     background-color: #e42b9a; /* Цвет фона кнопки */
     color: white; /* Цвет текста кнопки */
     border: none; /* Убираем рамку кнопки */
     border-radius: 5px; /* Закругленные края кнопки */
     cursor: pointer; /* Указатель при наведении на кнопку */
+    width: 500px;
+    transform: translateX(160px);
 }
 
 .reviews-header {
-    width: 400px;
+    display: flex;
 
 }
 .add-review-button {
@@ -601,6 +598,7 @@ span {
     align-items: center;
     justify-content: center;
     margin-left: 10px; /* Отступ слева от кнопки */
+    transform: translateY(33px);
 }
 .add-review-button span {
     font-size: 30px;
@@ -905,3 +903,197 @@ input.error {
 .but_reg {
     font-family: 'Arial', sans-serif;
 } 
+.container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+
+}
+
+.card {
+
+    border-radius: 20px;
+    color: white;
+    border: 2px solid #444;
+    margin: 25px 0px;
+    width: 85%;
+    border: 7px #ffff solid;
+
+}
+
+.card-header {
+    background-color: #d83787;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 20px;
+    margin: -8px;
+
+}
+
+.card-header .info {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.name {
+    color: black;
+}
+
+.exam {
+    margin-top: 4px;
+    color: black;
+}
+
+.date {
+    color: #1e1e1e;
+
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+}
+
+.card-body {
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.read-more {
+    display: block;
+    margin-top: 10px;
+    color: #bfbfbf;
+    font-style: italic;
+    font-size: 13px;
+    display: none;
+}
+
+.first {
+    display:grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+
+}
+
+.first_1 {
+    color:#d83787;
+    border-bottom: 1px rgb(255, 255, 255) solid;
+    font-size: 20px;
+
+
+}
+
+.first_2 {
+    color:rgb(255, 255, 255);
+    font-size: 20px;
+    border-radius: 23px;
+    padding: 12px 7px;
+    font-weight: 800;
+    font-size: 28px;
+
+}
+
+img {
+    width:80px;
+    height:auto;
+}
+
+.review-container {
+    position: relative;
+}
+
+.review-text {
+    line-height: 1.5;
+    max-height: 6em; /* Ограничение по высоте (примерно 4 строки) */
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.review-text.truncated {
+    position: relative;
+}
+
+
+
+.read-more {
+    background-color: #3A3A3A;
+    color: rgb(160, 156, 156);
+    /* border-bottom: 1px #d83787 solid;  */
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 14px;
+    display: none;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #d83787; /* розовая линия снизу */
+    width: fit-content; /* по размеру текста */
+}
+
+.the_end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 98%;
+    color:#ffff;
+    border-top: 4px #ffff solid;
+    margin-top:30px;
+}
+
+.zloy {
+    display: inline-block;
+    width: 180px;
+    height: auto;
+    border-radius: 3%;
+}
+.dropdown {
+    position: absolute;
+    top: 80px;
+    right: 25px;
+    background: #d83787;
+    padding: 10px;
+    border-radius: 20px;
+    border: 4px #ffff solid;
+    opacity: 0.5;
+    transform: translateY(-50px);
+    visibility:collapse;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+}
+.dropdown.active {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+}
+.dropdown a {
+    display: block;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+.close {
+    cursor: pointer;
+    font-size: 20px;
+    float: right;
+}

@@ -54,7 +54,7 @@
     position: absolute;
     top: 80px;
     right: 25px;
-    background: #edd3fc;
+    background:#e42b9a;
     padding: 10px;
     border-radius: 20px;
 
@@ -238,6 +238,7 @@ background-color: #ffffff; /* Темно-зеленый при наведени�
     align-items: center;
     position: relative;
     width: 98%;
+    color:#ffffff;
 }
 input {
     width: 96%;

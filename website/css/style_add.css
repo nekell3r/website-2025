@@ -1,0 +1,172 @@
+.header2 {
+    width: 98%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 20px;
+    border-bottom: 4px solid rgb(255, 255, 255);
+}
+
+.menu {
+    display: flex;
+    gap: 60px;
+    font-weight: bold;
+}
+.menu a {
+    text-decoration: none;  
+    color: black;  
+    cursor: pointer; 
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+}
+.menu-button, .hamburger-button {
+    cursor: pointer;
+    border: none;
+    background: #3a3a3a;
+    padding: 10px;
+    border-radius: 90%;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 19px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    color: #e42b9a
+}
+
+.hamburger-button {
+    width: 48px;
+    height: 42px;
+    color: #e42b9a
+}
+.hamburger-button div {
+    width: 28px;
+    height: 3px;
+    background: rgb(255, 255, 255);
+    margin: 3px 0;
+    color: #e42b9a;
+
+}
+.dropdown {
+    position: absolute;
+    top: 80px;
+    right: 25px;
+    background: #e42b9a;
+    padding: 10px;
+    border-radius: 20px;
+
+    opacity: 0.5;
+    transform: translateY(-30px);
+    visibility:collapse;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+}
+.dropdown.active {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+}
+.dropdown a {
+    display: block;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+.close {
+    cursor: pointer;
+    font-size: 20px;
+    float: right;
+}
+.zloy_ru {
+    display: inline-block;
+    width: 180px;
+    height: auto;
+    border-radius: 3%;
+}
+.the_end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 98%;
+    color:rgb(255, 255, 255);
+    border-top: 4px #fff solid;
+}
+.review-form {
+    margin:80px auto;
+    width: 500px;
+    height: 400px;
+    padding: 20px;
+    border: 1px solid #e42b9a;
+    border-radius: 10px;
+    color: inherit;
+    background: none;
+    align-items: center;
+}
+
+.review-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-line label {
+    font-weight: bold;
+    width: 70px;
+}
+
+.input-line input {
+    background: none;
+    color: inherit;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.add-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+    margin-right: 30px;
+}
+
+.review-title {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.review-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 5px;
+    background: none;
+    color: inherit;
+    margin-right: 5px;
+}
+.short-input {
+    margin-left: 30px;
+    width: 130px !important;
+    background: none;
+    color: inherit;
+    border: 1px solid white;
+    border-radius: 35px;
+    padding: 5px;
+    flex: 0 0 auto; 
+}
+body, .review-form, label, h3, input, .review-title {
+    color: white !important;
+}

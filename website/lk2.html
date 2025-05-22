@@ -27,16 +27,6 @@
             padding: 10px; /* Отступы внутри заголовка */
         }
 
-        .reviews-header {
-            display: flex;
-            align-items: center; /* Центрируем по вертикали */
-        }
-
-        .reviews-header img {
-            margin-left: 10px; /* Отступ слева от изображения */
-            width: 30px; /* Установите нужный размер изображения */
-            height: auto; /* Сохраняем пропорции изображения */
-        }
 
         .profile-container {
             display: flex;
@@ -45,8 +35,10 @@
         }
 
         .avatar img {
-            width: 100px; /* Установите нужный размер аватара */
+            width: 200px; /* Установите нужный размер аватара */
             height: auto; /* Сохраняем пропорции изображения аватара */
+            margin-right: 60px;
+            border-radius: 150px;
         }
 
         .info {
@@ -65,17 +57,14 @@
 <body>
     <div class="header2">
         <div class="logo">
-            <img src="img/злой рус.png" class="zloy" alt="Злой Русский">
+            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
-            <b>ОГЭ</b>
+            <a href="oge.html">ОГЭ</a>
             <a href="ege.html">ЕГЭ</a>
             <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="menu-button">
-                <img src="img/пж.jpg" style="width: 50px;" alt="ПЖ">
-            </button>
             <button class="hamburger-button" onclick="toggleMenu()">
                 <img src="img/burger.jpg" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
             </button>
@@ -84,16 +73,16 @@
 
     <br><br>
 
-    <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px width: ;">Личная информация</h1></b>
+    <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Личная информация</h1></b>
 
     <div class="profile-container">
 
         <div class="avatar">
-            <img src="img/ava.png" alt="Аватар пользователя">
+            <img src="img/ava3.jpg" alt="Аватар пользователя">
         </div>
 
  
-        <div class="info">
+        <div class="info" style="font-size: 23px">
 
              <div class="info-row">
                 <span>Имя: Павел</span>
@@ -117,19 +106,114 @@
      <br>
 
      <!-- Заголовок "Купленные продукты" -->
-     <b><h2>Купленные продукты</h2></b>
+     <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Купленные продукты</h1></b>
 
      <br>
 
      <div class="reviews-header">
-        <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin-right: 10px;">Мои отзывы</h1></b>
+        <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin-right: 10px; text-align: center;">Мои отзывы</h1></b>
         <button class="add-review-button">
             <span>+</span>
         </button>
     </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="info">
+                    <div class="name">Анастасия</div>
+                    <div class="exam">ЕГЭ: <strong>87</strong></div>
+                    <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
+                </div>
+                <img src="img/avatar.jpg" alt="Аватар">
+            </div>
+            <div class="card-body">
+                <div class="review-container">
+                    <div class="review-text">
+                    Год назад я и представить не могла, что смогу сдать ЕГЭ на такой балл! В начале года меня буквально парализовал страх — казалось, что даже 70 баллов будет нереальным результатом. Но благодаря системной подготовке и большому количеству практики преподавателя, всё сложилось лучше, чем я ожидала.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="info">
+                    <div class="name">Анастасия</div>
+                    <div class="exam">ЕГЭ: <strong>87</strong></div>
+                    <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
+                </div>
+                <img src="img/avatar.jpg" alt="Аватар">
+            </div>
+            <div class="card-body">
+                <div class="review-container">
+                    <div class="review-text">
+                    Год назад я и представить не могла, что смогу сдать ЕГЭ на такой балл! В начале года меня буквально парализовал страх — казалось, что даже 70 баллов будет нереальным результатом. Но благодаря системной подготовке и большому количеству практики преподавателя, всё сложилось лучше, чем я ожидала.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
     
-    <!-- Белая полоска снизу -->
-    <div style="border-bottom: 4px solid #ffff; width: 100%"></div>
+     <div class="the_end" style="padding-top: 20px">
+        <h1 style="flex: 1;
+        text-align: center;"
+        >Служебная информация</h1>
+        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+    </div>
+
 
 </body>
+
+<div class="dropdown" id="dropdown">
+    <span class="close" onclick="toggleMenu()">&times;</span>
+    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
+    <a href="response_ege.html">отзывы</a>
+    <a href="#">FAQ</a>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdown");
+        menu.classList.toggle("active");
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+    const reviewContainers = document.querySelectorAll('.review-container');
+    
+    reviewContainers.forEach(container => {
+        const reviewText = container.querySelector('.review-text');
+        const fullText = reviewText.textContent.trim();
+        
+        // Создаем кнопку
+        const readMoreBtn = document.createElement('button');
+        readMoreBtn.className = 'read-more';
+        readMoreBtn.textContent = 'Читать полностью';
+        container.appendChild(readMoreBtn);
+        
+        if (fullText.length > 100) {
+            // Добавляем класс для усеченного текста
+            reviewText.classList.add('truncated');
+            
+            // Показываем кнопку
+            readMoreBtn.style.display = 'inline-block';
+            
+            // Обработчик клика
+            readMoreBtn.addEventListener('click', function() {
+                if (reviewText.style.maxHeight) {
+                    reviewText.style.maxHeight = null;
+                    this.textContent = 'Читать полностью';
+                    reviewText.classList.add('truncated');
+                } else {
+                    reviewText.style.maxHeight = 'none';
+                    this.textContent = 'Свернуть';
+                    reviewText.classList.remove('truncated');
+                }
+            });
+        }
+    });
+});
+function toggleMenu() {
+    var menu = document.getElementById("dropdown");
+    menu.classList.toggle("active");
+}
+</script>
+  
 </html>  
