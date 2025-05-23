@@ -90,46 +90,43 @@ function toggleMenu() {
   }
 
   // Функция добавления кнопок "Читать полностью"
-  function addReadMoreButtons() {
+function addReadMoreButtons() {
   const reviewContainers = document.querySelectorAll('.review-container');
 
   reviewContainers.forEach(container => {
     const reviewText = container.querySelector('.review-text');
 
-    // Не добавлять кнопку дважды
-    if (container.querySelector('.read-more')) return;
+    if (container.querySelector('.read-more')) return; // Не дублируем кнопку
+
+    const fullText = reviewText.textContent.trim();
+
+    if (fullText.length <= 200) return; // Если отзыв короткий — пропускаем
+
+    // Сохраняем полный текст в data-атрибут
+    reviewText.dataset.fullText = fullText;
+    reviewText.dataset.shortText = fullText.slice(0, 200) + '...';
+
+    // Устанавливаем укороченный текст
+    reviewText.textContent = reviewText.dataset.shortText;
 
     const readMoreBtn = document.createElement('button');
     readMoreBtn.className = 'read-more';
     readMoreBtn.textContent = 'Читать полностью';
     container.appendChild(readMoreBtn);
 
-    const maxHeight = 150; // px
+    readMoreBtn.addEventListener('click', () => {
+      const isExpanded = reviewText.classList.toggle('expanded');
 
-    if (reviewText.scrollHeight > maxHeight) {
-      // Изначально текст с ограничением
-      reviewText.style.maxHeight = maxHeight + 'px';
-      reviewText.style.overflow = 'hidden';
-
-      readMoreBtn.style.display = 'inline-block';
-
-      readMoreBtn.addEventListener('click', () => {
-        if (reviewText.classList.contains('expanded')) {
-          // Сворачиваем
-          reviewText.classList.remove('expanded');
-          readMoreBtn.textContent = 'Читать полностью';
-        } else {
-          // Разворачиваем
-          reviewText.classList.add('expanded');
-          readMoreBtn.textContent = 'Свернуть';
-        }
-      });
-    } else {
-      readMoreBtn.style.display = 'none';
-    }
+      if (isExpanded) {
+        reviewText.textContent = reviewText.dataset.fullText;
+        readMoreBtn.textContent = 'Свернуть';
+      } else {
+        reviewText.textContent = reviewText.dataset.shortText;
+        readMoreBtn.textContent = 'Читать полностью';
+      }
+    });
   });
 }
-
 
   const observer = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting) loadItems();
