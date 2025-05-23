@@ -1,4 +1,4 @@
-from src.exceptions.exceptions import ProductNotFoundException
+from src.exceptions.db_exceptions import ProductNotFoundException
 from src.repositories.base import BaseRepository
 from src.models.products import ProductsOrm
 from src.repositories.mappers.mappers import ProductsMapper

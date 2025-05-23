@@ -2,8 +2,9 @@ import sys
 from pathlib import Path
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi_cache import FastAPICache
+from fastapi.responses import JSONResponse
 from fastapi_cache.backends.redis import RedisBackend
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
@@ -11,6 +12,7 @@ import uvicorn
 
 sys.path.append(str(Path(__file__).parent.parent))
 
+from src.exceptions.service_exceptions import MadRussianServiceException
 from src.api.root import router as root_router
 from src.api.reviews import router as reviews_router
 from src.api.payments import router as purchases_router
@@ -36,6 +38,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+@app.exception_handler(MadRussianServiceException)
+async def service_exception_handler(request: Request, exc: MadRussianServiceException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:8000", "http://localhost:63342", "http://localhost:3000", "http://127.0.0.1:8000"], 

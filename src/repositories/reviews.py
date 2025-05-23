@@ -12,7 +12,7 @@ from src.schemas.reviews import (
     Review,
     ReviewWithId,
 )
-from src.exceptions.exceptions import ReviewNotFoundException
+from src.exceptions.db_exceptions import ReviewNotFoundException
 
 
 class ReviewsRepository(BaseRepository):

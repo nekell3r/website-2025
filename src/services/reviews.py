@@ -4,10 +4,14 @@ from src.dependencies.auth import PaginationDep, UserRoleDep
 from src.dependencies.db import DBDep
 from fastapi import HTTPException
 
-from src.exceptions.exceptions import ReviewNotFoundException, ReviewNotFoundServiceException, ProductNotFoundException, \
-    ProductNotFoundHTTPException, PurchaseNotFoundHTTPException, PurchaseNotFoundException, \
-    ReviewIsExistingHTTPException, ReviewNoRightsHTTPException, MadRussianHTTPException, \
-    ReviewWrongFormatHTTPException
+from src.exceptions.db_exceptions import ReviewNotFoundException, PurchaseNotFoundException, ProductNotFoundException
+from src.exceptions.service_exceptions import (ReviewNoRightsServiceException,
+                                               ReviewIsExistingServiceException,
+                                               ReviewWrongFormatServiceException,
+                                               ReviewNotFoundServiceException,
+                                               PurchaseNotFoundServiceException,
+                                               ProductNotFoundServiceException,
+                                               MadRussianServiceException)
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 
@@ -23,7 +27,7 @@ class ReviewsService:
         elif exam == "ОГЭ":
             db_exam = "oge"
         else:
-            raise ReviewWrongFormatHTTPException
+            raise ReviewWrongFormatServiceException
         per_page = pagination.per_page or 5
         try:
             data = await db.reviews.get_all_filtered(
@@ -73,18 +77,18 @@ class ReviewsService:
             result=review_data.result,
         )
         if data.exam not in ["ЕГЭ", "ОГЭ"]:
-            raise ReviewWrongFormatHTTPException
+            raise ReviewWrongFormatServiceException
         try:
             product_slug = (await db.products.get_one(name=data.exam)).slug
             purchase = await db.purchases.get_one(product_slug=product_slug, user_id=user_id, status="Paid")
         except ProductNotFoundException:
-            raise ProductNotFoundHTTPException
+            raise ProductNotFoundServiceException
         except PurchaseNotFoundException:
-            raise PurchaseNotFoundHTTPException
+            raise PurchaseNotFoundServiceException
 
         current_review = await db.reviews.get_one(exam=data.exam, user_id=user_id)
         if current_review:
-            raise ReviewIsExistingHTTPException
+            raise ReviewIsExistingServiceException
 
         await db.reviews.add(data)
         await db.commit()
@@ -103,7 +107,7 @@ class ReviewsService:
             raise ReviewNotFoundServiceException
 
         if review.user_id != user_id:
-            raise ReviewNoRightsHTTPException
+            raise ReviewNoRightsServiceException
 
         now_utc = datetime.now(timezone.utc)
         delta = now_utc - review.edited_at
@@ -125,17 +129,14 @@ class ReviewsService:
             review_id: int
     ):
         try:
-            try:
-                review = await db.reviews.get_one_with_id(id=review_id)
-            except ReviewNotFoundException:
-                raise ReviewNotFoundServiceException
-            if review.user_id != user_id:
-                raise ReviewNoRightsHTTPException
+            review = await db.reviews.get_one_with_id(id=review_id)
+        except ReviewNotFoundException:
+            raise ReviewNotFoundServiceException
+        if review.user_id != user_id:
+            raise ReviewNoRightsServiceException
 
-            await db.reviews.delete(id=review_id)
-            await db.commit()
-        except:
-            raise MadRussianHTTPException
+        await db.reviews.delete(id=review_id)
+        await db.commit()
         await db.commit()
         return {"status": "ok"}
 

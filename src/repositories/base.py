@@ -3,7 +3,7 @@ from sqlalchemy.exc import NoResultFound
 from pydantic import BaseModel
 
 from src.repositories.mappers.base import DataMapper
-from src.exceptions.exceptions import ObjectNotFoundException
+from src.exceptions.db_exceptions import ObjectNotFoundException
 
 
 class BaseRepository:

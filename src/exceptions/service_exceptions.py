@@ -9,29 +9,29 @@ class ReviewNotFoundServiceException(MadRussianServiceException):
     status_code = 404
     detail = "Отзыв не найден"
 
-class ReviewWrongFormatHTTPException(MadRussianHTTPException):
+class ReviewWrongFormatServiceException(MadRussianServiceException):
     status_code = 400
     detail = "Неверный формат: продукты должны быть только ОГЭ или ЕГЭ"
 
-class ReviewIsExistingHTTPException(MadRussianHTTPException):
+class ReviewIsExistingServiceException(MadRussianServiceException):
     status_code = 409
     detail = "Отзыв уже существует"
 
-class ReviewNoRightsHTTPException(MadRussianHTTPException):
+class ReviewNoRightsServiceException(MadRussianServiceException):
     status_code = 403
     detail = "Нет прав на работу с этим отзывом"
 
-class UserNotFoundHTTPException(MadRussianHTTPException):
+class UserNotFoundServiceException(MadRussianServiceException):
     status_code = 404
     detail = "Пользователь не найден"
 
-class PurchaseNotFoundHTTPException(MadRussianHTTPException):
+class PurchaseNotFoundServiceException(MadRussianServiceException):
     status_code = 404
     detail = "Покупка не найдена"
 
-class WebhookWrongFormatHTTPException(MadRussianHTTPException):
+class WebhookWrongFormatServiceException(MadRussianServiceException):
     status_code = 400
     detail = "Неверный формат: отсутствует id"
-class ProductNotFoundHTTPException(MadRussianHTTPException):
+class ProductNotFoundServiceException(MadRussianServiceException):
     status_code = 404
     detail = "Продукт не найден"

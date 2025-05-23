@@ -1,6 +1,6 @@
 from sqlalchemy import update
 
-from src.exceptions.exceptions import PurchaseNotFoundException
+from src.exceptions.db_exceptions import PurchaseNotFoundException
 from src.repositories.base import BaseRepository
 from src.models.purchases import PaymentOrm
 from src.repositories.mappers.mappers import PurchasesMapper

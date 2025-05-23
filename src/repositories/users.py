@@ -5,7 +5,7 @@ from src.repositories.base import BaseRepository
 from src.models.users import UsersOrm
 from src.repositories.mappers.mappers import UsersMapper
 from src.schemas.users import UserWithHashedPassword, User
-from src.exceptions.exceptions import UserNotFoundException
+from src.exceptions.db_exceptions import UserNotFoundException
 
 class UsersRepository(BaseRepository):
     model = UsersOrm

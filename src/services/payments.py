@@ -5,12 +5,17 @@ from fastapi import HTTPException
 from uuid import uuid4
 import httpx
 
-
+from src.exceptions.db_exceptions import ReviewNotFoundException, PurchaseNotFoundException, ProductNotFoundException
+from src.exceptions.service_exceptions import (ReviewNoRightsServiceException,
+                                               ReviewIsExistingServiceException,
+                                               ReviewWrongFormatServiceException,
+                                               ReviewNotFoundServiceException,
+                                               PurchaseNotFoundServiceException,
+                                               ProductNotFoundServiceException,
+                                               MadRussianServiceException, WebhookWrongFormatServiceException)
 from src.dependencies.auth import UserIdDep
 from src.dependencies.db import DBDep
 from src.config import settings
-from src.exceptions.exceptions import PurchaseNotFoundException, PurchaseNotFoundHTTPException, ProductNotFoundException, \
-    WebhookWrongFormatHTTPException
 from src.schemas.payments import CreatePaymentRequest, CreatePaymentResponse, Purchase
 from src.schemas.personal_info import BoughtProduct
 
@@ -207,11 +212,11 @@ class PaymentsService:
 
         payment_id = obj.get("metadata").get("invoice_id")
         if not payment_id:
-            raise WebhookWrongFormatHTTPException
+            raise WebhookWrongFormatServiceException
         try:
             purchase = await db.purchases.get_one(payment_id=payment_id)
         except PurchaseNotFoundException:
-            raise PurchaseNotFoundHTTPException
+            raise PurchaseNotFoundServiceException
         if event == "payment.succeeded":
             purchase.status = "Paid"
             paid_at = obj.get("paid_at")
@@ -228,7 +233,7 @@ class PaymentsService:
         try:
             await db.purchases.edit(purchase, payment_id=payment_id)
         except PurchaseNotFoundException:
-            raise PurchaseNotFoundHTTPException
+            raise PurchaseNotFoundServiceException
         await db.commit()
         return {"status": "ok"}
 
@@ -236,12 +241,12 @@ class PaymentsService:
         try:
             purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
         except PurchaseNotFoundException:
-            raise PurchaseNotFoundHTTPException
+            raise PurchaseNotFoundServiceException
         try:
             answer = [
                 BoughtProduct(**((await db.products.get_one_or_none(slug=p.product_slug)).model_dump()), paid_at=p.paid_at)
                 for p in purchases
             ]
         except ProductNotFoundException:
-            raise PurchaseNotFoundHTTPException
+            raise PurchaseNotFoundServiceException
         return answer
