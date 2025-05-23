@@ -558,6 +558,7 @@ span {
     width:130px;
     height:auto;
 
+
 }
 
 .info {
@@ -928,13 +929,26 @@ input.error {
 .card-header {
     background-color: #d83787;
     padding: 20px;
-    display: flex;
+    /* display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; */
     font-size: 20px;
     border-radius: 20px;
     margin: -8px;
+}
+.card-header img {
+    margin-top: 15px; /* Регулируйте значение по необходимости */
+}
 
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.header-top img {
+    align-self: flex-end; /* Выравнивание по нижнему краю контейнера */
+    margin-bottom: -30px; /* Дополнительная корректировка при необходимости */
 }
 
 .card-header .info {
@@ -1096,4 +1110,9 @@ img {
     cursor: pointer;
     font-size: 20px;
     float: right;
+}
+.red {
+    text-align: center;
+    border: 1px #ffff solid;
+    border-radius: 20px;
 }
