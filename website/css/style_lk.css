@@ -89,13 +89,7 @@
     float: right;
 }
 .name {
-display: flex;
-justify-content: center;
-align-items: center;
-height: 60px;
-text-align: center;
-font-family: Comic Sans MS, Comic Sans, cursive;
-font-size: 20px;
+    color: black;
 }
 .arrow {
     width: 50px;
@@ -928,15 +922,28 @@ input.error {
 .card-header {
     background-color: #d83787;
     padding: 20px;
-    /* display: flex;
-    justify-content: space-between;
-    align-items: center; */
+    display: flex; 
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start; /* Align to top */
+    align-items: center; /* Center items horizontally */
     font-size: 20px;
     border-radius: 20px;
     margin: -8px;
 }
-.card-header img {
-    margin-top: 15px; /* Регулируйте значение по необходимости */
+
+.edit-review-link {
+    color: white;
+    text-decoration: none; /* Or underline, if preferred */
+    font-weight: bold;
+}
+
+.edit-review-link:hover {
+    text-decoration: underline;
+}
+
+/* Ensure the avatar within the new wrapper still has no top margin */
+.card-header .card-header-content-wrapper img {
+    margin-top: 0px; 
 }
 
 .header-top {
@@ -957,12 +964,18 @@ input.error {
     margin-left: 10px; /* смещаем всю колонку чуть правее */
 }
 
-.name {
+/* Стили для имени пользователя в карточке отзыва */
+.card-header .info .name {
     color: black;
+    margin-bottom: 0px; /* Убираем нижний отступ */
+    /* Если имя пользователя слишком высокое, можно добавить: */
+    /* height: auto; */ 
+    /* display: block; */
+    /* text-align: left; */
 }
 
-.exam {
-    margin-top: 4px;
+.card-header .info .exam {
+    margin-top: 0px; /* Убираем верхний отступ */
     color: black;
 }
 
@@ -1037,31 +1050,30 @@ img {
 
 .review-text {
     line-height: 1.5;
-    max-height: 6em; /* Ограничение по высоте (примерно 4 строки) */
+    max-height: 100px;
     overflow: hidden;
     transition: max-height 0.3s ease;
+    color: #ffffff;
 }
 
-.review-text.truncated {
-    position: relative;
+.review-text.expanded {
+    max-height: none;
+    overflow: visible;
 }
-
-
 
 .read-more {
     background-color: #3A3A3A;
-    color: rgb(160, 156, 156);
-    /* border-bottom: 1px #d83787 solid;  */
+    color: rgb(255, 255, 255);
     padding: 5px 10px;
     cursor: pointer;
     margin-top: 8px;
     font-size: 14px;
-    display: none;
     font-family: Comic Sans MS, Comic Sans, cursive;
     text-align: left;
     border: none;
-    border-bottom: 1px solid #d83787; /* розовая линия снизу */
-    width: fit-content; /* по размеру текста */
+    border-bottom: 1px solid #d83787;
+    width: fit-content;
+    display: inline-block;
 }
 
 .the_end {

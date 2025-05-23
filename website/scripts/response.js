@@ -100,7 +100,8 @@ function addReadMoreButtons() {
 
     const fullText = reviewText.textContent.trim();
 
-    if (fullText.length <= 200) return; // Если отзыв короткий — пропускаем
+    // Временно изменяем условие длины для отладки
+    if (fullText.length <= 10) return; 
 
     // Сохраняем полный текст в data-атрибут
     reviewText.dataset.fullText = fullText;
