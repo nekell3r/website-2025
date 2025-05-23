@@ -96,7 +96,6 @@ height: 60px;
 text-align: center;
 font-family: Comic Sans MS, Comic Sans, cursive;
 font-size: 20px;
-font-weight: bold;
 }
 .arrow {
     width: 50px;
@@ -940,7 +939,8 @@ input.error {
 .card-header .info {
     display: flex;
     flex-direction: column;
-
+    align-items: flex-start; /* выравнивание по левому краю */
+    margin-left: 10px; /* смещаем всю колонку чуть правее */
 }
 
 .name {
