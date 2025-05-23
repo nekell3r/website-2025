@@ -1,14 +1,16 @@
-from fastapi import HTTPException
 from sqlalchemy import select, insert, update, delete
+from sqlalchemy.exc import NoResultFound
 from pydantic import BaseModel
 
 from src.repositories.mappers.base import DataMapper
+from src.exceptions.exceptions import ObjectNotFoundException
 
 
 class BaseRepository:
     model = None
     schema: BaseModel = None
     mapper: DataMapper = None
+    not_found_exception: ObjectNotFoundException = None
 
     def __init__(self, session):
         self.session = session
@@ -16,9 +18,12 @@ class BaseRepository:
     async def get_all(self, *args, **kwargs):
         query = select(self.model)
         result = await self.session.execute(query)
-        return [
+        answer = [
             self.mapper.map_to_domain_entity(model) for model in result.scalars().all()
         ]
+        if not answer:
+            raise self.not_found_exception
+        return answer
 
     async def get_one_or_none(self, **filter_by):
         query = select(self.model).filter_by(**filter_by)
@@ -26,6 +31,15 @@ class BaseRepository:
         model = result.scalars().one_or_none()
         if model is None:
             return None
+        return self.mapper.map_to_domain_entity(model)
+
+    async def get_one(self, **filter_by):
+        query = select(self.model).filter_by(**filter_by)
+        result = await self.session.execute(query)
+        try:
+            model = result.scalar_one()
+        except NoResultFound:
+            raise self.not_found_exception
         return self.mapper.map_to_domain_entity(model)
 
     async def add(self, data: BaseModel):
@@ -49,11 +63,10 @@ class BaseRepository:
     async def delete(self, **filter_by) -> None:
         select_stmt = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(select_stmt)
-        instance = result.scalar_one_or_none()
+        try:
+            instance = result.scalars_one()
+        except NoResultFound:
+            raise self.not_found_exception
 
-        if instance is None:
-            raise HTTPException(status_code=404, detail="Объект не найден")
-
-        # Если найден — удаляем
         delete_stmt = delete(self.model).filter_by(**filter_by)
         await self.session.execute(delete_stmt)

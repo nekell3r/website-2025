@@ -4,22 +4,35 @@ from src.dependencies.auth import PaginationDep, UserRoleDep
 from src.dependencies.db import DBDep
 from fastapi import HTTPException
 
+from src.exceptions.exceptions import ReviewNotFoundException, ReviewNotFoundServiceException, ProductNotFoundException, \
+    ProductNotFoundHTTPException, PurchaseNotFoundHTTPException, PurchaseNotFoundException, \
+    ReviewIsExistingHTTPException, ReviewNoRightsHTTPException, MadRussianHTTPException, \
+    ReviewWrongFormatHTTPException
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 
 class ReviewsService:
     async def get_reviews(
         self,
+        exam: str,
         db: DBDep,
         pagination: PaginationDep,
     ):
+        if exam == "ЕГЭ":
+            db_exam = "ege"
+        elif exam == "ОГЭ":
+            db_exam = "oge"
+        else:
+            raise ReviewWrongFormatHTTPException
         per_page = pagination.per_page or 5
-        data = await db.reviews.get_all(
-            limit=per_page,
-            offset=per_page * (pagination.page - 1)
-        )
-        if not data:
-            raise HTTPException(404, detail="Отзывы не найдены")
+        try:
+            data = await db.reviews.get_all_filtered(
+                limit=per_page,
+                offset=per_page * (pagination.page - 1),
+                exam=db_exam,
+            )
+        except ReviewNotFoundException:
+            raise ReviewNotFoundServiceException
         return data
 
     async def get_reviews_with_id(
@@ -28,11 +41,10 @@ class ReviewsService:
         pagination: PaginationDep,
     ):
         per_page = pagination.per_page or 5
-        data = await db.reviews.superuser_get_all(
-            limit=per_page, offset=per_page * (pagination.page - 1)
-        )
-        if not data:
-            raise HTTPException(404, detail="Отзывы не найдены")
+        try:
+            data = await db.reviews.get_all_with_id(limit=per_page, offset=per_page * (pagination.page - 1))
+        except ReviewNotFoundException:
+            raise ReviewNotFoundServiceException
         return data
 
     async def get_my_reviews(
@@ -42,9 +54,10 @@ class ReviewsService:
     ):
         page = 1
         per_page = 2
-        data = await db.reviews.get_all_filtered(limit=per_page, offset=per_page * (page - 1), user_id=user_id)
-        if not data:
-            raise HTTPException(404, detail="Отзывы не найдены")
+        try:
+            data = await db.reviews.get_all_filtered(limit=per_page, offset=per_page * (page - 1), user_id=user_id)
+        except ReviewNotFoundException:
+            raise ReviewNotFoundServiceException
         return data
 
     async def create_review(
@@ -60,20 +73,23 @@ class ReviewsService:
             result=review_data.result,
         )
         if data.exam not in ["ЕГЭ", "ОГЭ"]:
-            raise HTTPException(400, detail="Неверный экзамен, возможные варианты - ЕГЭ, ОГЭ")
+            raise ReviewWrongFormatHTTPException
+        try:
+            product_slug = (await db.products.get_one(name=data.exam)).slug
+            purchase = await db.purchases.get_one(product_slug=product_slug, user_id=user_id, status="Paid")
+        except ProductNotFoundException:
+            raise ProductNotFoundHTTPException
+        except PurchaseNotFoundException:
+            raise PurchaseNotFoundHTTPException
 
-        product_slug = (await db.products.get_one_or_none(name=data.exam)).slug
-        print(product_slug)
-        print(user_id)
-        purchase = await db.purchases.get_one_or_none(product_slug=product_slug, user_id=user_id, status="Paid")
-        if not purchase:
-            raise HTTPException(404, detail="Пользователь не купил данный продукт")
-        current_review = await db.reviews.get_one_or_none(exam=data.exam, user_id=user_id)
+        current_review = await db.reviews.get_one(exam=data.exam, user_id=user_id)
         if current_review:
-            raise HTTPException(409, detail="Пользователь уже оставил отзыв на данный продукт")
+            raise ReviewIsExistingHTTPException
+
         await db.reviews.add(data)
         await db.commit()
         return {"status" : "Ok"}
+
     async def edit_review(
             self,
             db: DBDep,
@@ -81,11 +97,14 @@ class ReviewsService:
             review_id: int,
             review_data: ReviewPatch,
     ):
-        review = await db.reviews.get_one_or_none_with_id(id=review_id)
-        if not review:
-            raise HTTPException(404, detail="Отзыв не найден")
+        try:
+            review = await db.reviews.get_one_with_id(id=review_id)
+        except ReviewNotFoundException:
+            raise ReviewNotFoundServiceException
+
         if review.user_id != user_id:
-            raise HTTPException(403, detail="У вас нет прав редактировать этот отзыв")
+            raise ReviewNoRightsHTTPException
+
         now_utc = datetime.now(timezone.utc)
         delta = now_utc - review.edited_at
         if delta < timedelta(hours=1):
@@ -98,21 +117,25 @@ class ReviewsService:
         await db.reviews.edit(review_data, exclude_unset=True, id=review_id)
         await db.commit()
         return {"status": "Ok"}
+
     async def delete_review(
             self,
             db: DBDep,
             user_id: int,
             review_id: int
     ):
-        review = await db.reviews.get_one_or_none_with_id(id=review_id)
-        if review is None:
-            raise HTTPException(404, detail="Отзыв не найден")
+        try:
+            try:
+                review = await db.reviews.get_one_with_id(id=review_id)
+            except ReviewNotFoundException:
+                raise ReviewNotFoundServiceException
+            if review.user_id != user_id:
+                raise ReviewNoRightsHTTPException
 
-        if review.user_id != user_id:
-            raise HTTPException(
-                403, "Неавторизованный для удаления чужих отзывов пользователь"
-            )
-        await db.reviews.delete(id=review_id)
+            await db.reviews.delete(id=review_id)
+            await db.commit()
+        except:
+            raise MadRussianHTTPException
         await db.commit()
         return {"status": "ok"}
 
@@ -125,9 +148,7 @@ class ReviewsService:
         per_page = pagination.per_page or 5
         if not is_super:
             raise HTTPException(403, detail="Неавторизованный пользователь")
-        data = await db.reviews.superuser_get_all(
-            limit=per_page, offset=per_page * (pagination.page - 1)
-        )
+        data = await db.reviews.get_all_with_id(limit=per_page, offset=per_page * (pagination.page - 1))
         if not data:
             raise HTTPException(404, detail="Отзывы не найдены")
         return data
@@ -138,7 +159,7 @@ class ReviewsService:
             is_super: UserRoleDep,
             review_id: int
     ):
-        review = await db.reviews.get_one_or_none_with_id(id=review_id)
+        review = await db.reviews.get_one_with_id(id=review_id)
         if review is None:
             raise HTTPException(404, detail="Отзыв не найден")
         if not is_super:

@@ -18,13 +18,13 @@ router = APIRouter(prefix="/reviews", tags=["Отзывы"])
 
 
 @router.get(
-    "",
+    "{exam}",
     summary="Получение отзывов всех пользователей",
     description="Принимает на вход per_page - количество отзывов за 1 прогрузку, page - номер прогрузки(страницы/блока отзывов). "
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
-async def get_reviews(db: DBDep, pagination: PaginationDep):
-    return await ReviewsService().get_reviews(db, pagination)
+async def get_reviews(exam: str, db: DBDep, pagination: PaginationDep):
+    return await ReviewsService().get_reviews(exam, db, pagination)
 
 @router.post(
     "",

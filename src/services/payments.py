@@ -9,6 +9,8 @@ import httpx
 from src.dependencies.auth import UserIdDep
 from src.dependencies.db import DBDep
 from src.config import settings
+from src.exceptions.exceptions import PurchaseNotFoundException, PurchaseNotFoundHTTPException, ProductNotFoundException, \
+    WebhookWrongFormatHTTPException
 from src.schemas.payments import CreatePaymentRequest, CreatePaymentResponse, Purchase
 from src.schemas.personal_info import BoughtProduct
 
@@ -205,12 +207,11 @@ class PaymentsService:
 
         payment_id = obj.get("metadata").get("invoice_id")
         if not payment_id:
-            raise HTTPException(status_code=400, detail="Missing payment ID")
-
-        purchase = await db.purchases.get_one_or_none(payment_id=payment_id)
-        if not purchase:
-            raise HTTPException(status_code=200, detail="Purchase not found")
-
+            raise WebhookWrongFormatHTTPException
+        try:
+            purchase = await db.purchases.get_one(payment_id=payment_id)
+        except PurchaseNotFoundException:
+            raise PurchaseNotFoundHTTPException
         if event == "payment.succeeded":
             purchase.status = "Paid"
             paid_at = obj.get("paid_at")
@@ -224,17 +225,23 @@ class PaymentsService:
         else:
             # Неизвестное событие — можно проигнорировать или логировать
             return {"status": "ignored", "reason": f"Unhandled event: {event}"}
-
-        await db.purchases.edit(purchase, payment_id=payment_id)
+        try:
+            await db.purchases.edit(purchase, payment_id=payment_id)
+        except PurchaseNotFoundException:
+            raise PurchaseNotFoundHTTPException
         await db.commit()
         return {"status": "ok"}
 
     async def get_purchases(self, user_id: UserIdDep, db: DBDep):
-        purchases = await db.purchases.get_all_filtered(user_id=user_id, status="Paid")
-        if not purchases:
-            raise HTTPException(status_code=404, detail="Purchases not found")
-        return [
-            BoughtProduct(**((await db.products.get_one_or_none(slug=p.product_slug)).model_dump()), paid_at=p.paid_at)
-            for p in purchases
-        ]
-
+        try:
+            purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
+        except PurchaseNotFoundException:
+            raise PurchaseNotFoundHTTPException
+        try:
+            answer = [
+                BoughtProduct(**((await db.products.get_one_or_none(slug=p.product_slug)).model_dump()), paid_at=p.paid_at)
+                for p in purchases
+            ]
+        except ProductNotFoundException:
+            raise PurchaseNotFoundHTTPException
+        return answer

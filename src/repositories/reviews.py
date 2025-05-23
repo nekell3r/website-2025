@@ -1,47 +1,50 @@
-from datetime import datetime, timezone, timedelta
-
-from fastapi import HTTPException
+from sqlalchemy import select, update
+from sqlalchemy.exc import NoResultFound
 
 from src.repositories.base import BaseRepository
 from src.models.reviews import ReviewsOrm
 from src.repositories.mappers.mappers import (
     ReviewsMapper,
-    ReviewsPatchMapper,
     ReviewsIdMapper,
 )
 from src.schemas.reviews import (
-    ReviewBase,
     ReviewPatch,
     Review,
     ReviewWithId,
 )
-from sqlalchemy import select, update
+from src.exceptions.exceptions import ReviewNotFoundException
 
 
 class ReviewsRepository(BaseRepository):
-    model = ReviewsOrm  # id, user_id, review
-    schema = Review  # user_id, review
+    model = ReviewsOrm
+    schema = Review
     mapper = ReviewsMapper
-
-    async def get_all(self, limit, offset) -> list[Review]:
-        query = select(ReviewsOrm)
+    not_found_exception = ReviewNotFoundException
+    async def get_all(self, exam, limit, offset) -> list[Review]:
+        query = select(ReviewsOrm).filter_by(exam=exam)
         query = query.limit(limit).offset(offset)
         # print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
-        return [
+        answer = [
             self.mapper.map_to_domain_entity(review)
             for review in result.scalars().all()
         ]
+        if not answer:
+            raise self.not_found_exception
+        return answer
 
-    async def superuser_get_all(self, limit, offset) -> list[ReviewWithId]:
-        query = select(ReviewsOrm)
+    async def get_all_with_id(self, limit, offset, **filter_by) -> list[ReviewWithId]:
+        query = select(ReviewsOrm).filter_by(**filter_by)
         query = query.limit(limit).offset(offset)
         # print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
-        return [
+        answer = [
             ReviewsIdMapper.map_to_domain_entity(review)
             for review in result.scalars().all()
         ]
+        if not answer:
+            raise self.not_found_exception
+        return answer
 
     async def get_all_filtered(self, limit, offset, **filter_by) -> list[ReviewWithId]:
         query = (
@@ -52,17 +55,21 @@ class ReviewsRepository(BaseRepository):
         )
         # print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
-        return [
+        answer = [
             ReviewsIdMapper.map_to_domain_entity(review)
             for review in result.scalars().all()
         ]
+        if not answer:
+            raise self.not_found_exception
+        return answer
 
-    async def get_one_or_none_with_id(self, **filter_by) -> ReviewWithId | None:
+    async def get_one_with_id(self, **filter_by) -> ReviewWithId | None:
         query = select(ReviewsOrm).filter_by(**filter_by)
         result = await self.session.execute(query)
-        result = result.scalars().one_or_none()
-        if result is None:
-            return None
+        try:
+            result = result.scalars_one()
+        except NoResultFound:
+            raise self.not_found_exception
         return ReviewsIdMapper.map_to_domain_entity(result)
 
     async def edit(
@@ -70,9 +77,11 @@ class ReviewsRepository(BaseRepository):
     ) -> None:
         stmt = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(stmt)
-        obj = result.scalar_one_or_none()
-        if obj is None:
-            raise HTTPException(status_code=409, detail="Такого отзыва не существует")
+        try:
+            obj = result.scalars_one()
+        except NoResultFound:
+            raise self.not_found_exception
+
         update_stmt = (
             update(self.model)
             .filter_by(**filter_by)

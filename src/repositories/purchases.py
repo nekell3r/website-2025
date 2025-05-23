@@ -1,5 +1,6 @@
-from sqlalchemy import update, select
+from sqlalchemy import update
 
+from src.exceptions.exceptions import PurchaseNotFoundException
 from src.repositories.base import BaseRepository
 from src.models.purchases import PaymentOrm
 from src.repositories.mappers.mappers import PurchasesMapper
@@ -10,6 +11,7 @@ class PurchasesRepository(BaseRepository):
     model = PaymentOrm
     schema = Purchase
     mapper = PurchasesMapper
+    not_found_exception = PurchaseNotFoundException
 
     async def edit(
         self, data: PaymentWebhookData, exclude_unset: bool = True, **filter_by
@@ -24,9 +26,3 @@ class PurchasesRepository(BaseRepository):
             )
         )
         await self.session.execute(update_stmt)
-    async def get_all_filtered(self, **filter_by):
-        query = select(self.model).filter_by(**filter_by)
-        result = await self.session.execute(query)
-        return [
-            self.mapper.map_to_domain_entity(model) for model in result.scalars().all()
-        ]
