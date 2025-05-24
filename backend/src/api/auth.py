@@ -30,17 +30,13 @@ async def send_phone_code(
     db: DBDep,
     data: PhoneInput = Body(
         openapi_examples={
-            "1": {
-                "summary": "number 1",
-                "value": {
-                    "phone": "+79282017042",
-                },
+            "reg_phone_example_1": {
+                "summary": "Пример 1 (регистрация, основной)",
+                "value": {"phone": "+79011234561"},
             },
-            "2": {
-                "summary": "number 2",
-                "value": {
-                    "phone": "+79876543210",
-                },
+            "reg_phone_example_2": {
+                "summary": "Пример 2 (регистрация, для смешанного)",
+                "value": {"phone": "+79022345678"},
             },
         }
     ),
@@ -56,12 +52,14 @@ async def send_email_code(
     db: DBDep,
     data: EmailInput = Body(
         openapi_examples={
-            "1": {
-                "summary": "number 1",
-                "value": {
-                    "email": "pashka@gmail.com",
-                },
-            }
+            "reg_email_example_1": {
+                "summary": "Пример 1 (регистрация, для смешанного)",
+                "value": {"email": "user.register@example.com"},
+            },
+            "reg_email_example_2": {
+                "summary": "Пример 2 (регистрация, альтернативный)",
+                "value": {"email": "another.reg@example.net"},
+            },
         }
     ),
 ):
@@ -82,20 +80,26 @@ async def verify_register(
     db: DBDep,
     data: RegistrationInput = Body(
         openapi_examples={
-            "phone_only": {
-                "summary": "Регистрация по телефону",
+            "phone_only_valid": {
+                "summary": "Регистрация по телефону (валидный пример)",
+                "description": "Email и email_code не предоставляются. Пароли совпадают.",
                 "value": {
-                    "phone": "+79282017042",
-                    "code": "1234",
-                    "password": "Test_password_123"
+                    "phone": "+79011234561",
+                    "password": "Password123!",
+                    "password_repeat": "Password123!",
+                    "phone_code": 1111
                 },
             },
-            "email_only": {
-                "summary": "Регистрация по email",
+            "phone_and_email_valid": {
+                "summary": "Регистрация по телефону и email (валидный пример)",
+                "description": "Предоставляются email и email_code. Пароли совпадают.",
                 "value": {
-                    "email": "pashka@gmail.com",
-                    "code": "4321",
-                    "password": "Test_password_12345"
+                    "phone": "+79022345678",
+                    "email": "user.register@example.com",
+                    "password": "AnotherPassword456$",
+                    "password_repeat": "AnotherPassword456$",
+                    "phone_code": 2222,
+                    "email_code": 3333
                 },
             },
         }
@@ -113,18 +117,12 @@ async def send_reset_code(
     db: DBDep,
     data: PhoneInput = Body(
         openapi_examples={
-            "1": {
-                "summary": "number 1",
+            "send_code_for_phone_reset": {
+                "summary": "Отправка кода для сброса по телефону",
                 "value": {
-                    "phone": "+79282017042",
+                    "phone": "+79033456789",
                 },
-            },
-            "2": {
-                "summary": "number 2",
-                "value": {
-                    "phone": "+79876543210",
-                },
-            },
+            }
         }
     ),
 ):
@@ -137,20 +135,13 @@ async def verify_reset_code(
     db: DBDep,
     data: ResetCodeVerifyInput = Body(
         openapi_examples={
-            "phone_code_verify": {
-                "summary": "Верификация по телефону",
+            "phone_code_verify_for_reset": {
+                "summary": "Верификация кода (сброс по телефону)",
                 "value": {
-                    "phone": "+79282017042",
-                    "code": "1234"
+                    "phone": "+79033456789",
+                    "code": 1234
                 },
-            },
-            "email_code_verify": {
-                "summary": "Верификация по email",
-                "value": {
-                    "email": "pashka@gmail.com",
-                    "code": "4321"
-                },
-            },
+            }
         },
     ),
 ):
@@ -163,20 +154,14 @@ async def set_new_password_after_reset(
     db: DBDep,
     data: SetNewPasswordAfterResetInput = Body(
         openapi_examples={
-            "phone_set_new_pass": {
-                "summary": "Новый пароль по телефону",
+            "phone_set_new_pass_after_reset": {
+                "summary": "Новый пароль (сброс по телефону)",
                 "value": {
-                    "phone": "+79282017042",
-                    "new_password": "NewStrongPassword1!",
+                    "phone": "+79033456789",
+                    "new_password": "NewPassword123!",
+                    "new_password_repeat": "NewPassword123!"
                 },
-            },
-            "email_set_new_pass": {
-                "summary": "Новый пароль по email",
-                "value": {
-                    "email": "pashka@gmail.com",
-                    "new_password": "AnotherNewStrongPassword1!",
-                },
-            },
+            }
         },
     ),
 ):
@@ -195,18 +180,18 @@ async def login_user(
     response: Response,
     data: UserLogin = Body(
         openapi_examples={
-            "1": {
-                "summary": "Пользователь 1",
+            "login_registered_user_1": {
+                "summary": "Вход пользователя (из примера регистрации phone_only_valid)",
                 "value": {
-                    "phone": "+79282017042",
-                    "password": "Test_password_123",
+                    "phone": "+79011234561", 
+                    "password": "Password123!",
                 },
             },
-            "2": {
-                "summary": "Пользователь 2",
+            "login_example_2": {
+                "summary": "Вход пользователя (другой пример)",
                 "value": {
-                    "phone": "+79876543210",
-                    "password": "Test_password_12345",
+                    "phone": "+79041234564", 
+                    "password": "LoginPassword2@",
                 },
             },
         }

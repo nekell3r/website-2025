@@ -138,7 +138,7 @@ class AuthService:
         result = await self.send_phone_code(valid_phone_obj, "reset")
         return result
 
-    async def verify_code_phone(self, phone_obj: phonenumbers.PhoneNumber, code_input: CodeInput, action: str):
+    async def verify_code_phone(self, phone_obj: phonenumbers.PhoneNumber, code_input: int, action: str):
         phone_e164 = phonenumbers.format_number(phone_obj, phonenumbers.PhoneNumberFormat.E164)
         key = f"{action}:code:{phone_e164}"
         
@@ -148,7 +148,7 @@ class AuthService:
             raise AuthCodeExpiredServiceException(detail="Код подтверждения истек или не был найден.")
         
         stored_code_str = stored_code_value.decode('utf-8') if isinstance(stored_code_value, bytes) else str(stored_code_value)
-        input_code_str = str(code_input.code)
+        input_code_str = str(code_input)
 
         if stored_code_str != input_code_str:
             raise AuthCodeInvalidServiceException(detail="Неверный код подтверждения.")
@@ -157,7 +157,7 @@ class AuthService:
         await self.redis.set(key_verified, "true", expire=300)
         return {"status": "Код подтверждён"}
 
-    async def verify_code_email(self, email: EmailStr, code_input: CodeInput, action: str):
+    async def verify_code_email(self, email: EmailStr, code_input: int, action: str):
         key = f"{action}:code:{email}"
         key_verified = f"{action}:code_verified:{email}"
         stored_code_bytes = await self.redis.get(key)
@@ -165,7 +165,10 @@ class AuthService:
         if not stored_code_bytes:
             raise AuthCodeExpiredServiceException
 
-        if stored_code_bytes.decode() != str(code_input.code):
+        stored_code_str = stored_code_bytes.decode('utf-8') if isinstance(stored_code_bytes, bytes) else str(stored_code_bytes)
+        input_code_str = str(code_input)
+        
+        if stored_code_str != input_code_str:
             raise AuthCodeInvalidServiceException
 
         await self.redis.set(key_verified, "true", expire=300)
@@ -189,9 +192,9 @@ class AuthService:
                 raise UserAlreadyExistsServiceException(detail="Пользователь с таким телефоном уже существует.")
             
             try:
-                await self.verify_code_phone(valid_phone_obj, CodeInput(code=data.code), "registration")
+                await self.verify_code_phone(valid_phone_obj, data.phone_code, "registration")
             except MadRussianServiceException as e:
-                raise 
+                raise RegistrationValidationServiceException(detail=f"Ошибка верификации телефона: {e.detail if hasattr(e, 'detail') else 'неверный или истекший код'}")
             
             user_identifier_dict["phone"] = PydanticPhoneNumber(phone_e164) 
             verified_with_phone = True
@@ -200,7 +203,7 @@ class AuthService:
             existing_user = await db.users.get_one_or_none(email=data.email)
             if existing_user:
                 raise UserAlreadyExistsServiceException(detail="Пользователь с таким email уже существует.")
-            await self.verify_code_email(data.email, CodeInput(code=data.code), "registration")
+            await self.verify_code_email(data.email, data.email_code, "registration")
             user_identifier_dict["email"] = data.email
 
         self.validate_password_strength(data.password)
@@ -223,102 +226,62 @@ class AuthService:
         return {"status": "OK, user created"}
 
     async def verify_reset(self, data: ResetCodeVerifyInput, db:DBDep):
-        if not (data.phone or data.email):
-            raise ResetPasswordValidationServiceException(detail="Укажите номер телефона или email для сброса пароля.")
-        if data.phone and data.email:
-            raise ResetPasswordValidationServiceException(detail="Укажите что-то одно для сброса: телефон или email.")
+        valid_phone_obj = await self.validate_russian_phone(str(data.phone))
+        phone_e164 = phonenumbers.format_number(valid_phone_obj, phonenumbers.PhoneNumberFormat.E164)
+        
+        try:
+            await db.users.get_one(phone=phone_e164)
+        except UserNotFoundException:
+            pass
 
-        user_found = False
-        if data.phone:
-            if data.phone is None:
-                 raise ResetPasswordValidationServiceException(detail="Телефон не предоставлен для верификации кода сброса.")
-            valid_phone_obj = await self.validate_russian_phone(str(data.phone))
-            phone_e164 = phonenumbers.format_number(valid_phone_obj, phonenumbers.PhoneNumberFormat.E164)
-            try:
-                await db.users.get_one(phone=phone_e164)
-                user_found = True
-            except UserNotFoundException:
-                pass
-            
-            if user_found:
-                await self.verify_code_phone(valid_phone_obj, CodeInput(code=data.code), "reset")
-                return {"status": "OK, verification code is correct for phone"}
-        
-        if data.email:
-            if data.email is None:
-                raise ResetPasswordValidationServiceException(detail="Email не предоставлен для верификации кода сброса.")
-            try:
-                await db.users.get_one(email=data.email)
-                user_found = True
-            except UserNotFoundException:
-                pass
-
-            if user_found:
-                await self.verify_code_email(data.email, CodeInput(code=data.code), "reset")
-                return {"status": "OK, verification code is correct for email"}
-        
-        if not user_found:
-            raise UserNotFoundAuthServiceException(detail="Пользователь не найден.")
-        
-        raise MadRussianServiceException(detail="Не удалось верифицировать код сброса.") 
+        await self.verify_code_phone(valid_phone_obj, data.code, "reset")
+        return {"status": "OK, verification code is correct for phone"}
 
     async def delete_verified_phone_code(self, phone_obj: phonenumbers.PhoneNumber, action: str):
         phone_e164 = phonenumbers.format_number(phone_obj, phonenumbers.PhoneNumberFormat.E164)
-        key = f"{action}:code:{phone_e164}"
         key_verified = f"{action}:code_verified:{phone_e164}"
-        await self.redis.delete(key)
+        key_code = f"{action}:code:{phone_e164}"
         await self.redis.delete(key_verified)
+        await self.redis.delete(key_code)
 
     async def delete_verified_email_code(self, email: EmailStr, action: str):
-        await self.redis.delete(f"{action}:code_verified:{email}")
+        key_verified = f"{action}:code_verified:{email}"
+        key_code = f"{action}:code:{email}"
+        await self.redis.delete(key_verified)
+        await self.redis.delete(key_code)
 
     async def set_password_after_reset(self, data: SetNewPasswordAfterResetInput, db:DBDep):
-        if not (data.phone or data.email):
-            raise ResetPasswordValidationServiceException(detail="Укажите номер телефона или email.")
+        valid_phone_obj = await self.validate_russian_phone(str(data.phone))
+        phone_e164 = phonenumbers.format_number(valid_phone_obj, phonenumbers.PhoneNumberFormat.E164)
 
-        if data.phone and data.email:
-            raise ResetPasswordValidationServiceException(detail="Укажите что-то одно: телефон или email.") 
+        key_verified = f"reset:code_verified:{phone_e164}"
+        if not await self.redis.get(key_verified):
+            raise AuthCodeNotVerifiedServiceException(detail="Код для сброса пароля не был подтвержден или срок действия истек.")
 
-        identifier_type = "" 
-        identifier_value = ""
-        user_object_key = "" 
-        valid_phone_obj: phonenumbers.PhoneNumber | None = None
-
-        if data.phone:
-            valid_phone_obj = await self.validate_russian_phone(data.phone)
-            identifier_type = "phone"
-            identifier_value = phonenumbers.format_number(valid_phone_obj, phonenumbers.PhoneNumberFormat.E164)
-            user_object_key = "phone"
-        elif data.email:
-            identifier_type = "email"
-            identifier_value = data.email
-            user_object_key = "email"
-
-        is_verified_key = f"reset:code_verified:{identifier_value}"
-        is_verified_value = await self.redis.get(is_verified_key)
-        
-        is_verified_str = is_verified_value.decode('utf-8') if isinstance(is_verified_value, bytes) else str(is_verified_value)
-
-        if not is_verified_value or is_verified_str != "true":
-            raise AuthCodeNotVerifiedServiceException(detail="Код не был верифицирован или сессия истекла.")
-        
-        try:
-            user = await db.users.get_one(**{user_object_key: identifier_value})
-        except UserNotFoundException:
-            raise UserNotFoundAuthServiceException(detail="Пользователь не найден.")
-        
-        self.validate_password_strength(data.new_password) 
+        self.validate_password_strength(data.new_password)
         hashed_password = self.hash_password(data.new_password)
-        
-        await db.users.edit(id=user.id, data={"hashed_password": hashed_password})
-        await db.commit()
 
-        if identifier_type == "phone" and valid_phone_obj:
-            await self.delete_verified_phone_code(valid_phone_obj, "reset")
-        elif identifier_type == "email":
-            await self.delete_verified_email_code(EmailStr(identifier_value), "reset") 
+        try:
+            user = await db.users.get_one(phone=phone_e164)
+            updated_user_data = UserAdd(
+                phone=PydanticPhoneNumber(phone_e164),
+                email=user.email,
+                name=user.name,
+                surname=user.surname,
+                grade=user.grade,
+                is_super_user=user.is_super_user,
+                hashed_password=hashed_password
+            )
+            await db.users.edit(user_id=user.id, data_changes=updated_user_data.model_dump(exclude_unset=True))
+            await db.commit()
             
-        return {"status": "OK, password changed"}
+            await self.redis.delete(key_verified)
+            await self.redis.delete(f"reset:code:{phone_e164}")
+
+        except UserNotFoundException:
+            raise UserNotFoundAuthServiceException(detail="Пользователь не найден во время установки нового пароля.")
+        
+        return {"status": "OK, password has been reset"}
 
     async def set_password_for_authenticated_user(self, request: Request, response: Response, data: SetPasswordInput, db: DBDep):
         payload = await self.get_current_user_payload(request, response, db) 

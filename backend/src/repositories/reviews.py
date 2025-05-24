@@ -67,7 +67,7 @@ class ReviewsRepository(BaseRepository):
         query = select(ReviewsOrm).filter_by(**filter_by)
         result = await self.session.execute(query)
         try:
-            result = result.scalars_one()
+            result = result.scalar_one()
         except NoResultFound:
             raise self.not_found_exception
         return ReviewsIdMapper.map_to_domain_entity(result)
@@ -78,7 +78,7 @@ class ReviewsRepository(BaseRepository):
         stmt = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(stmt)
         try:
-            obj = result.scalars_one()
+            obj = result.scalar_one()
         except NoResultFound:
             raise self.not_found_exception
 
