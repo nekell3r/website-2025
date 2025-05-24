@@ -1,6 +1,6 @@
 from pydantic import BaseModel, HttpUrl, EmailStr
 from datetime import datetime
-from typing import Optional, Literal
+from typing import Optional
 
 
 class CreatePaymentRequest(BaseModel):
@@ -19,6 +19,7 @@ class PaymentWebhookData(BaseModel):
     paid_at: Optional[datetime] = None
     fiscal_receipt_url: Optional[HttpUrl] = None
 
+
 class Purchase(BaseModel):
     user_id: int
     product_slug: str
@@ -27,7 +28,3 @@ class Purchase(BaseModel):
     status: str
     paid_at: Optional[datetime] = None
     fiscal_receipt_url: Optional[str] = None
-
-
-
-

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, DateTime,  JSON, ForeignKey
+from sqlalchemy import String, DateTime, JSON, ForeignKey
 from datetime import datetime, timezone
 
 from src.database import Base
@@ -10,7 +10,9 @@ class PaymentOrm(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    product_slug: Mapped[String] = mapped_column(ForeignKey("products.slug"), nullable=False)
+    product_slug: Mapped[String] = mapped_column(
+        ForeignKey("products.slug"), nullable=False
+    )
 
     payment_id: Mapped[str] = mapped_column(String(255), unique=True)
     status: Mapped[str] = mapped_column(String(50), default="pending")

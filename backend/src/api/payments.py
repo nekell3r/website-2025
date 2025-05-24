@@ -8,6 +8,7 @@ from src.services.payments import PaymentsService
 
 router = APIRouter(prefix="/payments", tags=["Платежи"])
 
+
 @router.post("", response_model=CreatePaymentResponse)
 async def create_payment_endpoint(
     request: CreatePaymentRequest,
@@ -17,14 +18,13 @@ async def create_payment_endpoint(
     data = await PaymentsService().create_payment(data=request, db=db, user_id=user_id)
     return data
 
+
 @router.post("/webhook")
-async def yookassa_webhook(
-        request: Request,
-        db: DBDep
-    ):
+async def yookassa_webhook(request: Request, db: DBDep):
     payload = await request.json()
     result = await PaymentsService().process_webhook(payload=payload, db=db)
     return JSONResponse(status_code=200, content=result)
+
 
 @router.get("/purchases", summary="Получение купленных продуктов пользователя")
 async def get_user_purchases(db: DBDep, user_id: UserIdDep):

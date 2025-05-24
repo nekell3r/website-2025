@@ -12,13 +12,16 @@ class ReviewBase(BaseModel):
     result: int = Field(..., ge=0)
     review: str
 
+
 class Review(ReviewBase):
     created_at: datetime
     edited_at: datetime
 
+
 class ReviewWithId(Review):
     user_id: int
     id: int
+
 
 class ReviewAddRequest(ReviewBase):
     @field_validator("result")

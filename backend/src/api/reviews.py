@@ -1,16 +1,13 @@
 import sys
 
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body
 from pathlib import Path
-from starlette import status
 
-from src.dependencies.auth import UserIdDep, PaginationDep, UserRoleDep
+from src.dependencies.auth import UserIdDep, PaginationDep
 from src.dependencies.db import DBDep
 from src.schemas.reviews import (
     ReviewAddRequest,
     ReviewPatch,
-    ReviewAdd,
-    ReviewWithId,
 )
 from src.services.reviews import ReviewsService
 
@@ -26,8 +23,11 @@ router = APIRouter(prefix="/reviews", tags=["Отзывы"])
     "Также принимает параметры пагинации per_page и page. "
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
-async def get_reviews_by_exam_type(exam_type: str, db: DBDep, pagination: PaginationDep):
+async def get_reviews_by_exam_type(
+    exam_type: str, db: DBDep, pagination: PaginationDep
+):
     return await ReviewsService().get_reviews(exam_type, db, pagination)
+
 
 @router.post(
     "",
@@ -103,10 +103,6 @@ async def update_review(
     description="Удаление отзыва по id из личного кабинета. Принимает на вход только id отзыва. Если отзыва не существует, вернется ошибка 404."
     "Если удалено успешно, ответ формата {'status' : 'ok'}",
 )
-async def delete_review(
-        db: DBDep,
-        user_id: UserIdDep,
-        review_id: int
-):
+async def delete_review(db: DBDep, user_id: UserIdDep, review_id: int):
     result = await ReviewsService().delete_review(db, user_id, review_id)
     return result

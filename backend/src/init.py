@@ -8,6 +8,7 @@ redis_manager = RedisManager(
     port=settings.REDIS_PORT,
 )
 
+
 def init_yookassa(shop_id: str, secret_key: str):
     Configuration.account_id = shop_id
     Configuration.secret_key = secret_key

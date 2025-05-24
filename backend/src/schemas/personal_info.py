@@ -1,9 +1,8 @@
-from typing import Annotated, Optional
+from typing import Optional
 
-from pydantic import BaseModel, EmailStr
-from pydantic_extra_types.phone_numbers import PhoneNumber
-from annotated_types import MinLen, MaxLen, Ge, Le
+from pydantic import BaseModel
 from datetime import datetime
+
 
 class BoughtProduct(BaseModel):
     name: str

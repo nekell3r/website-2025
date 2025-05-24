@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 
 router = APIRouter(prefix="", tags=["корень"])
 
+
 @router.head("/")
 async def get_root():
-    return {"status":"Ok"}
+    return {"status": "Ok"}

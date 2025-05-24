@@ -67,18 +67,20 @@ class RegistrationInput(BaseModel):
     phone_code: Annotated[int, Ge(1000), Le(9999)]
     email_code: Annotated[int, Ge(1000), Le(9999)] | None = None
 
-    @model_validator(mode='after')
-    def check_passwords_match(self) -> 'RegistrationInput':
+    @model_validator(mode="after")
+    def check_passwords_match(self) -> "RegistrationInput":
         if self.password != self.password_repeat:
-            raise ValueError('passwords do not match')
+            raise ValueError("passwords do not match")
         return self
 
-    @model_validator(mode='after')
-    def check_email_and_code_consistency(self) -> 'RegistrationInput':
+    @model_validator(mode="after")
+    def check_email_and_code_consistency(self) -> "RegistrationInput":
         if self.email and self.email_code is None:
-            raise ValueError('email_code is required when email is provided')
+            raise ValueError("email_code is required when email is provided")
         if not self.email and self.email_code is not None:
-            raise ValueError('email_code should not be provided without an email address')
+            raise ValueError(
+                "email_code should not be provided without an email address"
+            )
         return self
 
 
@@ -92,10 +94,10 @@ class SetNewPasswordAfterResetInput(BaseModel):
     new_password: str = Field(..., min_length=8)
     new_password_repeat: str = Field(..., min_length=8)
 
-    @model_validator(mode='after')
-    def check_new_passwords_match(self) -> 'SetNewPasswordAfterResetInput':
+    @model_validator(mode="after")
+    def check_new_passwords_match(self) -> "SetNewPasswordAfterResetInput":
         if self.new_password != self.new_password_repeat:
-            raise ValueError('new passwords do not match')
+            raise ValueError("new passwords do not match")
         return self
 
 
@@ -104,8 +106,8 @@ class SetPasswordInput(BaseModel):
     new_password: str = Field(..., min_length=8)
     new_password_repeat: str = Field(..., min_length=8)
 
-    @model_validator(mode='after')
-    def check_new_passwords_match(self) -> 'SetPasswordInput':
+    @model_validator(mode="after")
+    def check_new_passwords_match(self) -> "SetPasswordInput":
         if self.new_password != self.new_password_repeat:
-            raise ValueError('new passwords do not match')
+            raise ValueError("new passwords do not match")
         return self

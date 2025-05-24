@@ -9,6 +9,7 @@ class Product(BaseModel):
     description: str | None = "Test_description"
     slug: str
 
+
 class ProductPatch(BaseModel):
     name: Optional[str] = None
     price: Optional[int] = None

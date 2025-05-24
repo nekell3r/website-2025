@@ -12,6 +12,7 @@ class ProductsOrm(Base):
     download_link: Mapped[str] = mapped_column(String(500), nullable=False)
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
-    slug : Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    slug: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+
 
 # imperative mapping

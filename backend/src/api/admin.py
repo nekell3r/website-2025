@@ -13,21 +13,21 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 router = APIRouter(prefix="/admin", tags=["Админка"])
 
-@router.get(
-    "/reviews"
-)
+
+@router.get("/reviews")
 async def get_reviews(
     is_super: UserRoleDep,
     db: DBDep,
     pagination: PaginationDep,
-    ):
-        return await ReviewsService().admin_get_reviews(is_super, db, pagination)
+):
+    return await ReviewsService().admin_get_reviews(is_super, db, pagination)
+
 
 @router.delete(
     "/reviews/{review_id}",
     summary="Удаление отзыва",
     description="Удаляет отзыв по id. id передается в теле запроса в формате json. "
-                "Пример: {\"id\": 1}. Возвращает статус 200 и сообщение об успешном удалении",
+    'Пример: {"id": 1}. Возвращает статус 200 и сообщение об успешном удалении',
 )
 async def delete_review(
     is_super: UserRoleDep,
@@ -37,17 +37,15 @@ async def delete_review(
     return await ReviewsService().admin_delete_review(db, is_super, review_id)
 
 
-@router.get("/products", summary="Все продукты. Используется в личном кабинете суперюзера")
+@router.get(
+    "/products", summary="Все продукты. Используется в личном кабинете суперюзера"
+)
 async def get_products(is_super: UserRoleDep, db: DBDep):
     return await ProductService().get_products(is_super=is_super, db=db)
 
 
 @router.get("/products/{slug}", summary="Определенный продукт")
-async def get_product(
-        is_super: UserRoleDep,
-        db: DBDep,
-        slug: str
-):
+async def get_product(is_super: UserRoleDep, db: DBDep, slug: str):
     return await ProductService().get_product(slug=slug, is_super=is_super, db=db)
 
 
@@ -114,4 +112,6 @@ async def update_product(
         }
     ),
 ):
-    return await ProductService().edit_product(data=data, slug=slug, is_super=is_super, db=db)
+    return await ProductService().edit_product(
+        data=data, slug=slug, is_super=is_super, db=db
+    )

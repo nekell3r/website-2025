@@ -5,49 +5,13 @@ import os
 from contextlib import asynccontextmanager
 import asyncpg
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi_cache import FastAPICache
-from fastapi.responses import JSONResponse
 from fastapi_cache.backends.redis import RedisBackend
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 
-
-# Определяем, какой .env файл загружать, если вообще нужно
-mode = os.environ.get('MODE')
-
-if mode is None or mode == 'LOCAL':
-    # print(f"DEBUG (main.py): MODE is '{mode}'. Loading .local_env_example for local development.")
-    # Для локального запуска (когда MODE не установлен или MODE=LOCAL)
-    # загружаем .local_env_example.
-    # Это полезно, если вы запускаете uvicorn src.main:app --reload напрямую
-    # без Docker и без предварительной установки переменных окружения.
-    load_dotenv(dotenv_path='.local_env_example', override=True)
-elif mode == 'TEST':
-    # print(f"DEBUG (main.py): MODE is 'TEST'. Skipping explicit .env load. Expecting pytest-dotenv or similar.")
-    # Для тестов (MODE=TEST) ничего не делаем здесь,
-    # так как pytest-dotenv (или аналогичный инструмент) должен был уже загрузить .env-test
-    pass
-else:
-    # print(f"DEBUG (main.py): MODE is '{mode}' (e.g., DEV, PROD). Skipping explicit .env load. Expecting variables from Docker environment.")
-    # Для других режимов, таких как DEV, PROD (когда приложение запущено в Docker),
-    # мы ожидаем, что переменные окружения будут предоставлены средой Docker
-    # (например, через docker-compose.yml или переменные среды CI/CD).
-    # Никакие .env файлы здесь не загружаем, чтобы не перезаписать внешнюю конфигурацию.
-    pass
-
-# Условная загрузка .env файла
-# if os.environ.get('MODE') != 'TEST':
-    # print(f"DEBUG (main.py): MODE is not 'TEST' (current value: {os.environ.get('MODE')}). Loading .local_env_example.")
-#    load_dotenv(dotenv_path='.local_env_example', override=True)
-# else:
-    # print(f"DEBUG (main.py): MODE is 'TEST'. Skipping load of .local_env_example, relying on existing env (e.g., from .env-test).")
-
-# print(f"DEBUG (main.py @ after conditional load_dotenv): os.environ.get('DB_HOST') = {os.environ.get('DB_HOST')}")
-# print(f"DEBUG (main.py @ after conditional load_dotenv): os.environ.get('MODE') = {os.environ.get('MODE')}")
-
-sys.path.append(str(Path(__file__).parent.parent))
-
+# Импорты из src
 from src.exceptions.service_exceptions import MadRussianServiceException
 from src.exceptions.handlers import mad_russian_service_exception_handler
 from src.api.root import router as root_router
@@ -63,6 +27,21 @@ from src.api.personal_info import router as personal_info_router
 from src.init import redis_manager, init_yookassa
 from src.config import settings
 
+# Инициализация окружения и путей
+def early_setup():
+    mode = os.environ.get("MODE")
+
+    if mode is None or mode == "LOCAL":
+        load_dotenv(dotenv_path=".local_env_example", override=True)
+    elif mode == "TEST":
+        pass
+    else:
+        pass
+
+    sys.path.append(str(Path(__file__).parent.parent))
+
+early_setup()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -74,7 +53,9 @@ async def lifespan(app: FastAPI):
         await conn.close()
         # print("DEBUG: Database connection successful.")
     except Exception as e:
-        print(f"CRITICAL: Failed to connect to the database on startup: {e}") # Оставим CRITICAL
+        print(
+            f"CRITICAL: Failed to connect to the database on startup: {e}"
+        )  # Оставим CRITICAL
 
     await redis_manager.connect()
     FastAPICache.init(RedisBackend(redis_manager.redis), prefix="fastapi-cache")
@@ -85,11 +66,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-app.add_exception_handler(MadRussianServiceException, mad_russian_service_exception_handler)
+app.add_exception_handler(
+    MadRussianServiceException, mad_russian_service_exception_handler
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://localhost:63342", "http://localhost:3000", "http://127.0.0.1:8000"], 
+    allow_origins=[
+        "http://localhost:8000",
+        "http://localhost:63342",
+        "http://localhost:3000",
+        "http://127.0.0.1:8000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -106,4 +94,4 @@ app.include_router(users_register_router)
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0" ,reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", reload=True)

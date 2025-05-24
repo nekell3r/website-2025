@@ -46,20 +46,26 @@ class BaseRepository:
         dumped_data = data.model_dump()
         # В UsersRepository.add мы уже нормализуем 'phone', если это он
         add_data_stmt_returning_model = (
-             insert(self.model).values(**dumped_data).returning(self.model)
+            insert(self.model).values(**dumped_data).returning(self.model)
         )
         result_model = await self.session.execute(add_data_stmt_returning_model)
         created_model_instance = result_model.scalars().one()
         return self.mapper.map_to_domain_entity(created_model_instance)
 
-    async def edit(self, data: BaseModel | dict, exclude_unset_for_model: bool = True, **filter_by):
+    async def edit(
+        self, data: BaseModel | dict, exclude_unset_for_model: bool = True, **filter_by
+    ):
         if not filter_by:
             # Можно выбросить ValueError, если фильтр обязателен и не должен быть пустым
             # Либо, если обновление без фильтра недопустимо, это должно быть более строгой ошибкой.
             # Пока оставим возможность вызова без ошибки, но это может быть нежелательно.
-            print(f"ПРЕДУПРЕЖДЕНИЕ (BaseRepository.edit): Вызов edit без критериев фильтрации (**filter_by пуст).")
+            print(
+                "ПРЕДУПРЕЖДЕНИЕ (BaseRepository.edit): Вызов edit без критериев фильтрации (**filter_by пуст)."
+            )
             # return # Если хотим прервать выполнение
-            raise ValueError("Критерии фильтрации для операции edit не могут быть пустыми.")
+            raise ValueError(
+                "Критерии фильтрации для операции edit не могут быть пустыми."
+            )
 
         values_to_update = {}
         if isinstance(data, BaseModel):
@@ -69,22 +75,26 @@ class BaseRepository:
         else:
             raise TypeError("Data for edit must be a Pydantic model or a dictionary.")
 
-        if not values_to_update: 
-            print(f"DEBUG (BaseRepository.edit): Нет данных для обновления по фильтру: {filter_by}.")
-            return 
+        if not values_to_update:
+            print(
+                f"DEBUG (BaseRepository.edit): Нет данных для обновления по фильтру: {filter_by}."
+            )
+            return
 
         update_stmt = (
-            update(self.model)
-            .filter_by(**filter_by)
-            .values(**values_to_update)
+            update(self.model).filter_by(**filter_by).values(**values_to_update)
         )
         await self.session.execute(update_stmt)
 
     async def delete(self, **filter_by):
         if not filter_by:
             # Аналогично edit, можно добавить проверку на пустой filter_by
-            print(f"ПРЕДУПРЕЖДЕНИЕ (BaseRepository.delete): Вызов delete без критериев фильтрации (**filter_by пуст).")
+            print(
+                "ПРЕДУПРЕЖДЕНИЕ (BaseRepository.delete): Вызов delete без критериев фильтрации (**filter_by пуст)."
+            )
             # return
-            raise ValueError("Критерии фильтрации для операции delete не могут быть пустыми.")
+            raise ValueError(
+                "Критерии фильтрации для операции delete не могут быть пустыми."
+            )
         query = delete(self.model).filter_by(**filter_by)
         await self.session.execute(query)

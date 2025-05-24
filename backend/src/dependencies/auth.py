@@ -13,20 +13,18 @@ class PaginationParams(BaseModel):
 
 PaginationDep = Annotated[PaginationParams, Depends()]
 
+
 def get_current_user_dp(dp: str):
     async def dependency(
         request: Request,
         response: Response,
-        auth_service: AuthService = Depends(AuthService)
+        auth_service: AuthService = Depends(AuthService),
     ):
         payload: dict = await auth_service.get_current_user_payload(request, response)
         return payload[dp]
-    return dependency
 
+    return dependency
 
 
 UserIdDep = Annotated[int, Depends(get_current_user_dp("id"))]
 UserRoleDep = Annotated[bool, Depends(get_current_user_dp("is_super_user"))]
-
-
-

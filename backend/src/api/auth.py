@@ -12,7 +12,7 @@ from src.schemas.users import (
     EmailInput,
     RegistrationInput,
     ResetCodeVerifyInput,
-    SetNewPasswordAfterResetInput
+    SetNewPasswordAfterResetInput,
 )
 from src.services.auth import AuthService
 
@@ -87,7 +87,7 @@ async def verify_register(
                     "phone": "+79011234561",
                     "password": "Password123!",
                     "password_repeat": "Password123!",
-                    "phone_code": 1111
+                    "phone_code": 1111,
                 },
             },
             "phone_and_email_valid": {
@@ -99,7 +99,7 @@ async def verify_register(
                     "password": "AnotherPassword456$",
                     "password_repeat": "AnotherPassword456$",
                     "phone_code": 2222,
-                    "email_code": 3333
+                    "email_code": 3333,
                 },
             },
         }
@@ -107,6 +107,7 @@ async def verify_register(
 ):
     await AuthService().verify_registration(data=data, db=db)
     return {"status": "Ok, пользователь успешно зарегистрирован"}
+
 
 @reset.post(
     "",
@@ -137,10 +138,7 @@ async def verify_reset_code(
         openapi_examples={
             "phone_code_verify_for_reset": {
                 "summary": "Верификация кода (сброс по телефону)",
-                "value": {
-                    "phone": "+79033456789",
-                    "code": 1234
-                },
+                "value": {"phone": "+79033456789", "code": 1234},
             }
         },
     ),
@@ -159,7 +157,7 @@ async def set_new_password_after_reset(
                 "value": {
                     "phone": "+79033456789",
                     "new_password": "NewPassword123!",
-                    "new_password_repeat": "NewPassword123!"
+                    "new_password_repeat": "NewPassword123!",
                 },
             }
         },
@@ -183,14 +181,14 @@ async def login_user(
             "login_registered_user_1": {
                 "summary": "Вход пользователя (из примера регистрации phone_only_valid)",
                 "value": {
-                    "phone": "+79011234561", 
+                    "phone": "+79011234561",
                     "password": "Password123!",
                 },
             },
             "login_example_2": {
                 "summary": "Вход пользователя (другой пример)",
                 "value": {
-                    "phone": "+79041234564", 
+                    "phone": "+79041234564",
                     "password": "LoginPassword2@",
                 },
             },
@@ -198,15 +196,24 @@ async def login_user(
     ),
 ):
     try:
-        phone_str_to_search = str(data.phone) 
+        phone_str_to_search = str(data.phone)
         parsed_num = phonenumbers.parse(phone_str_to_search, None)
         if not phonenumbers.is_valid_number(parsed_num):
-            raise HTTPException(status_code=400, detail="Неверный формат номера телефона для логина.")
-        
-        phone_e164_for_search = phonenumbers.format_number(parsed_num, phonenumbers.PhoneNumberFormat.E164)
-        print(f"DEBUG (login_user API): Ищем пользователя по нормализованному номеру: {phone_e164_for_search}")
+            raise HTTPException(
+                status_code=400, detail="Неверный формат номера телефона для логина."
+            )
+
+        phone_e164_for_search = phonenumbers.format_number(
+            parsed_num, phonenumbers.PhoneNumberFormat.E164
+        )
+        print(
+            f"DEBUG (login_user API): Ищем пользователя по нормализованному номеру: {phone_e164_for_search}"
+        )
     except NumberParseException:
-        raise HTTPException(status_code=400, detail="Неверный формат номера телефона при парсинге для логина.")
+        raise HTTPException(
+            status_code=400,
+            detail="Неверный формат номера телефона при парсинге для логина.",
+        )
 
     user = await db.users.get_user_with_hashed_password(phone=phone_e164_for_search)
     if not user:

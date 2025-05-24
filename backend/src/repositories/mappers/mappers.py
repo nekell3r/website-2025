@@ -1,10 +1,6 @@
 from src.models.reviews import ReviewsOrm
 from src.repositories.mappers.base import DataMapper
-from src.schemas.reviews import (
-    ReviewBase,
-    ReviewPatch,
-    ReviewWithId, Review
-)
+from src.schemas.reviews import ReviewPatch, ReviewWithId, Review
 from src.models.users import UsersOrm
 from src.schemas.users import User
 from src.models.products import ProductsOrm

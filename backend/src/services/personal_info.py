@@ -1,17 +1,16 @@
-from fastapi import HTTPException
-
-
 from src.dependencies.auth import UserIdDep
 from src.dependencies.db import DBDep
 from src.schemas.users import UserUpdate, User
-from src.exceptions.db_exceptions import UserNotFoundException, ProductNotFoundException, PurchaseNotFoundException
+from src.exceptions.db_exceptions import (
+    UserNotFoundException,
+    ProductNotFoundException,
+    PurchaseNotFoundException,
+)
 from src.exceptions.service_exceptions import (
     UserNotFoundServiceException,
     ProductNotFoundServiceException,
-    PurchaseNotFoundServiceException,
-    ProductNotPurchasedServiceException
+    ProductNotPurchasedServiceException,
 )
-from src.services.auth import AuthService
 
 
 class InfoService:
@@ -22,9 +21,11 @@ class InfoService:
             raise UserNotFoundServiceException
         return user
 
-    async def update_user_info(self, new_data: UserUpdate, user_id: UserIdDep, db: DBDep):
+    async def update_user_info(
+        self, new_data: UserUpdate, user_id: UserIdDep, db: DBDep
+    ):
         try:
-            user = await db.users.get_one(id=user_id)
+            await db.users.get_one(id=user_id)
         except UserNotFoundException:
             raise UserNotFoundServiceException
         await db.users.edit(data=new_data, exclude_unset_for_model=True, id=user_id)
@@ -33,7 +34,7 @@ class InfoService:
 
     async def get_product(self, slug: str, user_id: UserIdDep, db: DBDep):
         try:
-            user = await db.users.get_one(id=user_id)
+            await db.users.get_one(id=user_id)
         except UserNotFoundException:
             raise UserNotFoundServiceException
         try:
@@ -41,7 +42,9 @@ class InfoService:
         except ProductNotFoundException:
             raise ProductNotFoundServiceException
         try:
-            await db.purchases.get_one(product_slug=slug, user_id=user_id, status="Paid")
+            await db.purchases.get_one(
+                product_slug=slug, user_id=user_id, status="Paid"
+            )
         except PurchaseNotFoundException:
             raise ProductNotPurchasedServiceException
         return product

@@ -1,7 +1,6 @@
 from functools import lru_cache
-from pathlib import Path
 from typing import Literal, Any
-import os
+
 # Убираем прямой вызов load_dotenv из python-dotenv.
 # Для тестов полагаемся на pytest-dotenv (через pytest.ini).
 # Для запуска приложения (LOCAL/DEV/PROD) переменные окружения должны быть установлены
@@ -12,15 +11,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # print(f"DEBUG (config.py @ top): os.environ.get('MODE') = {os.environ.get('MODE')}")
 
+
 class _SettingsStore:
-    _instance: BaseSettings | None = None # Будет хранить экземпляр ActualSettings
+    _instance: BaseSettings | None = None  # Будет хранить экземпляр ActualSettings
 
     @staticmethod
-    @lru_cache(maxsize=1) # Кэшируем, чтобы инициализация была только раз
+    @lru_cache(maxsize=1)  # Кэшируем, чтобы инициализация была только раз
     def get_instance() -> BaseSettings:
         if _SettingsStore._instance is None:
             # print(f"DEBUG (config.py - _SettingsStore.get_instance): Lazily initializing ActualSettings. Current os.environ.get('MODE') = {os.environ.get('MODE')}")
-            
+
             class ActualSettings(BaseSettings):
                 MODE: Literal["TEST", "LOCAL", "DEV", "PROD"]
                 DB_NAME: str
@@ -50,22 +50,26 @@ class _SettingsStore:
                     return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
                 model_config = SettingsConfigDict(
-                    env_file=None, # Pydantic должен читать только из os.environ
-                    extra='ignore',
+                    env_file=None,  # Pydantic должен читать только из os.environ
+                    extra="ignore",
                 )
-            
+
             _SettingsStore._instance = ActualSettings()
             # print(f"DEBUG (config.py - _SettingsStore.get_instance): ActualSettings initialized. MODE={_SettingsStore._instance.MODE}, DB_HOST={_SettingsStore._instance.DB_HOST}")
         return _SettingsStore._instance
+
 
 # Создаем прокси-объект, который будет использоваться как `settings`
 class SettingsProxy:
     def __getattr__(self, name: str) -> Any:
         # Это вызовет _SettingsStore.get_instance() только при первом обращении к любому атрибуту settings
         instance = _SettingsStore.get_instance()
-        if instance is None: # Добавим проверку на всякий случай
-            raise AttributeError(f"Settings instance is None, cannot get attribute '{name}'")
+        if instance is None:  # Добавим проверку на всякий случай
+            raise AttributeError(
+                f"Settings instance is None, cannot get attribute '{name}'"
+            )
         return getattr(instance, name)
+
 
 settings = SettingsProxy()
 
@@ -73,4 +77,3 @@ settings = SettingsProxy()
 
 # Далее будет SettingsProxy и settings = SettingsProxy()
 # ... (остальная часть файла будет в следующем шаге)
-

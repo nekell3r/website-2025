@@ -20,6 +20,7 @@ class ReviewsRepository(BaseRepository):
     schema = Review
     mapper = ReviewsMapper
     not_found_exception = ReviewNotFoundException
+
     async def get_all(self, exam, limit, offset) -> list[Review]:
         query = select(ReviewsOrm).filter_by(exam=exam)
         query = query.limit(limit).offset(offset)
@@ -47,12 +48,7 @@ class ReviewsRepository(BaseRepository):
         return answer
 
     async def get_all_filtered(self, limit, offset, **filter_by) -> list[ReviewWithId]:
-        query = (
-            select(ReviewsOrm)
-            .filter_by(**filter_by)
-            .limit(limit)
-            .offset(offset)
-        )
+        query = select(ReviewsOrm).filter_by(**filter_by).limit(limit).offset(offset)
         print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
         answer = [
@@ -78,16 +74,14 @@ class ReviewsRepository(BaseRepository):
         stmt = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(stmt)
         try:
-            obj = result.scalar_one()
+            result.scalar_one()
         except NoResultFound:
             raise self.not_found_exception
 
         update_stmt = (
             update(self.model)
             .filter_by(**filter_by)
-            .values(
-                **data.model_dump(exclude_unset=exclude_unset)
-                )
-            )
+            .values(**data.model_dump(exclude_unset=exclude_unset))
+        )
 
         await self.session.execute(update_stmt)
