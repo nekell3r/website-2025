@@ -1,3 +1,5 @@
+# Third-party imports
+from dotenv import load_dotenv
 import pytest
 from pydantic_extra_types.phone_numbers import PhoneNumber
 from unittest import mock
@@ -13,6 +15,9 @@ from src.models import *  # noqa: F403
 from src.schemas.users import UserAdd
 from src.services.auth import AuthService
 from src.utils.db_manager import DBManager
+
+# Module-level executable code AFTER all imports
+load_dotenv()
 
 
 # Патч fastapi_cache после импортов
