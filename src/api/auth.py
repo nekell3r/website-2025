@@ -2,15 +2,17 @@ import sys
 
 from fastapi import APIRouter, Body, Response, HTTPException, Request
 from pathlib import Path
+import phonenumbers
+from phonenumbers.phonenumberutil import NumberParseException
 
 from src.dependencies.db import DBDep
 from src.schemas.users import (
-    UserRequestAdd,
     UserLogin,
     PhoneInput,
-    PhoneWithCode,
     EmailInput,
-    PhoneWithPassword,
+    RegistrationInput,
+    ResetCodeVerifyInput,
+    SetNewPasswordAfterResetInput
 )
 from src.services.auth import AuthService
 
@@ -78,32 +80,28 @@ async def send_email_code(
 )
 async def verify_register(
     db: DBDep,
-    data: UserRequestAdd = Body(
+    data: RegistrationInput = Body(
         openapi_examples={
-            "1": {
-                "summary": "Пользователь 1",
+            "phone_only": {
+                "summary": "Регистрация по телефону",
                 "value": {
                     "phone": "+79282017042",
-                    "code_phone": 0,
-                    "password": "Test_password_123",
-                    "password_repeat": "Test_password_123",
+                    "code": "1234",
+                    "password": "Test_password_123"
                 },
             },
-            "2": {
-                "summary": "Пользователь 2",
+            "email_only": {
+                "summary": "Регистрация по email",
                 "value": {
-                    "phone": "+79876543210",
                     "email": "pashka@gmail.com",
-                    "code_phone": 0,
-                    "code_email": 0,
-                    "password": "Test_password_12345",
-                    "password_repeat": "Test_password_12345",
+                    "code": "4321",
+                    "password": "Test_password_12345"
                 },
             },
         }
     ),
 ):
-    await AuthService().verify_registragion(data=data, db=db)
+    await AuthService().verify_registration(data=data, db=db)
     return {"status": "Ok, пользователь успешно зарегистрирован"}
 
 @reset.post(
@@ -134,58 +132,55 @@ async def send_reset_code(
     return {"status": "Ok, код сброса пароля отправлен"}
 
 
-@reset.post("/verify", summary="проверка кода верификации")
-async def verify_code(
+@reset.post("/verify", summary="Проверка кода верификации для сброса пароля")
+async def verify_reset_code(
     db: DBDep,
-    data: PhoneWithCode = Body(
+    data: ResetCodeVerifyInput = Body(
         openapi_examples={
-            "1": {
-                "summary": "number 1",
+            "phone_code_verify": {
+                "summary": "Верификация по телефону",
                 "value": {
                     "phone": "+79282017042",
-                    "code": 9999
+                    "code": "1234"
                 },
             },
-            "2": {
-                "summary": "number 2",
+            "email_code_verify": {
+                "summary": "Верификация по email",
                 "value": {
-                    "phone": "+79876543210",
-                    "code": 9999
+                    "email": "pashka@gmail.com",
+                    "code": "4321"
                 },
             },
         },
     ),
 ):
-
     await AuthService().verify_reset(data=data, db=db)
     return {"status": "OK, verification code is correct"}
 
 
-@reset.post("/password", summary="Установка нового пароля")
-async def set_password(
+@reset.post("/password", summary="Установка нового пароля после сброса")
+async def set_new_password_after_reset(
     db: DBDep,
-    data: PhoneWithPassword = Body(
+    data: SetNewPasswordAfterResetInput = Body(
         openapi_examples={
-            "1": {
-                "summary": "number 1",
+            "phone_set_new_pass": {
+                "summary": "Новый пароль по телефону",
                 "value": {
                     "phone": "+79282017042",
-                    "password": "Reset_password_123",
-                    "password_repeat": "Reset_password_123",  # тут была опечатка
+                    "new_password": "NewStrongPassword1!",
                 },
             },
-            "2": {
-                "summary": "number 2",
+            "email_set_new_pass": {
+                "summary": "Новый пароль по email",
                 "value": {
-                    "phone": "+79876543210",
-                    "password": "Reset_password_12345",
-                    "password_repeat": "Reset_password_12345",
+                    "email": "pashka@gmail.com",
+                    "new_password": "AnotherNewStrongPassword1!",
                 },
             },
         },
     ),
 ):
-    await AuthService().set_password(data=data, db=db)
+    await AuthService().set_password_after_reset(data=data, db=db)
     return {"status": "Ok, пароль изменён"}
 
 
@@ -217,7 +212,18 @@ async def login_user(
         }
     ),
 ):
-    user = await db.users.get_user_with_hashed_password(phone=data.phone)
+    try:
+        phone_str_to_search = str(data.phone) 
+        parsed_num = phonenumbers.parse(phone_str_to_search, None)
+        if not phonenumbers.is_valid_number(parsed_num):
+            raise HTTPException(status_code=400, detail="Неверный формат номера телефона для логина.")
+        
+        phone_e164_for_search = phonenumbers.format_number(parsed_num, phonenumbers.PhoneNumberFormat.E164)
+        print(f"DEBUG (login_user API): Ищем пользователя по нормализованному номеру: {phone_e164_for_search}")
+    except NumberParseException:
+        raise HTTPException(status_code=400, detail="Неверный формат номера телефона при парсинге для логина.")
+
+    user = await db.users.get_user_with_hashed_password(phone=phone_e164_for_search)
     if not user:
         raise HTTPException(status_code=401, detail="Пользователь не зарегистрирован")
     if not AuthService().verify_password(data.password, user.hashed_password):

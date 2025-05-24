@@ -11,29 +11,33 @@ from src.exceptions.service_exceptions import (ReviewNoRightsServiceException,
                                                ReviewNotFoundServiceException,
                                                PurchaseNotFoundServiceException,
                                                ProductNotFoundServiceException,
-                                               MadRussianServiceException)
+                                               MadRussianServiceException,
+                                               ReviewEditConflictServiceException,
+                                               AdminNoRightsServiceException)
 from src.schemas.reviews import ReviewAdd, ReviewAddRequest, ReviewPatch
 
 
 class ReviewsService:
     async def get_reviews(
         self,
-        exam: str,
+        exam_from_api: str,
         db: DBDep,
         pagination: PaginationDep,
     ):
-        if exam == "ЕГЭ":
-            db_exam = "ege"
-        elif exam == "ОГЭ":
-            db_exam = "oge"
+        db_exam_value_for_filter = ""
+        if exam_from_api == "ege":
+            db_exam_value_for_filter = "ЕГЭ"
+        elif exam_from_api == "oge":
+            db_exam_value_for_filter = "ОГЭ"
         else:
-            raise ReviewWrongFormatServiceException
+            raise ReviewWrongFormatServiceException(detail=f"Недопустимый тип экзамена в URL: {exam_from_api}. Ожидается 'ege' или 'oge'.")
+
         per_page = pagination.per_page or 5
         try:
             data = await db.reviews.get_all_filtered(
                 limit=per_page,
                 offset=per_page * (pagination.page - 1),
-                exam=db_exam,
+                exam=db_exam_value_for_filter,
             )
         except ReviewNotFoundException:
             raise ReviewNotFoundServiceException
@@ -70,26 +74,32 @@ class ReviewsService:
         user_id: int,
         review_data: ReviewAddRequest,
     ):
+        # Используем exam как есть из запроса ("ЕГЭ" или "ОГЭ")
         data = ReviewAdd(
             user_id=user_id,
             review=review_data.review,
-            exam=review_data.exam,
+            exam=review_data.exam, # Используем оригинальное значение review_data.exam
             result=review_data.result,
         )
+        # Проверка формата exam на оригинальных значениях
         if data.exam not in ["ЕГЭ", "ОГЭ"]:
             raise ReviewWrongFormatServiceException
         try:
+            # Для поиска продукта используем оригинальное значение exam из запроса
             product_slug = (await db.products.get_one(name=data.exam)).slug
+            # Для поиска покупки также используем product_slug, полученный по оригинальному имени экзамена
             purchase = await db.purchases.get_one(product_slug=product_slug, user_id=user_id, status="Paid")
         except ProductNotFoundException:
             raise ProductNotFoundServiceException
         except PurchaseNotFoundException:
             raise PurchaseNotFoundServiceException
 
-        current_review = await db.reviews.get_one(exam=data.exam, user_id=user_id)
+        # Проверяем существующий отзыв, используя exam как есть ("ЕГЭ" или "ОГЭ")
+        current_review = await db.reviews.get_one_or_none(exam=data.exam, user_id=user_id)
         if current_review:
             raise ReviewIsExistingServiceException
 
+        # Добавляем отзыв, где data.exam это "ЕГЭ" или "ОГЭ"
         await db.reviews.add(data)
         await db.commit()
         return {"status" : "Ok"}
@@ -113,9 +123,8 @@ class ReviewsService:
         delta = now_utc - review.edited_at
         if delta < timedelta(hours=1):
             minutes_left = 60 - int(delta.total_seconds() // 60)
-            raise HTTPException(
-                status_code=409,
-                detail=f"Редактирование возможно только через {minutes_left} мин.",
+            raise ReviewEditConflictServiceException(
+                detail=f"Редактирование возможно только через {minutes_left} мин."
             )
 
         await db.reviews.edit(review_data, exclude_unset=True, id=review_id)
@@ -148,10 +157,13 @@ class ReviewsService:
     ):
         per_page = pagination.per_page or 5
         if not is_super:
-            raise HTTPException(403, detail="Неавторизованный пользователь")
-        data = await db.reviews.get_all_with_id(limit=per_page, offset=per_page * (pagination.page - 1))
+            raise AdminNoRightsServiceException
+        try:
+            data = await db.reviews.get_all_with_id(limit=per_page, offset=per_page * (pagination.page - 1))
+        except ReviewNotFoundException:
+             raise ReviewNotFoundServiceException
         if not data:
-            raise HTTPException(404, detail="Отзывы не найдены")
+            raise ReviewNotFoundServiceException
         return data
 
     async def admin_delete_review(
@@ -160,11 +172,14 @@ class ReviewsService:
             is_super: UserRoleDep,
             review_id: int
     ):
-        review = await db.reviews.get_one_with_id(id=review_id)
+        try:
+            review = await db.reviews.get_one_with_id(id=review_id)
+        except ReviewNotFoundException:
+            raise ReviewNotFoundServiceException
         if review is None:
-            raise HTTPException(404, detail="Отзыв не найден")
+            raise ReviewNotFoundServiceException
         if not is_super:
-            raise HTTPException(403, detail="Неавторизованный для удаления чужих отзывов пользователь")
+            raise AdminNoRightsServiceException
         await db.reviews.delete(id=review_id)
         await db.commit()
         return {"status": "ok"}

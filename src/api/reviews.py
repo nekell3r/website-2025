@@ -2,6 +2,7 @@ import sys
 
 from fastapi import APIRouter, Body, HTTPException
 from pathlib import Path
+from starlette import status
 
 from src.dependencies.auth import UserIdDep, PaginationDep, UserRoleDep
 from src.dependencies.db import DBDep
@@ -9,6 +10,7 @@ from src.schemas.reviews import (
     ReviewAddRequest,
     ReviewPatch,
     ReviewAdd,
+    ReviewWithId,
 )
 from src.services.reviews import ReviewsService
 
@@ -18,13 +20,14 @@ router = APIRouter(prefix="/reviews", tags=["Отзывы"])
 
 
 @router.get(
-    "{exam}",
-    summary="Получение отзывов всех пользователей",
-    description="Принимает на вход per_page - количество отзывов за 1 прогрузку, page - номер прогрузки(страницы/блока отзывов). "
+    "/{exam_type}",
+    summary="Получение отзывов всех пользователей по типу экзамена",
+    description="Принимает на вход тип экзамена (например, ЕГЭ или ОГЭ) как часть пути. "
+    "Также принимает параметры пагинации per_page и page. "
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
-async def get_reviews(exam: str, db: DBDep, pagination: PaginationDep):
-    return await ReviewsService().get_reviews(exam, db, pagination)
+async def get_reviews_by_exam_type(exam_type: str, db: DBDep, pagination: PaginationDep):
+    return await ReviewsService().get_reviews(exam_type, db, pagination)
 
 @router.post(
     "",

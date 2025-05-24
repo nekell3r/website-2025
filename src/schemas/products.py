@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class Product(BaseModel):
@@ -9,7 +10,7 @@ class Product(BaseModel):
     slug: str
 
 class ProductPatch(BaseModel):
-    name: str | None = None
-    price: int | None = None
-    download_link: str | None = None
-    description: str | None
+    name: Optional[str] = None
+    price: Optional[int] = None
+    download_link: Optional[str] = None
+    description: Optional[str] = None

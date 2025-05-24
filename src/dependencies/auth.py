@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends, Query
+from fastapi import Depends, Query, Request, Response
 from pydantic import BaseModel
 
 
@@ -15,9 +15,11 @@ PaginationDep = Annotated[PaginationParams, Depends()]
 
 def get_current_user_dp(dp: str):
     async def dependency(
-        payload: dict = Depends(AuthService().get_token),
-
+        request: Request,
+        response: Response,
+        auth_service: AuthService = Depends(AuthService)
     ):
+        payload: dict = await auth_service.get_current_user_payload(request, response)
         return payload[dp]
     return dependency
 

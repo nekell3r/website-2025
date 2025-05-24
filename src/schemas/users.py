@@ -5,18 +5,9 @@ from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
-class UserRequestAdd(BaseModel):
-    phone: PhoneNumber
-    email: EmailStr | None = None
-    code_phone: int
-    code_email: int | None = None
-    password: str
-    password_repeat: str
-
-
 class UserLogin(BaseModel):
     phone: PhoneNumber
-    password: str
+    password: str = Field(..., min_length=8)
 
 
 class UserAdd(BaseModel):
@@ -60,18 +51,32 @@ class PhoneInput(BaseModel):
     phone: PhoneNumber
 
 
-class PhoneWithCode(PhoneInput):
-    code: int
-
-
 class EmailInput(BaseModel):
     email: EmailStr
 
 
-class EmailWithCode(EmailInput):
-    code: int
+class CodeInput(BaseModel):
+    code: str = Field(..., min_length=4, max_length=6)
 
 
-class PhoneWithPassword(PhoneInput):
-    password: str
-    password_repeat: str
+class RegistrationInput(CodeInput):
+    phone: PhoneNumber | None = Field(default=None)
+    email: EmailStr | None = Field(default=None)
+    password: str = Field(..., min_length=8)
+
+
+class ResetCodeVerifyInput(BaseModel):
+    phone: PhoneNumber | None = Field(default=None)
+    email: EmailStr | None = Field(default=None)
+    code: str = Field(..., min_length=4, max_length=4)
+
+
+class SetNewPasswordAfterResetInput(BaseModel):
+    phone: PhoneNumber | None = Field(default=None)
+    email: EmailStr | None = Field(default=None)
+    new_password: str = Field(..., min_length=8)
+
+
+class SetPasswordInput(BaseModel):
+    current_password: str = Field(..., min_length=8)
+    new_password: str = Field(..., min_length=8)
