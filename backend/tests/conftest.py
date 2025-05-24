@@ -19,6 +19,13 @@ from src.utils.db_manager import DBManager
 # Module-level executable code AFTER all imports
 load_dotenv()
 
+print("DEBUG (conftest): Database connection parameters:")
+print(f"DB_HOST: {settings.DB_HOST}")
+print(f"DB_PORT: {settings.DB_PORT}")
+print(f"DB_USER: {settings.DB_USER}")
+print(f"DB_NAME: {settings.DB_NAME}")
+print(f"Full DB URL: {settings.DB_URL}")
+
 
 # Патч fastapi_cache после импортов
 def early_patch():
