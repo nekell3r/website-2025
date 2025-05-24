@@ -155,22 +155,24 @@
 
 .review-text {
   color: #ffffff;
-  max-height: 100px;       /* Ограничение по высоте по умолчанию */
-  overflow: hidden;        /* Скрываем лишний текст */
-  transition: max-height 0.3s ease;
+  max-height: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.review-text.expanded {
-  max-height: none;        /* Убираем ограничение при разворачивании */
-  overflow: visible;
+.review-text.collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .read-more {
-  background-color: #3A3A3A;
-  color: rgb(255, 255, 255);
+  background-color: transparent;
+  color: #d83787;
   border: none;
-  border-bottom: 1px #d83787 solid;
-  padding: 5px 10px;
+  border-bottom: 1px solid #d83787;
+  padding: 5px 0;
   cursor: pointer;
   margin-top: 8px;
   font-size: 14px;
