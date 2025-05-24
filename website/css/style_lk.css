@@ -1004,12 +1004,14 @@ input.error {
 }
 
 .read-more {
-    display: block;
+    display: inline-block;
     margin-top: 10px;
-    color: #bfbfbf;
-    font-style: italic;
+    color: #d83787;
     font-size: 13px;
     display: none;
+    margin-left: 0; /* Убедимся, что нет отступа слева */
+    align-self: flex-start; /* Выравниваем по левому краю */
+    width: auto; /* Ширина по содержимому */
 }
 
 .first {
@@ -1062,18 +1064,17 @@ img {
 }
 
 .read-more {
-    background-color: #3A3A3A;
-    color: rgb(255, 255, 255);
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-top: 8px;
-    font-size: 14px;
-    font-family: Comic Sans MS, Comic Sans, cursive;
-    text-align: left;
+    display: inline-block;
+    margin-top: 10px;
+    color: #d83787;
+    background-color: transparent;
     border: none;
     border-bottom: 1px solid #d83787;
-    width: fit-content;
-    display: inline-block;
+    padding: 5px 0;
+    cursor: pointer;
+    font-style: normal;
+    font-size: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
 }
 
 .the_end {

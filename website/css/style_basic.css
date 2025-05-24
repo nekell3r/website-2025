@@ -251,23 +251,28 @@ input.error {
     background-color: #d83787;
     padding: 20px;
     display: flex; 
-    flex-direction: column; /* Stack items vertically */
-    justify-content: flex-start; /* Align to top */
-    align-items: center; /* Center items horizontally */
+    flex-direction: row; /* Changed from column */
+    justify-content: space-between; /* Changed from flex-start, to put info left and avatar right */
+    align-items: flex-start; /* Changed from center, to align top */
     font-size: 20px;
     border-radius: 20px;
     margin: -8px;
 }
 
+
 .edit-review-link {
-    color: white;
-    text-decoration: none; /* Or underline, if preferred */
-    font-weight: bold;
+  color: white;
+  text-decoration: none; /* Or underline, if preferred */
+  border: 2px #ffffff solid;
+  border-radius: 12px;
+  font-size: 12px;
+  padding: 0px;
 }
 
 .edit-review-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
+
 
 /* Ensure the avatar within the new wrapper still has no top margin */
 .card-header .card-header-content-wrapper img {
@@ -398,24 +403,30 @@ img {
     background-color: #d83787;
     padding: 20px;
     display: flex; 
-    flex-direction: column; /* Stack items vertically */
-    justify-content: flex-start; /* Align to top */
-    align-items: center; /* Center items horizontally */
+    flex-direction: row; /* Changed from column */
+    justify-content: space-between; /* Changed from flex-start, to put info left and avatar right */
+    align-items: flex-start; /* Changed from center, to align top */
     font-size: 20px;
     border-radius: 20px;
     margin: -8px;
 }
 
+
 .edit-review-link {
-    color: white;
-    text-decoration: none; /* Or underline, if preferred */
-    font-weight: bold;
+  color: white;
+  text-decoration: none; /* Or underline, if preferred */
+  border: 2px #ffffff solid;
+  border-radius: 12px;
+  font-size: 12px;
+  padding: 0px;
 }
 
 .edit-review-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
-
+.name {
+  color: black;
+}
 /* Ensure the avatar within the new wrapper still has no top margin */
 .card-header .card-header-content-wrapper img {
     margin-top: 0px; 
@@ -525,4 +536,306 @@ img {
     width: fit-content; /* по размеру текста */
 }
 /* === End Read More === */
- 
+.header2 {
+    width: 98%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 20px;
+    border-bottom: 4px solid rgb(255, 255, 255);
+  }
+  
+  .menu {
+    display: flex;
+    gap: 60px;
+    font-weight: bold;
+  }
+  .menu a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+  }
+  #sentinel {
+    padding: 20px;
+    color: #d83787;
+    font-size: 24px;
+  }
+  #sentinel::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    margin-top: 2px; /* необязательно, просто для отступа */
+  }
+  
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+  }
+  .menu-button, .hamburger-button {
+    cursor: pointer;
+    border: none;
+    background: #3a3a3a;
+    padding: 10px;
+    border-radius: 90%;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 19px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    color: #d83787;
+  }
+  
+  .hamburger-button {
+    width: 48px;
+    height: 42px;
+    color: #d83787;
+  }
+  .hamburger-button div {
+    width: 28px;
+    height: 3px;
+    background: rgb(255, 255, 255);
+    margin: 3px 0;
+    color: #d83787;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    width: 100%;
+    /* max-width: 1280px; */
+    padding: 20px;
+    box-sizing: border-box;
+    /* justify-items: center; */
+    align-items: start;
+  }
+  
+  .card {
+    background-color: #3a3a3a; /* Чёрный фон */
+    color: #fff;              /* Белый текст */
+    border: 1px solid #fff;   /* Белая граница */
+    border-radius: 20px;
+    padding: 7px;
+    margin: 20px;
+    width: 100%;
+  }
+  
+  .card-header {
+    background-color: #d83787;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 20px;
+    margin: -8px;
+    margin-bottom: 12px;
+  }
+  
+  .card-header img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+  }
+  
+  .card-header .info {
+    max-width: 70%; /* или 60%, или 300px — по ситуации */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .edit-review-link {
+    color: white;
+    text-decoration: none; /* Or underline, if preferred */
+    text-align: center;
+    transform: tranlateX(50px);
+    border: 2px #ffffff solid;
+    border-radius: 12px;
+    font-size: 12px;
+    padding: 0px;
+    width: 90px;
+    transform: translateX(81px);
+  }
+  
+  .edit-review-link:hover {
+    text-decoration: underline;
+    text-align: center;
+    transform: tranlateX(50px);
+  }
+  .name {
+    color: black;
+  }
+  
+  .exam {
+    margin-top: 4px;
+    color: black;
+  }
+  
+  .date {
+    color: #1e1e1e;
+    white-space: nowrap;       /* запрещает перенос текста */
+    overflow: hidden;          /* скрывает выходящий за границу текст */
+    text-overflow: ellipsis;
+  }
+  .date strong {
+    display: block;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+  }
+  
+  .card-body {
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+  }
+  
+  .review-container {
+    position: relative;
+  }
+  
+  .review-text {
+    color: #ffffff;
+    max-height: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .review-text.collapsed {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .read-more {
+    background-color: transparent;
+    color: #d83787;
+    border: none;
+    border-bottom: 1px solid #d83787;
+    padding: 5px 0;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    display: inline-block;
+  }
+  
+  .first {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+  }
+  
+  .first_1 {
+    color: #d83787;
+    border-bottom: 1px rgb(255, 255, 255) solid;
+    font-size: 20px;
+  }
+  
+  .first_2 {
+    color: rgb(255, 255, 255);
+    font-size: 28px;
+    border-radius: 23px;
+    padding: 12px 7px;
+    font-weight: 800;
+  }
+  
+  img {
+    width: 80px;
+    height: auto;
+  }
+  
+  .the_end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 98%;
+    color: #ffff;
+    border-top: 4px #ffff solid;
+    margin-top: 30px;
+  }
+  
+  .zloy {
+    display: inline-block;
+    width: 180px;
+    height: auto;
+    border-radius: 3%;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 80px;
+    right: 25px;
+    background: #d83787;
+    padding: 10px;
+    border-radius: 20px;
+    border: 4px #ffff solid;
+    opacity: 0.5;
+    transform: translateY(-50px);
+    visibility: collapse;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .dropdown.active {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+  }
+  
+  .dropdown a {
+    display: block;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+  }
+  
+  .close {
+    cursor: pointer;
+    font-size: 20px;
+    float: right;
+  }
+  
+  .delete-button {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    color: rgb(153, 153, 153); /* Цвет как в дизайне */
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.3s;
+    border-bottom: 1px #d83787 solid;
+  }
+  
+  .delete-button:hover {
+    color: #ff0000; /* Красный при наведении */
+    text-decoration: underline;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    margin: 0;
+    padding: 0;
+    background-color: #3a3a3a;
+  }
+   
