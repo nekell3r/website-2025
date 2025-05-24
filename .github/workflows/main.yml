@@ -65,11 +65,11 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
-        working-directory: ./backend # Установка зависимостей в директории backend
-      
-      - name: Install project
+        working-directory: ./backend # Для шага 'Install dependencies'
+
+      - name: Install project # Пустая строка перед этим шагом важна для читаемости
         run: poetry install --no-interaction
-        working-directory: ./backend
+        working-directory: ./backend # Для шага 'Install project'
 
       - name: Run linters (Black & Ruff) - Опционально, но рекомендуется
         working-directory: ./backend
