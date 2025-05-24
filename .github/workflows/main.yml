@@ -15,7 +15,6 @@ jobs:
     services:
       postgres:
         image: postgres:15
-        container_name: postgres
         env:
           POSTGRES_USER: test_user       # Фиксированное значение
           POSTGRES_PASSWORD: test_password # Фиксированное значение
@@ -27,7 +26,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --network-alias postgres
       redis:
         image: redis:7
         ports:
