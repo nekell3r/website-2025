@@ -7,7 +7,7 @@ authors = [
     {name = "nekell3r",email = "pazhabskiy032007@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13.2,<4.0"
+requires-python = ">=3.12,<4.0"
 dependencies = [
     "fastapi (>=0.115.11,<0.116.0)",
     "pydantic[email] (>=2.10.6,<3.0.0)",
