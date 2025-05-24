@@ -1,0 +1,105 @@
+name: CI Pipeline MadRussian
+
+on:
+  push:
+    branches: [ main, backend ] # Trigger on main and backend branches
+  pull_request:
+    branches: [ main ]         # Trigger for PRs to main
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend # Crucial: backend code is in this subdirectory
+
+    strategy:
+      matrix:
+        python-version: ['''3.13'''] # Or your target Python version
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      # This checks out the entire repository root
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true # Poetry will create .venv inside ./backend
+        installer-parallel: true
+
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v4
+      with:
+        path: backend/.venv # Path to .venv inside backend directory
+        key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('''**/backend/poetry.lock''') }} # Hash poetry.lock inside backend
+
+    - name: Install dependencies (if no cache)
+      # Runs in ./backend due to job default
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != '''true'''
+      run: poetry install --no-interaction --no-root --sync
+
+    - name: Install project (makes poetry run work with project code)
+      # Runs in ./backend due to job default
+      run: poetry install --no-interaction --sync
+
+    - name: Run linters and formatters
+      # Runs in ./backend due to job default
+      env:
+        # Ensure Ruff and Black are found if installed globally in CI Python or via Poetry
+        PATH: "${{ env.pythonLocation }}/bin:${{ env.PATH }}:${{ github.workspace }}/backend/.venv/bin"
+      run: |
+        echo "Running linters and formatters..."
+        poetry run black --check .
+        poetry run ruff check .
+        poetry run ruff format --check .
+
+    - name: Run tests
+      # Runs in ./backend due to job default
+      env:
+        MODE: TEST
+        DB_HOST: localhost # Service containers are accessible via localhost
+        DB_PORT: 5432      # PostgreSQL port defined in service
+        DB_USER: test_user # Matches service definition
+        DB_PASS: test_password # Matches service definition
+        DB_NAME: test_db     # Matches service definition
+        REDIS_HOST: localhost # Service containers are accessible via localhost
+        REDIS_PORT: 6379    # Redis port defined in service
+        # Example: JWT_SECRET_KEY: "a_secure_test_secret_for_ci"
+      run: poetry run pytest
+
+    - name: Build Docker image
+      # Runs in ./backend due to job default. Dockerfile context is '.' (i.e. ./backend)
+      run: |
+        docker build -t madrussian-app-ci-build . 
