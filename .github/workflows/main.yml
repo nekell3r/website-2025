@@ -15,7 +15,7 @@ jobs:
     services:
       postgres:
         image: postgres:15
-        container-name: postgres
+        container_name: postgres
         env:
           POSTGRES_USER: test_user       # Фиксированное значение
           POSTGRES_PASSWORD: test_password # Фиксированное значение
