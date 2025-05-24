@@ -101,6 +101,12 @@
     height: auto;
     border-radius: 3%;
 }
+.zloy {
+    display: inline-block;
+    width: 180px;
+    height: auto;
+    border-radius: 3%;
+}
 h1 {
     color: #f0f0f0
 }
@@ -492,6 +498,11 @@ img {
     max-height: 6em; /* Ограничение по высоте (примерно 4 строки) */
     overflow: hidden;
     transition: max-height 0.3s ease;
+}
+
+.review-text.expanded {
+    max-height: none; /* Снимаем ограничение по высоте для показа полного текста */
+    overflow: visible;
 }
 
 .review-text.truncated {

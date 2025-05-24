@@ -86,6 +86,12 @@
     height: auto;
     border-radius: 3%;
 }
+.zloy {
+    display: inline-block;
+    width: 180px;
+    height: auto;
+    border-radius: 3%;
+}
 .the_end {
     display: flex;
     justify-content: space-between;

@@ -82,6 +82,12 @@
 }
 .zloy_ru {
     display: inline-block;
+    width: 200px;
+    height: auto;
+    border-radius: 3%;
+}
+.zloy {
+    display: inline-block;
     width: 180px;
     height: auto;
     border-radius: 3%;

@@ -92,40 +92,51 @@ function toggleMenu() {
   // Функция добавления кнопок "Читать полностью"
 function addReadMoreButtons() {
   const reviewContainers = document.querySelectorAll('.review-container');
+  const TRUNCATION_LENGTH = 200; // Characters after which truncation occurs
 
   reviewContainers.forEach(container => {
-    const reviewText = container.querySelector('.review-text');
+    const reviewTextElement = container.querySelector('.review-text');
 
-    if (container.querySelector('.read-more')) return; // Не дублируем кнопку
+    // Skip if button exists or no text element
+    if (container.querySelector('.read-more') || !reviewTextElement) {
+      return;
+    }
 
-    const fullText = reviewText.textContent.trim();
+    const fullText = reviewTextElement.textContent.trim();
 
-    // Временно изменяем условие длины для отладки
-    if (fullText.length <= 10) return; 
+    // Ensure the element starts non-expanded
+    reviewTextElement.classList.remove('expanded');
+    // Store full text in a data attribute for easy access
+    reviewTextElement.dataset.fullText = fullText;
 
-    // Сохраняем полный текст в data-атрибут
-    reviewText.dataset.fullText = fullText;
-    reviewText.dataset.shortText = fullText.slice(0, 200) + '...';
+    if (fullText.length > TRUNCATION_LENGTH) {
+      const shortText = fullText.slice(0, TRUNCATION_LENGTH) + '...';
+      reviewTextElement.dataset.shortText = shortText;
+      reviewTextElement.textContent = shortText; // Initially display truncated text
 
-    // Устанавливаем укороченный текст
-    reviewText.textContent = reviewText.dataset.shortText;
+      const readMoreBtn = document.createElement('button');
+      readMoreBtn.className = 'read-more';
+      readMoreBtn.textContent = 'Читать полностью';
+      readMoreBtn.style.display = 'inline-block'; // Make the button visible
+      // Append button to the container (parent of reviewTextElement)
+      container.appendChild(readMoreBtn);
 
-    const readMoreBtn = document.createElement('button');
-    readMoreBtn.className = 'read-more';
-    readMoreBtn.textContent = 'Читать полностью';
-    container.appendChild(readMoreBtn);
-
-    readMoreBtn.addEventListener('click', () => {
-      const isExpanded = reviewText.classList.toggle('expanded');
-
-      if (isExpanded) {
-        reviewText.textContent = reviewText.dataset.fullText;
-        readMoreBtn.textContent = 'Свернуть';
-      } else {
-        reviewText.textContent = reviewText.dataset.shortText;
-        readMoreBtn.textContent = 'Читать полностью';
-      }
-    });
+      readMoreBtn.addEventListener('click', () => {
+        const isCurrentlyExpanded = reviewTextElement.classList.toggle('expanded');
+        if (isCurrentlyExpanded) {
+          reviewTextElement.textContent = reviewTextElement.dataset.fullText;
+          readMoreBtn.textContent = 'Свернуть';
+        } else {
+          reviewTextElement.textContent = reviewTextElement.dataset.shortText;
+          readMoreBtn.textContent = 'Читать полностью';
+        }
+      });
+    } else {
+      // If text is not long enough for truncation, ensure full text is displayed
+      // and no 'shortText' data attribute is lingering.
+      reviewTextElement.textContent = fullText;
+      delete reviewTextElement.dataset.shortText; // Clean up
+    }
   });
 }
 
