@@ -42,7 +42,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13' # Укажите вашу версию Python, например 3.11 или 3.12. 3.13 может быть еще не везде доступна/стабильна в CI.
+          python-version: '3.12' # Укажите вашу версию Python, например 3.11 или 3.12. 3.13 может быть еще не везде доступна/стабильна в CI.
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
