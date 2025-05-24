@@ -378,7 +378,7 @@ async def test_verify_registration_phone_success(
 
     with mock.patch.object(
         auth_service, "validate_russian_phone", return_value=parsed_phone_obj
-    ) as mock_validate, mock.patch.object( # noqa: F841
+    ) as mock_validate, mock.patch.object(  # noqa: F841
         auth_service, "verify_code_phone"
     ) as mock_verify_code_phone, mock.patch.object(
         auth_service, "delete_verified_phone_code"

@@ -27,6 +27,7 @@ from src.api.personal_info import router as personal_info_router
 from src.init import redis_manager, init_yookassa
 from src.config import settings
 
+
 # Инициализация окружения и путей
 def early_setup():
     mode = os.environ.get("MODE")
@@ -39,6 +40,7 @@ def early_setup():
         pass
 
     sys.path.append(str(Path(__file__).parent.parent))
+
 
 early_setup()
 

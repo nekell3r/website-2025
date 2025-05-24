@@ -14,9 +14,13 @@ from src.schemas.users import UserAdd
 from src.services.auth import AuthService
 from src.utils.db_manager import DBManager
 
+
 # Патч fastapi_cache после импортов
 def early_patch():
-    mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
+    mock.patch(
+        "fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f
+    ).start()
+
 
 early_patch()
 

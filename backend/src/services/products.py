@@ -1,5 +1,3 @@
-
-
 from src.dependencies.auth import UserRoleDep
 from src.dependencies.db import DBDep
 from src.schemas.products import Product, ProductPatch
