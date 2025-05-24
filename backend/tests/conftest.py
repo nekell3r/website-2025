@@ -17,6 +17,9 @@ from src.schemas.users import UserAdd
 from src.services.auth import AuthService
 from src.utils.db_manager import DBManager
 
+# Глобальная настройка для всех асинхронных тестов
+pytestmark = pytest.mark.asyncio(loop_scope="session")
+
 # Module-level executable code AFTER all imports
 load_dotenv()
 
@@ -40,18 +43,6 @@ def early_patch():
 early_patch()
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an instance of the default event loop for the test session."""
-    import asyncio
-
-    loop = asyncio.new_event_loop()
-    print("DEBUG (conftest): Created event loop", file=sys.stderr)
-    yield loop
-    loop.close()
-    print("DEBUG (conftest): Closed event loop", file=sys.stderr)
-
-
 @pytest.fixture(scope="session", autouse=True)
 def check_test_mode():
     print("DEBUG (conftest): Starting check_test_mode fixture", file=sys.stderr)
@@ -65,7 +56,7 @@ def check_test_mode():
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def setup_database(check_test_mode, event_loop):
+async def setup_database(check_test_mode):
     print("DEBUG (conftest): Starting setup_database fixture", file=sys.stderr)
     engine = get_engine_null_pool()
     print(
