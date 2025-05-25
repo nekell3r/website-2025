@@ -175,3 +175,8 @@ class ResetPasswordValidationServiceException(MadRussianServiceException):
 class IncorrectPasswordServiceException(MadRussianServiceException):
     status_code = 400
     detail = "Неверный текущий пароль"
+
+
+class ProductAlreadyExistsServiceException(MadRussianServiceException):
+    status_code = 409
+    detail = "Продукт с таким slug уже существует"
