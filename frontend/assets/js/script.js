@@ -16,6 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// Обработчик клика вне меню
+document.addEventListener("click", function(event) {
+  const menu = document.getElementById("dropdown");
+  const menuButton = document.querySelector(".menu-button");
+  
+  if (menu && menu.classList.contains("active") &&
+      !menu.contains(event.target) &&
+      !menuButton.contains(event.target)) {
+    menu.classList.remove("active");
+  }
+});
+
 $(document).ready(function(){
     $('#phone-input').inputmask('+7(999)-999-9999');
 });

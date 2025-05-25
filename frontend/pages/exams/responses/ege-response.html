@@ -6,9 +6,9 @@
   <title>ОТЗЫВЫ ЕГЭ</title>
   <link rel="stylesheet" href="../../../assets/css/style_response.css" />
 </head>
-<body data-exam="ege" data-endpoint="reviews/ege" style="margin: 0; padding: 0;">
+<body data-exam="ege" data-endpoint="reviews/ege">
 
-  <div style="margin-bottom: 20px" class="header2">
+  <div class="header2">
     <div class="logo">
       <a href="../../../index.html"><img src="../../../assets/img/злой рус.png" class="zloy" alt="Злой Русский" /></a>
     </div>
@@ -19,41 +19,41 @@
     </div>
     <div class="buttons">
       <button class="menu-button" onclick="toggleMenu()">
-        <img src="../../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню" />
+        <img src="../../../assets/img/new_hambur.png" alt="кнопка меню" />
       </button>
     </div>
   </div>
 
-  <div class="first">
-    <a class="first_1" href="response_oge.html" style="text-decoration: none">ОГЭ</a>
-    <a class="first_2">Отзывы</a>
-    <a class="first_1" href="response_ege.html" style="text-decoration: none">ЕГЭ</a>
+  <div class="content">
+    <div class="first">
+      <a class="first_1" href="oge-response.html">ОГЭ</a>
+      <a class="first_2">Отзывы</a>
+      <a class="first_1" href="ege-response.html">ЕГЭ</a>
+    </div>
+    <div id="container" class="container"></div>
+    <div id="sentinel">Загрузка...</div>
   </div>
 
-  <!-- Контейнер для отзывов -->
-  <div id="container" class="container"></div>
-
-  <!-- Элемент для отслеживания конца страницы -->
-  <div id="sentinel">Загрузка...</div>
-
-  <div class="the_end" style="padding-top: 20px">
-    <h1 style="flex: 1;
-    text-align: center;"
-    >Служебная информация</h1>
+  <footer class="the_end">
+    <h1>Служебная информация</h1>
     <img src="../../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
-</div>
-
+  </footer>
 
   <div class="dropdown" id="dropdown">
-    <span class="close" onclick="toggleMenu()">&times;</span>
     <a href="../../auth/login.html">авторизация/личный кабинет</a>
     <a href="ege-response.html">отзывы</a>
     <a href="../../materials/questions.html">FAQ</a>
   </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
-    <script src="../../../assets/js/script.js"></script>
-    <script src="../../../assets/js/response.js"></script>
+  <script>
+    function toggleMenu() {
+      var menu = document.getElementById("dropdown");
+      menu.classList.toggle("active");
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+  <script src="../../../assets/js/script.js"></script>
+  <script src="../../../assets/js/response.js"></script>
 </body>
 </html>

@@ -5,11 +5,11 @@ function toggleMenu() {
 
         document.addEventListener("click", function(event) {
             const menu = document.getElementById("dropdown");
-            const hamburger = document.querySelector(".hamburger-button");
+            const menuButton = document.querySelector(".menu-button");
+            
             if (menu.classList.contains("active") &&
                 !menu.contains(event.target) &&
-                !hamburger.contains(event.target)
-            ) {
+                !menuButton.contains(event.target)) {
                 menu.classList.remove("active");
             }
         });

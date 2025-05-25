@@ -64,24 +64,24 @@ async function loadItems() {
   try {
     const res = await fetch(`http://localhost:7777/${endpoint}?page=${page}&per_page=${LIMIT}`);
     
-    // Если ответ не OK (например, 404, 500 и т.д.) - это ошибка
+    // Если получили 404, значит отзывов нет
+    if (res.status === 404) {
+      sentinel.textContent = "Отзывов пока нет";
+      allLoaded = true;
+      return;
+    }
+    
+    // Если другая ошибка (не 404) - это проблема сервера
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
     const data = await res.json();
 
-    // Если данных нет и это первая страница
-    if (data.length === 0 && page === 1) {
-      sentinel.textContent = "Отзывов пока нет";
-      allLoaded = true;
-      return;
-    }
-
     // Если данных меньше чем LIMIT - значит это последняя порция
     if (data.length < LIMIT) {
       allLoaded = true;
-      sentinel.textContent = "Больше отзывов нет.";
+      sentinel.textContent = data.length === 0 ? "Больше отзывов нет" : "Больше отзывов нет.";
     }
 
     function formatDate(rawDateStr) {
@@ -109,7 +109,7 @@ async function loadItems() {
             <div class="exam">${examName}: <strong>${item.result}</strong></div>
             <div class="date">Дата публикации: <strong>${formatDate(item.created_at) || "Неизвестно"}</strong></div>
           </div>
-          <img src="img/avatar.jpg" alt="Аватар" />
+          <img src="../../../assets/img/avatar.jpg" alt="Аватар" />
         </div>
         <div class="card-body">
           <div class="review-container">
@@ -137,43 +137,35 @@ async function loadItems() {
 
 // Функция добавления кнопок "Читать полностью"
 function addReadMoreButtons() {
-const reviewContainers = document.querySelectorAll('.review-container');
+  const reviewContainers = document.querySelectorAll('.review-container');
 
-reviewContainers.forEach(container => {
-  const reviewText = container.querySelector('.review-text');
+  reviewContainers.forEach(container => {
+    const reviewText = container.querySelector('.review-text');
+    const readMoreBtn = container.querySelector('.read-more') || document.createElement('button');
+    
+    if (!container.querySelector('.read-more')) {
+      readMoreBtn.className = 'read-more';
+      readMoreBtn.textContent = 'Читать полностью';
+      container.appendChild(readMoreBtn);
+    }
 
-  // Не добавлять кнопку дважды
-  if (container.querySelector('.read-more')) return;
-
-  const readMoreBtn = document.createElement('button');
-  readMoreBtn.className = 'read-more';
-  readMoreBtn.textContent = 'Читать полностью';
-  container.appendChild(readMoreBtn);
-
-  const maxHeight = 150; // px
-
-  if (reviewText.scrollHeight > maxHeight) {
-    // Изначально текст с ограничением
-    reviewText.style.maxHeight = maxHeight + 'px';
-    reviewText.style.overflow = 'hidden';
-
-    readMoreBtn.style.display = 'inline-block';
-
-    readMoreBtn.addEventListener('click', () => {
-      if (reviewText.classList.contains('expanded')) {
-        // Сворачиваем
-        reviewText.classList.remove('expanded');
-        readMoreBtn.textContent = 'Читать полностью';
-      } else {
-        // Разворачиваем
-        reviewText.classList.add('expanded');
-        readMoreBtn.textContent = 'Свернуть';
-      }
-    });
-  } else {
-    readMoreBtn.style.display = 'none';
-  }
-});
+    // Проверяем, нужна ли кнопка
+    if (reviewText.scrollHeight > reviewText.clientHeight) {
+      readMoreBtn.style.display = 'block';
+      
+      readMoreBtn.onclick = () => {
+        if (reviewText.classList.contains('expanded')) {
+          reviewText.classList.remove('expanded');
+          readMoreBtn.textContent = 'Читать полностью';
+        } else {
+          reviewText.classList.add('expanded');
+          readMoreBtn.textContent = 'Свернуть';
+        }
+      };
+    } else {
+      readMoreBtn.style.display = 'none';
+    }
+  });
 }
 
 
