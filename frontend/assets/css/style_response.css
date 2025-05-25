@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-html {
+html{
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -15,6 +15,7 @@ body {
   display: flex;
   flex-direction: column;
   font-family: Comic Sans MS, Comic Sans, cursive;
+  min-height: 100vh;
 }
 
 .content {
@@ -22,6 +23,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .header2 {
@@ -222,14 +224,15 @@ body {
 }
 
 .the_end {
+  width: 100%;
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  width: 100%;
-  color: #ffff;
-  border-top: 4px solid #ffff;
-  margin-top: 3px;
+  padding: 10px 10px;
+  margin-top: auto;
+  box-sizing: border-box;
+  border-top: 4px #ffffff solid;
 }
 
 .the_end h1 {

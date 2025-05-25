@@ -4,23 +4,31 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" >
         <title>ГЛАВНАЯ</title>
-        <script src="scripts/response.js" defer></script>
         <link rel="stylesheet" href="assets/css/style_basic.css">
         <style>
-            body {
-                display: flex;
-                flex-direction: column; 
-                justify-content: center; 
-                align-items: center; 
-                font-family: Comic Sans MS, Comic Sans, cursive;
-                margin:0px;
-                padding: 0px;
-                background-color: #3A3A3A
+            .review-text {
+                max-height: 100px;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+            .review-text.expanded {
+                max-height: none;
+            }
+            .read-more {
+                display: none;
+                background: none;
+                border: none;
+                color: #d83787;
+                cursor: pointer;
+                margin-top: 10px;
+                font-family: inherit;
+                font-size: 16px;
+                padding: 0;
             }
         </style>
     </head>
 <body>
-    <div class="header2">
+    <header class="header2">
         <div class="logo">
             <a href="index.html"><img src="assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
@@ -31,11 +39,12 @@
         </div>
         <div class="buttons">
             <button class="menu-button" onclick="toggleMenu()">
-                <img src="assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+                <img src="assets/img/new_hambur.png" alt="кнопка меню">
             </button>
         </div>
-    </div>
-    <br><img src = "../../assets/img/кто мы.png" style="width: 300px;" alt="кто мы">
+    </header>
+
+    <br><img src = "assets/img/кто мы.png" style="width: 300px;" alt="кто мы">
     <div class="text_who_are_we">
         <b><h2>"Злой русский" - это бренд современных методических 
             материалов по русскому языку и литературе. 
@@ -53,7 +62,7 @@
         </div>
         
         <div class="column right-column">
-            <img src = "../../assets/img/beautiful_girl.png" style="flex: 1; margin: 40px; width: 500px;" alt="girl">
+            <img src = "assets/img/beautiful_girl.png" style="flex: 1; margin: 40px; width: 500px;" alt="girl">
         </div>
     </div>
 
@@ -62,61 +71,27 @@
     <b><h2>Материалы для подготовки к экзаменам</h2></b>
     <div class="two-column-block">
         <div class="column left-column">
-          <img src = "../../assets/img/work_note9.png" style="margin: 25px;" alt="Левое изображение">
-          <a href="#" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
+          <a href="pages/exams/oge.html"><img src="assets/img/work_note9.png" alt="Левое изображение"></a>
+          <a href="pages/exams/oge.html" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
         </div>
         
         <div class="column right-column">
-          <img src = "../../assets/img/work_note10.png" style="margin: 25px;" alt="Правое изображение">
-          <a href="#" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
+          <a href="pages/exams/ege.html"><img src="assets/img/work_note10.png" alt="Правое изображение"></a>
+          <a href="pages/exams/ege.html" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
         </div>
     </div>
-    <img src = "../../assets/img/отзывы.png" style="width: 300px; margin-bottom: 25px;" alt="отзывы">
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-              <div class="info">
-                <div class="name">Имя: <strong>Анастасия</strong></div>
-                <div class="exam">ЕГЭ: <strong>87</strong></div>
-                <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
-              </div>
-              <img src = "../../assets/img/avatar.jpg" alt="Аватар">
-            </div>
-            <div class="card-body">
-                <div class="review-container">
-                    <div class="review-text collapsed">
-                        Год назад я и представить не могла, что смогу сдать ЕГЭ на такой балл! В начале года меня буквально парализовал страх — казалось, что даже 70 баллов будет нереальным результатом. Но благодаря системной подготовке и большому количеству практики преподавателя, всё сложилось лучше, чем я ожидала.
-                    </div>
-                    <button class="read-more">Читать полностью</button>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-              <div class="info">
-                <div class="name">Имя: <strong>Анастасия</strong></div>
-                <div class="exam">ЕГЭ: <strong>87</strong></div>
-                <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
-              </div>
-              <img src = "../../assets/img/avatar.jpg" alt="Аватар">
-            </div>
-            <div class="card-body">
-                <div class="review-container">
-                    <div class="review-text collapsed">
-                        Год назад я и представить не могла, что смогу сдать ЕГЭ на такой балл! В начале года меня буквально парализовал страх — казалось, что даже 70 баллов будет нереальным результатом. Но благодаря системной подготовке и большому количеству практики преподавателя, всё сложилось лучше, чем я ожидала.
-                    </div>
-                    <button class="read-more">Читать полностью</button>
-                </div>
-            </div>
-        </div>
-    </div> 
+    <img src = "assets/img/отзывы.png" style="width: 300px; margin-bottom: 25px;" alt="отзывы">
+    <div id="container" class="container">
+        <!-- Отзывы будут загружены динамически -->
+    </div>
+    <div id="sentinel">Загрузка отзывов...</div>
 
     <div class="full-width-line"></div>
-    <img src = "../../assets/img/materials_for_urok.png" style="width: 500px; margin-top: 30px; " alt="материалы для уроков">
+    <img src = "assets/img/materials_for_urok.png" style="width: 500px; margin-top: 30px; " alt="материалы для уроков">
 
     <div class="two-column-block">
         <div class="column left-column">
-            <img src = "../../assets/img/work_note1_2.png" style="margin: 20px;" alt="girl">
+            <a href="pages/materials/list.html"><img src = "assets/img/work_note1_2.png" style="margin: 20px;" alt="girl"></a>
         </div>
         <div class="column right-column">
             <b><h2 style="margin: 20px;"> Разработки для проведения индивидуальных и классных занятий: 
@@ -129,31 +104,19 @@
             </h2></b>
         </div>
     </div>
-    <div class="full-width-line"></div>
 
 
 
-    <div class="the_end" style="padding-top: 20px">
-        <h1 style="flex: 1;
-        text-align: center;"
-        >Служебная информация</h1>
+    <footer class="the_end">
+        <h1>Служебная информация</h1>
         <img src="assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
-    </div>
+    </footer>
 
     <script>
         function toggleMenu() {
             var menu = document.getElementById("dropdown");
             menu.classList.toggle("active");
         }
-
-        // Обработчик загрузки DOM для добавления кнопок "Читать полностью"
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof addReadMoreButtons === 'function') {
-                addReadMoreButtons();
-            } else {
-                console.error('Функция addReadMoreButtons не найдена. Убедитесь, что response.js загружен.');
-            }
-        });
     </script>
 
 
@@ -166,5 +129,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/main-reviews.js"></script>
+
+    <script>
+        // Установка параметров для загрузки отзывов
+        document.body.setAttribute('data-endpoint', 'api/reviews');
+    </script>
 
 </body>

@@ -15,6 +15,7 @@ body {
   display: flex;
   flex-direction: column;
   font-family: Comic Sans MS, Comic Sans, cursive;
+  min-height: 100vh;
 }
 
 
@@ -222,7 +223,7 @@ input.error {
   }
   
   .column img {
-    width: 100%;            /* Картинки занимают всю ширину колонки */
+    width: 90%;            /* Картинки занимают всю ширину колонки */
     height: auto;
     margin-bottom: 15px;
     border-radius: 6%;     /* Скругленные углы */
@@ -859,3 +860,22 @@ img {
     background-color: #3a3a3a;
   }
    
+  .the_end {
+    width: 100%;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10px;
+    margin-top: auto;
+    box-sizing: border-box;
+    border-top: 4px #ffffff solid;
+  }
+  
+  .the_end h1 {
+    margin: 0;
+    line-height: 100px;
+    flex: 1;
+    text-align: center;
+  }
+  
