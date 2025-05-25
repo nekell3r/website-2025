@@ -52,24 +52,11 @@ body {
     border-radius: 90%;
     align-items: flex-start;
     justify-content: center;
-    font-size: 19px;
+    font-size: 1px;
     font-family: Comic Sans MS, Comic Sans, cursive;
-    color: #e42b9a
-}
+    color: #d83787;
+  }
 
-.hamburger-button {
-    width: 48px;
-    height: 42px;
-    color: #e42b9a
-}
-.hamburger-button div {
-    width: 28px;
-    height: 3px;
-    background: rgb(255, 255, 255);
-    margin: 3px 0;
-    color: #e42b9a
-
-}
 .dropdown {
     position: absolute;
     top: 80px;

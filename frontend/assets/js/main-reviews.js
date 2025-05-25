@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             // Загружаем по одному отзыву каждого типа
             const [ogeResponse, egeResponse] = await Promise.all([
-                fetch('http://localhost:7777/api/reviews/oge?page=1&per_page=1'),
-                fetch('http://localhost:7777/api/reviews/ege?page=1&per_page=1')
+                fetch('http://localhost:7777/reviews/oge?page=1&per_page=1'),
+                fetch('http://localhost:7777/reviews/ege?page=1&per_page=1')
             ]);
 
             if (!ogeResponse.ok && !egeResponse.ok) {
@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <div class="card-body">
                         <div class="review-container">
                             <div class="review-text">${item.review}</div>
+                            <button class="read-more">Читать полностью</button>
                         </div>
                     </div>
                 `;
@@ -61,8 +62,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Скрываем sentinel после загрузки
             sentinel.style.display = 'none';
 
-            // Добавляем кнопки "Читать полностью"
-            addReadMoreButtons();
+            // Добавляем обработчики для кнопок
+            initializeReadMoreButtons();
 
         } catch (error) {
             console.error('Ошибка при загрузке отзывов:', error);
@@ -70,35 +71,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // Функция добавления кнопок "Читать полностью"
-    function addReadMoreButtons() {
-        const reviewContainers = document.querySelectorAll('.review-container');
-        
-        reviewContainers.forEach(container => {
-            const reviewText = container.querySelector('.review-text');
-            const readMoreBtn = container.querySelector('.read-more') || document.createElement('button');
+    // Функция инициализации кнопок "Читать полностью"
+    function initializeReadMoreButtons() {
+        const buttons = document.querySelectorAll('.read-more');
+        buttons.forEach(button => {
+            const reviewText = button.previousElementSibling;
             
-            if (!container.querySelector('.read-more')) {
-                readMoreBtn.className = 'read-more';
-                readMoreBtn.textContent = 'Читать полностью';
-                container.appendChild(readMoreBtn);
-            }
-
-            // Проверяем, нужна ли кнопка
+            // Показываем кнопку только если текст не помещается
             if (reviewText.scrollHeight > reviewText.clientHeight) {
-                readMoreBtn.style.display = 'block';
+                button.style.display = 'inline-block';
                 
-                readMoreBtn.onclick = () => {
-                    if (reviewText.classList.contains('expanded')) {
-                        reviewText.classList.remove('expanded');
-                        readMoreBtn.textContent = 'Читать полностью';
-                    } else {
-                        reviewText.classList.add('expanded');
-                        readMoreBtn.textContent = 'Свернуть';
-                    }
-                };
+                button.addEventListener('click', () => {
+                    const isExpanded = reviewText.classList.contains('expanded');
+                    reviewText.classList.toggle('expanded');
+                    button.textContent = isExpanded ? 'Читать полностью' : 'Свернуть';
+                });
             } else {
-                readMoreBtn.style.display = 'none';
+                button.style.display = 'none';
             }
         });
     }

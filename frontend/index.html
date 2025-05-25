@@ -6,25 +6,34 @@
         <title>ГЛАВНАЯ</title>
         <link rel="stylesheet" href="assets/css/style_basic.css">
         <style>
+            img.zloy {
+                display: inline-block;
+                width: 140px !important;
+                height: auto;
+                border-radius: 3%;
+            }
             .review-text {
+                color: #ffffff;
                 max-height: 100px;
                 overflow: hidden;
-                transition: max-height 0.3s ease;
+                transition: all 0.3s ease;
             }
             .review-text.expanded {
                 max-height: none;
+                overflow: visible;
+            }
+            .review-container {
+                position: relative;
             }
             .read-more {
-                display: none;
-                background: none;
-                border: none;
+                background-color: transparent;
                 color: #d83787;
+                border: none;
+                padding: 5px 0;
                 cursor: pointer;
-                margin-top: 10px;
-                font-family: inherit;
                 font-size: 16px;
-                padding: 0;
             }
+            
         </style>
     </head>
 <body>
@@ -80,12 +89,13 @@
           <a href="pages/exams/ege.html" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
         </div>
     </div>
+    <div class = "content">
     <img src = "assets/img/отзывы.png" style="width: 300px; margin-bottom: 25px;" alt="отзывы">
     <div id="container" class="container">
         <!-- Отзывы будут загружены динамически -->
     </div>
-    <div id="sentinel">Загрузка отзывов...</div>
-
+    <div id="sentinel">Загрузка...</div>
+    </div>
     <div class="full-width-line"></div>
     <img src = "assets/img/materials_for_urok.png" style="width: 500px; margin-top: 30px; " alt="материалы для уроков">
 
@@ -109,7 +119,7 @@
 
     <footer class="the_end">
         <h1>Служебная информация</h1>
-        <img src="assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
+        <img src="assets/img/злой рус.png" class="zloy" alt="злой рус">
     </footer>
 
     <script>
@@ -137,3 +147,4 @@
     </script>
 
 </body>
+</html>
