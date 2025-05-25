@@ -12,8 +12,6 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
-    volumes:
-      - ./backend:/app # Монтирование кода для разработки (опционально, удобно для быстрой проверки изменений без пересборки)
     networks:
       - myNetwork
 
