@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <title>АВТОРИЗАЦИЯ</title>
-    <link rel="stylesheet" href="css/style_login.css">
+    <link rel="stylesheet" href="../../assets/css/style_login.css">
     <style>
         body {
             display: flex;
@@ -21,16 +21,16 @@
 <body>
     <header class="header2">
         <div class="logo">
-            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
-            <a href="oge.html">ОГЭ</a>
-            <a href="ege.html">ЕГЭ</a>
-            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
             <button class="menu-button" onclick="toggleMenu()">
-                <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
             </button>
         </div>
     </header>
@@ -65,7 +65,7 @@
 
         <div class="form-footer">
             <button type="button" id="submit-data" class="submit-icon-btn" style="margin-bottom: 15px;">
-                <img src="img/кнопкарег.png" alt="Завершить авторизацию">
+                <img src="../../assets/img/кнопкарег.png" alt="Завершить авторизацию">
             </button>
         </div>
     </div>
@@ -73,19 +73,19 @@
     <div class="help_info" >
         <div style="display: flex; flex-wrap: nowrap">
         <b><h2 class="but_reg">Еще не зарегистрированы?</h2></b>
-        <a class="but_reg" href="registr.html" style="color:#DA1984; margin-left: 30px;"><b><h2>Регистрация</h2></b></a>
+        <a class="but_reg" href="register.html" style="color:#DA1984; margin-left: 30px;"><b><h2>Регистрация</h2></b></a>
         </div>
 
         <div style="display: flex">
             <b><h2 class="but_reg">Забыли пароль?</h2></b>
-            <a class="but_reg" href="passrec.html" style="margin-left: 30px;
+            <a class="but_reg" href="password-recovery.html" style="margin-left: 30px;
             color: #DA1984;"><b><h2>Восстановить пароль</h2></b></a>
         </div>
     </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
-    <script src="scripts/script.js"></script>
+    <script src="../../assets/js/script.js"></script>
 
 
 
@@ -102,8 +102,7 @@
     border-top: 4px #ffffff solid;
 ">
     <h2 style="margin: 0; flex: 1; text-align: center;">Служебная информация</h2>
-    <img src="img/злой рус.png" alt="Злой Русский логотип
-">
+    <img src="../../assets/img/злой рус.png" alt="Злой Русский логотип">
     
 </footer>
 
@@ -123,8 +122,8 @@
     <div class="dropdown" id="dropdown">
         <span class="close" onclick="toggleMenu()">&times;</span>
         <a href="#">авторизация/личный кабинет</a>
-        <a href="response_ege.html">отзывы</a>
-        <a href="questions.html">FAQ</a>
+        <a href="../exams/responses/ege-response.html">отзывы</a>
+        <a href="../materials/questions.html">FAQ</a>
     </div>
 
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <script src="scripts/payment.js"></script>
     <title>ЕГЭ</title>
-    <link rel="stylesheet" href="css/style_ege.css">
+    <link rel="stylesheet" href="../../assets/css/style_ege.css">
     <style>
         body {
             display: flex;
@@ -22,18 +22,17 @@
 <body>
     <div class="header2">
         <div class="logo">
-            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
             <a href="oge.html">ОГЭ</a>
             <a href="ege.html">ЕГЭ</a>
-            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="hamburger-button" onclick="toggleMenu()">
-                <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
             </button>
-
         </div>
     </div>
 
@@ -43,21 +42,21 @@
         <div class="column left-column">
             <b><h3> 1. Рабочая тетрадь для подготовки к тестовой части ЕГЭ</h3></b>
             <b><h3>Какой то текст</h3></b>
-            <img src="img/work_note3.png" alt="work note3">
+            <img src = "../../assets/img/work_note3.png" alt="work note3">
             <b><h3>Примеры заданий из рабочей тетради:</h3></b>
-            <img src="img/wn.png" alt="wn">
+            <img src = "../../assets/img/wn.png" alt="wn">
             <b><h3>Орфография</h3></b>
-            <img src="img/simbol.png" alt="simbol">
+            <img src = "../../assets/img/simbol.png" alt="simbol">
         </div>
         <div class="column right-column">
             <b><h3> 2. Рабочая тетрадь для подготовки к сочинению ЕГЭ</h3></b>
             <b><h3>Какой то текст</h3></b>
-            <img src="img/work_note2.png" alt="Правое изображение">
+            <img src = "../../assets/img/work_note2.png" alt="Правое изображение">
             <b><h3>Примеры заданий из рабочей тетради:</h3></b>
             <b><h3>Комментарий. Обработка</h3></b>
-            <img src="img/comm.jpg" alt="Правое изображение">
+            <img src = "../../assets/img/comm.jpg" alt="Правое изображение">
             <b><h3>Проблема и авторская позиция. Отработка</h3></b>
-            <img src="img/пример2.png" alt="Правое изображение">
+            <img src = "../../assets/img/пример2.png" alt="Правое изображение">
         </div>
     </div>
     <h3 class="text_ege_under">По резульатам подготовки к сочинению ЕГЭ в 2024 году 100% учеников успешно сдали его с первой попытки. 
@@ -65,16 +64,16 @@
     <div class="ege_work3_container">
         <b><h3> 3.Рабочая тетрадь для подготовки к Итоговому Сочинению(ИС)</h3></b>
         <h3>Какой-то текст с информацией про материал</h3>
-        <img src="img/work_note.jpg" class="work_note" alt="Work note">
+        <img src = "../../assets/img/work_note.jpg" class="work_note" alt="Work note">
     </div>
 
     <div style="position: relative;
                 text-align: center;">
         <b><h3>Примеры заданий из рабочей тетради:</h3></b><br>
-        <img src="img/1пример.png" class="one_instance" alt="Свеча горела">
+        <img src = "../../assets/img/1пример.png" class="one_instance" alt="Свеча горела">
         <b><h3>Построение логики аргументации. Практика</h3></b>
         <h4>В каких жизненных ситуациях нужно быть готовым к смелым поступкам?</h4>
-        <img src="img/logic_arg.png" class="one_instance" alt="logic_arg">
+        <img src = "../../assets/img/logic_arg.png" class="one_instance" alt="logic_arg">
     </div>
     <div class="text_and_line-container">
         <h3 class="">По результатам подготовки к итоговому сочинению в 2024 году 100% учеников успешно сдали его с первой попытки.
@@ -103,7 +102,7 @@
         <h1 style="flex: 1;
         text-align: center;"
         >Служебная информация</h1>
-        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+        <img src="../../assets/img/злой рус.png" alt="Злой Русский логотип">
     </div>
 
         <script>
@@ -127,9 +126,9 @@
     </script>
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
-    <a href="response_ege.html">отзывы</a>
-    <a href="questions.html">FAQ</a>
+    <a href="../auth/login.html">авторизация/личный кабинет</a>
+    <a href="responses/ege-response.html">отзывы</a>
+    <a href="../materials/questions.html">FAQ</a>
 </div>
 
 <script>
@@ -203,6 +202,9 @@ async function tryAlternativeApproach() {
     }
 }
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../../assets/js/script.js"></script>
 
 </body>
 </html>

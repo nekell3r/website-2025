@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" >
         <script src="scripts/payment.js"></script>
         <title>ОГЭ</title>
-        <link rel="stylesheet" href="css/style_oge.css">
+        <link rel="stylesheet" href="../../assets/css/style_oge.css">
         <style>
             body {
                 display: flex;
@@ -22,18 +22,17 @@
 <body>
     <div class="header2">
         <div class="logo">
-            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
             <a href="oge.html">ОГЭ</a>
             <a href="ege.html">ЕГЭ</a>
-            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="hamburger-button" onclick="toggleMenu()">
-                <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
             </button>
-
         </div>
     </div>
 
@@ -42,21 +41,21 @@
     <div class="two-column-block">
         <div class="column left-column">
             <b><h2>1. Материалы для подготовки к Итоговому Собеседованию</h2></b>
-            <img src="img/work_note4.png" alt="Левое изображение"><br>
-            <img src="img/монолог.png" alt="Левое изображение">
-            <img src="img/монолог1.png" alt="Левое изображение">
+            <img src = "../../assets/img/work_note4.png" alt="Левое изображение"><br>
+            <img src = "../../assets/img/монолог.png" alt="Левое изображение">
+            <img src = "../../assets/img/монолог1.png" alt="Левое изображение">
             <h3> Варианты собеседования </h3>
-            <img src="img/вар собес.png" alt="Левое изображение">
+            <img src = "../../assets/img/вар собес.png" alt="Левое изображение">
             <h3> По результатам подготовки в 2023 году 100% учеников успешно сдали собеседование </h3>
         </div>
         
         <div class="column right-column">
             <b><h2> 2. Материалы для подготовки к сочинению и изложению </h2></b>
-            <img src="img/work_note7.png" alt="Правое изображение">
-            <img src="img/клише.png" alt="Правое изображение">
-            <img src="img/какая то штука.png" alt="Правое изображение">
-            <img src="img/work_note8.png" alt="Правое изображение">
-            <img src="img/text.png" alt="Правое изображение">
+            <img src = "../../assets/img/work_note7.png" alt="Правое изображение">
+            <img src = "../../assets/img/клише.png" alt="Правое изображение">
+            <img src = "../../assets/img/какая то штука.png" alt="Правое изображение">
+            <img src = "../../assets/img/work_note8.png" alt="Правое изображение">
+            <img src = "../../assets/img/text.png" alt="Правое изображение">
             <h3> Так же в продукт включен сборник образцов сочинений к темам ФИПИ </h3>
         </div>
     </div>
@@ -66,15 +65,15 @@
     </div>
     <div class="two-column-block">
         <div class="column left-column">
-            <img src="img/work_note5.png" style="margin-top: 60px;" alt="Левое изображение">
-            <img src="img/орфограммы.png" alt="Левое изображение">
-            <img src="img/орфограммы в суф.png" alt="Левое изображение">
+            <img src = "../../assets/img/work_note5.png" style="margin-top: 60px;" alt="Левое изображение">
+            <img src = "../../assets/img/орфограммы.png" alt="Левое изображение">
+            <img src = "../../assets/img/орфограммы в суф.png" alt="Левое изображение">
         </div>
         <div class="column right-column">
             <h3>Рабочая тетрадь по синтаксису </h3>
-            <img src="img/work_note6.png" alt="Правое изображение">
-            <img src="img/виды членов.png" alt="Правое изображение">
-            <img src="img/постановка препинаний.png" alt="Правое изображение">
+            <img src = "../../assets/img/work_note6.png" alt="Правое изображение">
+            <img src = "../../assets/img/виды членов.png" alt="Правое изображение">
+            <img src = "../../assets/img/постановка препинаний.png" alt="Правое изображение">
         </div>
     </div>
     
@@ -107,7 +106,7 @@
     <div class="the_end" style="padding-top: 20px">
         <h1 style="flex: 1;
         text-align: center;">Служебная информация</h1>
-        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+        <img src="../../assets/img/злой рус.png" alt="Злой Русский логотип">
     </div>
     <script>
 
@@ -130,9 +129,9 @@
     </script>
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
-    <a href="response_ege.html">отзывы</a>
-    <a href="questions.html">FAQ</a>
+    <a href="../auth/login.html">авторизация/личный кабинет</a>
+    <a href="responses/oge-response.html">отзывы</a>
+    <a href="../materials/questions.html">FAQ</a>
 </div>
 
 <script>
@@ -206,5 +205,7 @@ async function tryAlternativeApproach() {
     }
 }
 </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../assets/js/script.js"></script>
 </body>
 </html>

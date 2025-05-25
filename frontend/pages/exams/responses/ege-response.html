@@ -4,22 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ОТЗЫВЫ ЕГЭ</title>
-  <link rel="stylesheet" href="css/style_response.css" />
+  <link rel="stylesheet" href="../../../assets/css/style_response.css" />
 </head>
 <body data-exam="oge" style="margin: 0; padding: 0;">
 
   <div style="margin-bottom: 20px" class="header2">
     <div class="logo">
-      <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский" /></a>
+      <a href="../../../index.html"><img src="../../../assets/img/злой рус.png" class="zloy" alt="Злой Русский" /></a>
     </div>
     <div class="menu">
-      <a href="oge.html">ОГЭ</a>
-      <a href="ege.html">ЕГЭ</a>
-      <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+      <a href="../oge.html">ОГЭ</a>
+      <a href="../ege.html">ЕГЭ</a>
+      <a href="../../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
     </div>
     <div class="buttons">
-      <button class="hamburger-button" onclick="toggleMenu()">
-        <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер" />
+      <button class="menu-button" onclick="toggleMenu()">
+        <img src="../../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню" />
       </button>
     </div>
   </div>
@@ -40,17 +40,19 @@
     <h1 style="flex: 1;
     text-align: center;"
     >Служебная информация</h1>
-    <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+    <img src="../../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
 </div>
 
 
   <div class="dropdown" id="dropdown">
-    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
-    <a href="response_ege.html">отзывы</a>
-    <a href="questions.html">FAQ</a>
+    <span class="close" onclick="toggleMenu()">&times;</span>
+    <a href="../../auth/login.html">авторизация/личный кабинет</a>
+    <a href="ege-response.html">отзывы</a>
+    <a href="../../materials/questions.html">FAQ</a>
   </div>
 
-    <script src = "scripts/response.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../../assets/js/script.js"></script>
 
 </body>
 </html>

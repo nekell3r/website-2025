@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="scripts/response.js"></script>
     <title>ОТЗЫВЫ ОГЭ</title>
-    <link rel="stylesheet" href="css/style_response.css">
+    <link rel="stylesheet" href="../../../assets/css/style_response.css">
     <style>
         body {
             display: flex;
@@ -22,18 +22,17 @@
 <body>
     <div style="margin-bottom: 20px" class="header2">
         <div class="logo">
-            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="../../../index.html"><img src="../../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
-            <a href="oge.html">ОГЭ</a>
-            <a href="ege.html">ЕГЭ</a>
-            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="../oge.html">ОГЭ</a>
+            <a href="../ege.html">ЕГЭ</a>
+            <a href="../../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="hamburger-button" onclick="toggleMenu()">
-                <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
             </button>
-
         </div>
     </div>
 <div class="first">
@@ -49,7 +48,7 @@
             <div class="exam">ЕГЭ: <strong>87</strong></div>
             <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
           </div>
-          <img src="img/avatar.jpg" alt="Аватар">
+          <img src = "../../assets/img/avatar.jpg" alt="Аватар">
         </div>
         <div class="card-body">
             <div class="review-container">
@@ -64,14 +63,14 @@
 <div class="the_end" style="padding-top: 20px">
     <h1 style="flex: 1;
     text-align: center;">Служебная информация</h1>
-    <img src="img/злой рус.png" class="zloy" alt="злой рус">
+    <img src="../../../assets/img/злой рус.png" alt="Злой Русский логотип">
 </div>
 
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
-    <a href="response_ege.html">отзывы</a>
-    <a href="questions.html">FAQ</a>
+    <a href="../../auth/login.html">авторизация/личный кабинет</a>
+    <a href="oge-response.html">отзывы</a>
+    <a href="../../materials/questions.html">FAQ</a>
 </div>
 
 <script>
@@ -80,4 +79,6 @@
         menu.classList.toggle("active");
     }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../../../assets/js/script.js"></script>
   

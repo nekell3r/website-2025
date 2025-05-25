@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" >
         <script src="scripts/payment.js" defer></script>
         <title>МАТЕРИАЛЫ ДЛЯ УРОКОВ</title>
-        <link rel="stylesheet" href="css/style_materials.css">
+        <link rel="stylesheet" href="../../assets/css/style_materials.css">
         <style>
             body {
                 display: flex;
@@ -22,16 +22,16 @@
 <body>
     <div class="header2">
         <div class="logo">
-            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
-            <a href="oge.html">ОГЭ</a>
-            <a href="ege.html">ЕГЭ</a>
-            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="hamburger-button" onclick="toggleMenu()">
-                <img src="img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
             </button>
         </div>
     </div>
@@ -47,8 +47,8 @@
     <div class="two-column-block"> 
         <div class="column">
             <b><h1 class="russ-liter">Русский язык</h1></b> 
-            <img src="img/mestoim.png" alt="Левое изображение">
-            <img src="img/znaki.png" alt="Левое изображение">
+            <img src = "../../assets/img/mestoim.png" alt="Левое изображение">
+            <img src = "../../assets/img/znaki.png" alt="Левое изображение">
             <b><h2 class="russ-liter">Стоимость продукта - x рублей</h2></b>
             <div>
                 <input style="width:109%; transform: translateX(-22px); padding: 8px 10px; margin-bottom: 10px"  type="text" id="userInput-lru" placeholder="email для отправки чека" onclick="clearPlaceholder(this)">
@@ -59,8 +59,8 @@
         
         <div class="column">
             <b><h1 class="russ-liter">Литература</h1></b> 
-            <img src="img/belgorod.png" alt="Правое изображение">
-            <img src="img/klassiz.png" alt="Правое изображение">
+            <img src = "../../assets/img/belgorod.png" alt="Правое изображение">
+            <img src = "../../assets/img/klassiz.png" alt="Правое изображение">
             <b><h2 class="russ-liter">Стоимость продукта - x рублей</h2></b>
             <div>
                 <input style="width:109%; transform: translateX(-22px); padding: 8px 10px; margin-bottom: 10px"  type="text" id="userInput-llit" placeholder="email для отправки чека" onclick="clearPlaceholder(this)">
@@ -91,7 +91,7 @@
     <div class="the_end" style="padding-top: 20px">
         <h1 style="flex: 1;
         text-align: center;">Служебная информация</h1>
-        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+        <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
     </div>
 
     <script>
@@ -115,11 +115,11 @@
     </script>
 
     <div class="dropdown" id="dropdown">
-    <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
-    <a href="response_ege.html">отзывы</a>
-    <a href="questions.html">FAQ</a>
-</div>
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="../auth/login.html">авторизация/личный кабинет</a>
+        <a href="../exams/responses/ege-response.html">отзывы</a>
+        <a href="questions.html">FAQ</a>
+    </div>
 
 <script>
     function toggleMenu() {
@@ -193,6 +193,8 @@ async function tryAlternativeApproach() {
 }
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../../assets/js/script.js"></script>
 
 </body>
 </html>
