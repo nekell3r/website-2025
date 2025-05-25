@@ -40,11 +40,11 @@
 
     <div class="form-group">
         <input 
-            type="email" 
-            id="email" 
+            type="text" 
+            id="phone" 
             class="text-input" 
-            placeholder="Email (необязательно)"
-            data-placeholder-focus="example@mail.com"
+            placeholder="Телефон"
+            data-placeholder-focus="+7 (999) 999-99-99"
         >
     </div>
 
@@ -63,9 +63,11 @@
             </div>
         </div>
 
+        <div id="login-error" style="color: red; margin-top: 10px;"></div>
+
         <div class="form-footer">
-            <button type="button" id="submit-data" class="submit-icon-btn" style="margin-bottom: 15px;">
-                <img src="../../assets/img/кнопкарег.png" alt="Завершить авторизацию">
+            <button type="button" id="submit-login" class="submit-icon-btn" style="margin-bottom: 15px;">
+                <img src="../../assets/img/кнопкарег.png" alt="Войти">
             </button>
         </div>
     </div>
@@ -83,47 +85,40 @@
         </div>
     </div>
     </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
-    <script src="../../assets/js/script.js"></script>
 
+    <div style="height: 2px; background-color: white; width: 100%; margin-top: 30px;"></div>
+    <footer style="
+        width: 100%;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        margin-top: auto;
+        box-sizing: border-box;
+        border-top: 4px #ffffff solid;
+    ">
+        <h2 style="margin: 0; flex: 1; text-align: center;">Служебная информация</h2>
+        <img src="../../assets/img/злой рус.png" alt="Злой Русский логотип">
+    </footer>
 
-
-<div style="height: 2px; background-color: white; width: 100%; margin-top: 30px;"></div>
-<footer style="
-    width: 100%;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    margin-top: auto;
-    box-sizing: border-box;
-    border-top: 4px #ffffff solid;
-">
-    <h2 style="margin: 0; flex: 1; text-align: center;">Служебная информация</h2>
-    <img src="../../assets/img/злой рус.png" alt="Злой Русский логотип">
-    
-</footer>
-
-
-    
-    
-
+    <div class="dropdown" id="dropdown">
+        <a href="#">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <a href="../materials/questions.html">FAQ</a>
+    </div>
 
     <script>
         function toggleMenu() {
             var menu = document.getElementById("dropdown");
-    menu.classList.toggle("active");
+            menu.classList.toggle("active");
         }
     </script>
 
-
-    <div class="dropdown" id="dropdown">
-        <a href="#">авторизация/личный кабинет</a>
-        <a href="../exams/responses/ege-response.html">отзывы</a>
-        <a href="../materials/questions.html">FAQ</a>
-    </div>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/login.js"></script>
+    <script src="../../assets/js/reviews-redirect.js"></script>
 </body>
+</html>

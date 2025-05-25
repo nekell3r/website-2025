@@ -127,7 +127,7 @@
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
     <a href="../auth/login.html">авторизация/личный кабинет</a>
-    <a href="responses/ege-response.html">отзывы</a>
+    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
     <a href="../materials/questions.html">FAQ</a>
 </div>
 
@@ -205,6 +205,7 @@ async function tryAlternativeApproach() {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="../../assets/js/script.js"></script>
+<script src="../../assets/js/reviews-redirect.js"></script>
 
 </body>
 </html>

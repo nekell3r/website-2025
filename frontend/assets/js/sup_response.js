@@ -1,44 +1,121 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('container');
     const sentinel = document.getElementById('sentinel');
-    const examType = document.body.getAttribute('data-exam');
     const endpoint = document.body.getAttribute('data-endpoint');
+    const API_BASE_URL = 'http://localhost:7777';
     
     let page = 1;
     let loading = false;
     let hasMore = true;
     
+    // Функция для форматирования даты
+    function formatDate(dateString) {
+        const cleaned = dateString.replace(" +", "+").replace(/(\+|\-)(\d{2})(\d{2})/, "$1$2:$3");
+        const date = new Date(cleaned);
+        
+        if (isNaN(date)) return "Некорректная дата";
+        
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        
+        return `${day}.${month}.${year}`;
+    }
+    
+    // Добавляем стили для текста отзыва и кнопок
+    const style = document.createElement('style');
+    style.textContent = `
+        .review-text {
+            color: #ffffff;
+            max-height: 100px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            line-height: 1.5;
+        }
+        .review-text.expanded {
+            max-height: none;
+        }
+        .review-text.collapsed {
+            max-height: 100px;
+            overflow: hidden;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+        .read-more {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #d83787;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            padding: 0;
+            margin-right: auto;
+        }
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        .delete-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            padding: 0;
+            margin-left: auto;
+        }
+        .delete-button:hover {
+            color: #ff0000;
+            text-decoration: underline;
+        }
+    `;
+    document.head.appendChild(style);
+
     // Функция для создания карточки отзыва
     function createReviewCard(review) {
         const card = document.createElement('div');
         card.className = 'card';
-        card.setAttribute('data-review-id', review.id); // Сохраняем ID отзыва
+        card.setAttribute('data-review-id', review.id);
+        
+        // Определяем, нужна ли кнопка "Читать полностью"
+        const needsReadMore = review.review.length > 200;
         
         card.innerHTML = `
             <div class="card-header">
                 <div class="info">
-                    <div class="name">${review.name}</div>
-                    <div class="exam">${examType.toUpperCase()}: <strong>${review.score}</strong></div>
-                    <div class="date">Дата публикации: <strong>${review.date}</strong></div>
+                    <div class="name">${review.name || "Аноним"}</div>
+                    <div class="exam">${review.exam}: <strong>${review.result}</strong></div>
+                    <div class="date">Дата публикации: <strong>${formatDate(review.created_at)}</strong></div>
                 </div>
-                <img src="${review.avatar || '../../../assets/img/avatar.jpg'}" alt="Аватар">
+                <img src="${review.avatar_url || '../../../assets/img/avatar.jpg'}" alt="Аватар" />
             </div>
             <div class="card-body">
                 <div class="review-container">
-                    <div class="review-text ${review.text.length > 200 ? '' : 'expanded'}">${review.text}</div>
-                    ${review.text.length > 200 ? '<button class="read-more">Читать полностью</button>' : ''}
-                    <button class="delete-button" onclick="deleteReview('${review.id}')">Удалить</button>
+                    <div class="review-text ${needsReadMore ? 'collapsed' : ''}">${review.review}</div>
+                    <div class="button-container">
+                        <button class="read-more" style="display: ${needsReadMore ? 'inline-block' : 'none'}">Читать полностью</button>
+                        <button class="delete-button" onclick="deleteReview('${review.id}')">Удалить</button>
+                    </div>
                 </div>
             </div>
         `;
 
         // Добавляем обработчик для кнопки "Читать полностью"
         const readMoreBtn = card.querySelector('.read-more');
-        if (readMoreBtn) {
+        const reviewText = card.querySelector('.review-text');
+
+        if (readMoreBtn && needsReadMore) {
             readMoreBtn.addEventListener('click', function() {
-                const reviewText = this.previousElementSibling;
                 reviewText.classList.toggle('expanded');
-                this.textContent = reviewText.classList.contains('expanded') ? 'Свернуть' : 'Читать полностью';
+                reviewText.classList.toggle('collapsed');
+                this.textContent = reviewText.classList.contains('collapsed') ? 'Читать полностью' : 'Свернуть';
             });
         }
 
@@ -53,22 +130,46 @@ document.addEventListener('DOMContentLoaded', function() {
         sentinel.textContent = 'Загрузка...';
         
         try {
-            // TODO: Замените на реальный API endpoint
-            const response = await fetch(`/api/${endpoint}?page=${page}`);
+            const response = await fetch(`${API_BASE_URL}/${endpoint}?page=${page}`, {
+                headers: {
+                    'Accept': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            // Если получили 404, значит отзывов больше нет
+            if (response.status === 404) {
+                hasMore = false;
+                sentinel.textContent = page === 1 ? 'Отзывов пока нет' : 'Больше отзывов нет';
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки отзывов');
+            }
+            
             const data = await response.json();
             
-            if (data.reviews.length === 0) {
+            // Если пришел пустой массив или не массив вообще
+            if (!Array.isArray(data) || data.length === 0) {
                 hasMore = false;
-                sentinel.textContent = 'Отзывов пока нет';
+                sentinel.textContent = page === 1 ? 'Отзывов пока нет' : 'Больше отзывов нет';
                 return;
             }
             
-            data.reviews.forEach(review => {
+            data.forEach(review => {
                 container.appendChild(createReviewCard(review));
             });
             
             page++;
-            sentinel.textContent = 'Загрузка...';
+
+            // Если загрузили меньше, чем ожидалось, значит это последняя страница
+            if (data.length < 10) { // предполагаем, что сервер возвращает по 10 отзывов
+                hasMore = false;
+                sentinel.textContent = 'Больше отзывов нет';
+            } else {
+                sentinel.textContent = ''; // Очищаем текст, если есть еще отзывы
+            }
             
         } catch (error) {
             console.error('Ошибка при загрузке отзывов:', error);
@@ -85,23 +186,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            // TODO: Замените на реальный API endpoint
-            const response = await fetch(`/api/${endpoint}/${reviewId}`, {
+            const response = await fetch(`${API_BASE_URL}/${endpoint}/${reviewId}`, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                credentials: 'include'
             });
 
             if (response.ok) {
-                const card = document.querySelector(`[data-review-id="${reviewId}"]`);
-                if (card) {
-                    card.remove();
-                }
-                // Если отзывов не осталось, показываем сообщение
-                if (container.children.length === 0) {
-                    sentinel.textContent = 'Отзывов пока нет';
-                }
+                // После успешного удаления перезагружаем страницу
+                window.location.reload();
             } else {
                 throw new Error('Ошибка при удалении отзыва');
             }
