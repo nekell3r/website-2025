@@ -38,7 +38,12 @@ async def delete_review(
 
 
 @router.get(
-    "/products", summary="Все продукты. Используется в личном кабинете суперюзера"
+    "/products", 
+    summary="Все продукты. Используется в личном кабинете суперюзера",
+    responses={
+        404: {"description": "Продукты не найдены"},
+        200: {"description": "Список продуктов"}
+    }
 )
 async def get_products(is_super: UserRoleDep, db: DBDep):
     return await ProductService().get_products(is_super=is_super, db=db)
