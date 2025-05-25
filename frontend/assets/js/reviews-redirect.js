@@ -13,7 +13,7 @@ async function checkUserAndRedirect(event) {
 
         if (!response.ok) {
             // Если ошибка 401 (не авторизован) или другая, перенаправляем на обычные отзывы
-            window.location.href = 'responses/ege-response.html';
+            window.location.href = '/pages/exams/responses/ege-response.html';
             return;
         }
 
@@ -21,16 +21,16 @@ async function checkUserAndRedirect(event) {
         
         if (userData.is_super_user) {
             // Если пользователь админ, перенаправляем на админскую страницу отзывов
-            window.location.href = 'responses/sup-ege-response.html';
+            window.location.href = '/pages/exams/responses/sup-ege-response.html';
         } else {
             // Если обычный пользователь, перенаправляем на обычные отзывы
-            window.location.href = 'responses/ege-response.html';
+            window.location.href = '/pages/exams/responses/ege-response.html';
         }
     } catch (error) {
         console.error('Ошибка при проверке прав:', error);
         // В случае ошибки показываем уведомление
         alert('Произошла ошибка при проверке прав доступа. Попробуйте позже.');
         // И перенаправляем на обычные отзывы
-        window.location.href = 'responses/ege-response.html';
+        window.location.href = '/pages/exams/responses/ege-response.html';
     }
 } 

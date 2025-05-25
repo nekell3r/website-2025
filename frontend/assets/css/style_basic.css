@@ -1,3 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html{
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #3a3a3a;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+}
+
+
 .text_who_are_we {
     position: relative;
     text-align: center;
@@ -14,7 +34,7 @@
     transform: translateX(-50%);
   }
 .header2 {
-    width: 98%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -184,7 +204,7 @@ input.error {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    width: 98%;
+    width: 100%;
 }
 
 .two-column-block {
@@ -537,7 +557,7 @@ img {
 }
 /* === End Read More === */
 .header2 {
-    width: 98%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -766,7 +786,7 @@ img {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    width: 98%;
+    width: 100%;
     color: #ffff;
     border-top: 4px #ffff solid;
     margin-top: 30px;

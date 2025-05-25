@@ -1,3 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+html{
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #3a3a3a;
+  }
+  
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+  }
+  
+
 .full-width-line {
     width: 100vw;
     height: 4px;
@@ -45,7 +65,7 @@ b {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    width: 98%;
+    width: 100%;
 }
 input {
     width: 96%;
@@ -71,7 +91,7 @@ span {
     margin-left: 93px;
 }
 .header2 {
-    width: 98%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
