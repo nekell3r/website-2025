@@ -6,6 +6,7 @@ from unittest import mock
 from httpx import AsyncClient
 from httpx._transports.asgi import ASGITransport
 import sys
+from typing import AsyncGenerator
 
 # Импорты из src
 from src.config import settings
@@ -120,7 +121,7 @@ app.dependency_overrides[get_db] = get_db_null_pool_dependency
 
 
 @pytest.fixture(scope="session")
-async def ac(register_user) -> AsyncClient:
+async def ac(register_user) -> AsyncGenerator[AsyncClient, None]:
     print("DEBUG (conftest): Starting ac fixture", file=sys.stderr)
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"

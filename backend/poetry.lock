@@ -2238,4 +2238,4 @@ urllib3 = "*"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "bb01cee89f4f3fb0e04293bb548cf81d4b482b661bdad9c78a29b05aa0990c0a"
+content-hash = "b7727836cbacb164fd318a7f6c6ae2e6450a94c013cb9bf61070c9c6388ea9b9"
