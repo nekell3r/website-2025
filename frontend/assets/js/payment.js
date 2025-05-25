@@ -4,7 +4,6 @@ function clearPlaceholder(input) {
 }
 
 async function handlePayment(product_slug) {
-
     // Находим кнопку по product_slug
     const paymentButton = document.querySelector(`.payment-button[data-product-slug="${product_slug}"]`);
     if (!paymentButton) {
@@ -26,7 +25,6 @@ async function handlePayment(product_slug) {
 
     const email = emailInput.value.trim();
     
-    console.log('handlePayment called', email);
     // Валидация email
     if (!email) {
         emailError.textContent = 'Введите email';
@@ -51,37 +49,17 @@ async function handlePayment(product_slug) {
     paymentButton.textContent = 'Отправка...';
 
     try {
-        // Проверка доступности сервера
-        const apiUrl = new URL('https://slick-rice-heal.loca.lt/payments');
-        apiUrl.searchParams.append('t', Date.now());
-
-        // Улучшенная проверка соединения
-        const isServerAvailable = await checkServerAvailability(apiUrl.origin);
-        if (!isServerAvailable) {
-            throw new Error('Сервер временно недоступен');
-        }
-
-        // Основной запрос с таймаутом
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 секунд таймаут
-
-        const response = await fetch(apiUrl, {
+        const response = await fetch('http://localhost:7777/payments', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'ngrok-skip-browser-warning': 'true'
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 product_slug: product_slug,
                 email: email
-            }),
-            credentials: 'include',
-            mode: 'cors',
-            signal: controller.signal
+            })
         });
-
-        clearTimeout(timeoutId);
 
         // Обработка ответа
         if (!response.ok) {
@@ -96,32 +74,15 @@ async function handlePayment(product_slug) {
         }
 
         // Открытие платежной страницы
-        openPaymentPage(data.payment_url);
+        window.location.href = data.payment_url;
     } catch (error) {
         console.error('Ошибка платежа:', error);
         showPaymentError(error);
     } finally {
         paymentButton.disabled = false;
-        paymentButton.textContent = 'Переход к оплате';
-    }
-}// Вспомогательные функции
-
-async function checkServerAvailability(url) {
-    try {
-        // Проверяем именно по URL конечной точки, а не origin
-        const response = await fetch(url, {
-            method: 'HEAD',
-            headers: {
-                'ngrok-skip-browser-warning': 'true'
-            }
-        });
-        return response.ok;
-    } catch (e) {
-        console.error('Ошибка проверки сервера:', e);
-        return false;
+        paymentButton.textContent = 'Страница оплаты';
     }
 }
-
 
 async function parseResponse(response) {
     try {
@@ -132,25 +93,10 @@ async function parseResponse(response) {
     }
 }
 
-function openPaymentPage(url) {
-    try {
-        // Проверка валидности URL
-        new URL(url);
-
-        // Попытка открыть в новой вкладке сразу с URL
-        window.location.href = url;
-
-    } catch (e) {
-        console.error('Некорректный URL оплаты:', url);
-        throw new Error('Получена некорректная ссылка для оплаты');
-    }
-}
-
 function showPaymentError(error) {
     const errorMessages = {
         'Failed to fetch': 'Нет соединения с сервером. Проверьте интернет-соединение.',
         'NetworkError': 'Проблемы с интернет-соединением',
-        'Сервер недоступен': 'Сервер временно недоступен. Попробуйте позже.',
         'AbortError': 'Превышено время ожидания ответа от сервера'
     };
 
@@ -169,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     paymentButtons.forEach(button => {
         const productSlug = button.dataset.productSlug;
-
         button.addEventListener('click', () => handlePayment(productSlug));
     });
 });
