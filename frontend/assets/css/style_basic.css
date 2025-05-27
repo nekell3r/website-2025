@@ -841,3 +841,17 @@ img {
     flex: 1;
     text-align: center;
   }
+
+.server-error-container {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 15px;
+    display: none;
+}
+
+.server-error-message {
+    color: #dc3545;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+}

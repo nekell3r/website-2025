@@ -5,25 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <title>ЕГЭ</title>
     <link rel="stylesheet" href="../../assets/css/style_ege.css">
+    <link rel="stylesheet" href="../../assets/css/style_basic.css">
+
     <script src="../../assets/js/payment.js"></script>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            font-family: Comic Sans MS, Comic Sans, cursive;
-            margin:0px;
-            padding: 0px;
-            background-color: #3A3A3A
-        }
-        img.zloy {
-            display: inline-block;
-            width: 140px !important;
-            height: auto;
-            border-radius: 3%;
-        }
-    </style>
 </head>
 <body>
     <header class="header2">
@@ -100,6 +84,11 @@
     <div class="error-message" id="emailError-ege">Пожалуйста, введите email!</div>
     <button style="min-width: 200px;" class="payment-button" data-product-slug="ege" data-input-id="userInput-ege" data-error-id="emailError-ege">Страница оплаты</button>
     
+    <!-- Добавляем блок для серверных ошибок -->
+    <div class="server-error-container" id="serverError-ege" style="display: none;">
+        <div class="server-error-message"></div>
+    </div>
+
     <div class="text_and_line-container">
         <b><h1 style="display: flex;">Возможны способы оплаты - СБП, Карта МИР, Т-pay</h1></b>
     </div>

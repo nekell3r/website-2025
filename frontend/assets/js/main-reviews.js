@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             // Загружаем по одному отзыву каждого типа
             const [ogeResponse, egeResponse] = await Promise.all([
-                fetch('http://localhost:7777/reviews/oge?page=1&per_page=1'),
-                fetch('http://localhost:7777/reviews/ege?page=1&per_page=1')
+                fetch('http://localhost:7777/reviews/oge?page=1&per_page=1', {credentials: 'include'}),
+                fetch('http://localhost:7777/reviews/ege?page=1&per_page=1', {credentials: 'include'})
             ]);
 
             if (!ogeResponse.ok && !egeResponse.ok) {
