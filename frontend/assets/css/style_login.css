@@ -306,16 +306,16 @@ input[type="text"] {
     font-size: 14px;
     transform: translateX(-30px);
     height: 50%;
-    width: 117%;
+    width: 130%;
     padding: 15px 12px;
     margin-top: 20px;
     border: 1px solid  #e42b9a; 
     border-radius: 20px;
-    background-color: #333; /* Темный фон поля ввода */
+    background-color: #3a3a3a; /* Темный фон поля ввода */
     color: white; /* Цвет текста в поле ввода */
 }
 input[type="text"]::placeholder {
-    color: #aaa; /* Цвет текста-подсказки */
+    color: #979797; /* Цвет текста-подсказки */
 }
 
 input.error {
@@ -350,9 +350,30 @@ b {
     color: white
 }
 .phone-input {
+    transform: translateX(5px);
     display: flex;
     gap: 100px;
+    width: 90%; /* Занимает всю доступную ширину */
+    max-width: 440px; /* Ограничиваем максимальную ширину */
+    margin: 0 auto;
+    padding: 35px 25px; /* ↑ Увеличиваем вертикальный padding (первое значение) */
+    font-size: 40px;    /* Можно увеличить размер шрифта */
+    line-height: 1.5;   /* Опционально: регулирует межстрочный интервал */
+    height: 165px      /* Автоматическая высота на основе padding и font-size */
 }
+.phone-input input.phone-number {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #DA1984;
+    border-radius: 30px;
+    background-color: #3a3a3a;
+    font-size: 25px !important; /* Принудительно устанавливаем размер */
+    width: 200px; /* Исправляем ширину */
+    height: 80px; /* Автоматическая высота */
+    line-height: 1.2;
+    color: white;
+}
+
 .phone-number {
     flex: 1;
     padding: 25px;
@@ -361,7 +382,9 @@ b {
     border: 1px solid #DA1984;
     font-size: 25px;
     background-color: #3a3a3a;
-    font-size: 26px; 
+    font-size: 40px; 
+    width: 100px;
+    height: 60px;
 }
 .phone-number:focus {
     border-color: #DA1984;
@@ -377,3 +400,21 @@ b {
     display: flex;
     gap: 100px;
 }
+.the_end {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    padding-top: -10px;
+    height: 103px;
+  }
+  .the_end .zloy {
+    position: absolute;      
+    right: 0;               /* Прижимаем к правому краю */
+top: 50%;               /* Выравниваем по вертикали */
+    transform: translateY(-50%); /* Точное центрирование по вертикали */
+  }
+  .the_end h1 {
+    margin-top: 0px;
+  }

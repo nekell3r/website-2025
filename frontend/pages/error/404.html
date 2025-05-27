@@ -54,6 +54,23 @@
         .add-review-button {
             margin-left: 10px; /* Отступ слева от кнопки добавления отзыва */
         }
+        img {
+            width: 700px;
+            height: auto;
+        }
+        .zag {
+            font-size: 90px;
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            color: #e42b9a;
+            font-weight: bold;
+            margin-top: 70px;
+        }
+        .descr {
+            font-size: 30px;
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            text-align: center;
+            color: white;
+        }
         </style>
 </head>
 <body>
@@ -72,24 +89,28 @@
             </button>
         </div>
     </div>
+    <div>
+        <!-- <img src="/assets/img/404.jpg" alt="error 404"> -->
+        <div class="zag">
+            Ошибка 404
+        </div>
+        <div class="descr">
+            Что-то не получилось найти(((
+        </div>
+        
+    </div>
 </body>
-    <footer class="the_end">
-        <h1>Служебная информация</h1>
-        <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
-    </footer>
+<footer class="the_end">
+    <h1>Служебная информация</h1>
+    <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
+</footer>
 
-</body>
 
-<!-- <div class="dropdown" id="dropdown">
-    <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="../auth/login.html">авторизация/личный кабинет</a>
-    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
-    <a href="../materials/questions.html">FAQ</a>
-</div>
+
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
     <a href="../auth/login.html">авторизация/личный кабинет</a>
-    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+    <a href="../exams/responses/ege-response.html" onclick="checkUserAndRedirect(event)">отзывы</a>
     <a href="../materials/questions.html">FAQ</a>
 </div>
 
@@ -98,4 +119,5 @@
         var menu = document.getElementById("dropdown");
         menu.classList.toggle("active");
     }
-</script> -->
+</script>
+</html>

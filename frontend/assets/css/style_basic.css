@@ -168,13 +168,7 @@ input.error {
     border-color: #ff0000;
     box-shadow: 0 0 5px rgba(255,0,0,0.5);
 }
-.the_end {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    width: 100%;
-}
+
 
 .two-column-block {
     display: flex;           /* Включаем flex-контейнер */
@@ -379,10 +373,10 @@ input.error {
 
 }
 
-img {
+/* img {
     width:80px;
     height:auto;
-}
+} */
 
 .container {
     grid-template-columns: repeat(2, 1fr);
