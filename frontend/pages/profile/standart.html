@@ -18,55 +18,21 @@
             background-color: #3A3A3A;
             height: 100vh; /* Занимаем всю высоту экрана */
         }
-
-        .header2 {
-            width: 100%; /* Ширина заголовка на весь экран */
-            display: flex;
-            justify-content: space-between; /* Распределяем элементы по краям */
-            align-items: center; /* Центрируем по вертикали */
-            padding: 10px; /* Отступы внутри заголовка */
-        }
-
-
-        .profile-container {
-            display: flex;
-            align-items: center; /* Центрируем по вертикали */
-            margin-top: 20px; /* Отступ сверху для профиля */
-        }
-
-        .avatar img {
-            width: 200px; /* Установите нужный размер аватара */
-            height: auto; /* Сохраняем пропорции изображения аватара */
-            margin-right: 60px;
-            border-radius: 150px;
-        }
-
-        .info {
-            margin-left: 20px; /* Отступ слева от информации о пользователе */
-        }
-
-        .info-row {
-            margin-bottom: 10px; /* Отступ между строками информации */
-        }
-
-        .add-review-button {
-            margin-left: 10px; /* Отступ слева от кнопки добавления отзыва */
-        }
     </style>
 </head>
 <body>
     <div class="header2">
         <div class="logo">
-            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
-            <a href="../exams/oge.html">ОГЭ</a>
-            <a href="../exams/ege.html">ЕГЭ</a>
-            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="oge.html">ОГЭ</a>
+            <a href="ege.html">ЕГЭ</a>
+            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="menu-button" onclick="toggleMenu()">
-                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+            <button class="hamburger-button" onclick="toggleMenu()">
+                <img src="img/burger.jpg" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
             </button>
         </div>
     </div>
@@ -78,7 +44,7 @@
     <div class="profile-container">
 
         <div class="avatar">
-            <img src = "../../assets/img/ava3.jpg" alt="Аватар пользователя">
+            <img src="img/ava3.jpg" alt="Аватар пользователя">
         </div>
 
  
@@ -107,12 +73,13 @@
 
      <!-- Заголовок "Купленные продукты" -->
      <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Купленные продукты</h1></b>
+     
 
      <br>
 
      <div class="reviews-header">
         <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin-right: 10px; text-align: center;">Мои отзывы</h1></b>
-        <a href="add.html"><img src = "../../assets/img/plus2.png" style="margin-top: 17px; margin-left: 6px"></a>
+        <a href="add.html"><img src="img/plus2.png" style="margin-top: 17px; margin-left: 6px"></a>
         </a>
     </div>
     <div class="container">
@@ -127,7 +94,7 @@
                         <div class="exam" style="margin-top: 0px;">ЕГЭ: <strong>87</strong></div>
                         <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
                     </div>
-                    <img src = "../../assets/img/avatar.jpg" alt="Аватар">
+                    <img src="img/avatar.jpg" alt="Аватар">
                 </div>
             </div>
             <div class="card-body">
@@ -149,7 +116,7 @@
                         <div class="exam" style="margin-top: 0px;">ЕГЭ: <strong>87</strong></div>
                         <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
                     </div>
-                    <img src = "../../assets/img/avatar.jpg" alt="Аватар">
+                    <img src="img/avatar.jpg" alt="Аватар">
                 </div>
             </div>
             <div class="card-body">
@@ -162,18 +129,21 @@
         </div>
     </div> 
     
-    <footer class="the_end">
-        <h1>Служебная информация</h1>
-        <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
-    </footer>
+     <div class="the_end" style="padding-top: 20px">
+        <h1 style="flex: 1;
+        text-align: center;"
+        >Служебная информация</h1>
+        <img src="img/злой рус.png" class="zloy_ru" alt="злой рус">
+    </div>
+
 
 </body>
 
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="../auth/login.html">авторизация/личный кабинет</a>
-    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
-    <a href="../materials/questions.html">FAQ</a>
+    <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
+    <a href="response_ege.html">отзывы</a>
+    <a href="#">FAQ</a>
 </div>
 
 <script>
@@ -216,10 +186,10 @@
         }
     });
 });
+function toggleMenu() {
+    var menu = document.getElementById("dropdown");
+    menu.classList.toggle("active");
+}
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="../../assets/js/script.js"></script>
-<script src="../../assets/js/reviews-redirect.js"></script>
-
+  
 </html>  
