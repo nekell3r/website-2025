@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЕГЭ</title>
+    <script src="scripts/response.js" defer></script>
+    <link rel="stylesheet" href="../../assets/css/style_lk.css">
+    <link rel="stylesheet" href="../../assets/css/style_basic.css">
+    <style>
+        /* Устанавливаем стили для body */
+        body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; /* Изменено на flex-start для выравнивания содержимого сверху */
+            align-items: center; 
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin: 0;
+            padding: 0;
+            background-color: #3A3A3A;
+            height: 100vh; /* Занимаем всю высоту экрана */
+        }
+
+        .header2 {
+            width: 100%; /* Ширина заголовка на весь экран */
+            display: flex;
+            justify-content: space-between; /* Распределяем элементы по краям */
+            align-items: center; /* Центрируем по вертикали */
+            padding: 10px; /* Отступы внутри заголовка */
+        }
+
+
+        .profile-container {
+            display: flex;
+            align-items: center; /* Центрируем по вертикали */
+            margin-top: 20px; /* Отступ сверху для профиля */
+        }
+
+        .avatar img {
+            width: 200px; /* Установите нужный размер аватара */
+            height: auto; /* Сохраняем пропорции изображения аватара */
+            margin-right: 60px;
+            border-radius: 150px;
+        }
+
+        .info {
+            margin-left: 20px; /* Отступ слева от информации о пользователе */
+        }
+
+        .info-row {
+            margin-bottom: 10px; /* Отступ между строками информации */
+        }
+
+        .add-review-button {
+            margin-left: 10px; /* Отступ слева от кнопки добавления отзыва */
+        }
+    </style>
+</head>
+<body>
+    <div class="header2">
+        <div class="logo">
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+        </div>
+        <div class="menu">
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+            </button>
+        </div>
+    </div>
+
+    <br><br>
+
+    <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Личная информация</h1></b>
+
+    <div class="profile-container">
+
+        <div class="avatar">
+            <img src = "../../assets/img/ava3.jpg" alt="Аватар пользователя">
+        </div>
+
+ 
+        <div class="info" style="font-size: 23px">
+
+             <div class="info-row">
+                <span>Имя: Павел</span>
+                <span>Телефон: +79567320543</span>
+             </div>
+
+
+             <div class="info-row">
+                <span>Фамилия: Жабский</span>
+                <span>Почта: @pavel@gmail.com</span>
+             </div>
+
+             <button class="edit-button">Редактировать профиль / Сохранить изменения</button>
+         </div>
+     </div>
+     <br><br><br>
+
+     <!-- Белая полоска снизу -->
+     <div style="border-bottom: 4px solid #ffff; width: 100%"></div>
+
+     <br>
+
+     <!-- Заголовок "Купленные продукты" -->
+     <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Купленные продукты</h1></b>
+
+     <br>
+
+     <div class="reviews-header">
+        <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin-right: 10px; text-align: center;">Мои отзывы</h1></b>
+        <a href="add.html"><img src = "../../assets/img/plus2.png" style="margin-top: 17px; margin-left: 6px"></a>
+        </a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="edit-review-container" style="display: inline-block; margin-bottom: 10px; font-size: 10px; border: 1px #ffff solid; border-radius: 10px; padding: 2px 5px;">
+                    <a href="red.html" class="edit-review-link">Редактировать</a>
+                </div>
+                <div class="card-header-content-wrapper" style="display: flex; width: 100%; justify-content: space-between; align-items: flex-start;">
+                    <div class="info">
+                        <div class="name">Имя: Анастасия</div>
+                        <div class="exam" style="margin-top: 0px;">ЕГЭ: <strong>87</strong></div>
+                        <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
+                    </div>
+                    <img src = "../../assets/img/avatar.jpg" alt="Аватар">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="review-container">
+                    <div class="review-text">
+                    Год назад я и представить не могла, что смогу сдать ЕГЭ на такой балл! В начале года меня буквально парализовал страх — казалось, что даже 70 баллов будет нереальным результатом. Но благодаря системной подготовке и большому количеству практики преподавателя, всё сложилось лучше, чем я ожидала.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="edit-review-container" style="display: inline-block; margin-bottom: 10px; font-size: 10px; border: 1px #ffff solid; border-radius: 10px; padding: 2px 5px;">
+                    <a href="red.html" class="edit-review-link">Редактировать</a>
+                </div>
+                <div class="card-header-content-wrapper" style="display: flex; width: 100%; justify-content: space-between; align-items: flex-start;">
+                    <div class="info">
+                        <div class="name">Имя: <strong>Анастасия</strong></div>
+                        <div class="exam" style="margin-top: 0px;">ЕГЭ: <strong>87</strong></div>
+                        <div class="date">Дата публикации: <strong>14.04.2025</strong></div>
+                    </div>
+                    <img src = "../../assets/img/avatar.jpg" alt="Аватар">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="review-container">
+                    <div class="review-text">
+                    Год назад я и представить не могла, что смогу сдать ЕГЭ на такой балл! В начале года меня буквально парализовал страх — казалось, что даже 70 баллов будет нереальным результатом. Но благодаря системной подготовке и большому количеству практики преподавателя, всё сложилось лучше, чем я ожидала.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    <footer class="the_end">
+        <h1>Служебная информация</h1>
+        <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
+    </footer>
+
+</body>
+
+<div class="dropdown" id="dropdown">
+    <span class="close" onclick="toggleMenu()">&times;</span>
+    <a href="../auth/login.html">авторизация/личный кабинет</a>
+    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+    <a href="../materials/questions.html">FAQ</a>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdown");
+        menu.classList.toggle("active");
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+    const reviewContainers = document.querySelectorAll('.review-container');
+    
+    reviewContainers.forEach(container => {
+        const reviewText = container.querySelector('.review-text');
+        const fullText = reviewText.textContent.trim();
+        
+        // Создаем кнопку
+        const readMoreBtn = document.createElement('button');
+        readMoreBtn.className = 'read-more';
+        readMoreBtn.textContent = 'Читать полностью';
+        container.appendChild(readMoreBtn);
+        
+        if (fullText.length > 100) {
+            // Добавляем класс для усеченного текста
+            reviewText.classList.add('truncated');
+            
+            // Показываем кнопку
+            readMoreBtn.style.display = 'inline-block';
+            
+            // Обработчик клика
+            readMoreBtn.addEventListener('click', function() {
+                if (reviewText.style.maxHeight) {
+                    reviewText.style.maxHeight = null;
+                    this.textContent = 'Читать полностью';
+                    reviewText.classList.add('truncated');
+                } else {
+                    reviewText.style.maxHeight = 'none';
+                    this.textContent = 'Свернуть';
+                    reviewText.classList.remove('truncated');
+                }
+            });
+        }
+    });
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../../assets/js/script.js"></script>
+<script src="../../assets/js/reviews-redirect.js"></script>
+
+</html>  

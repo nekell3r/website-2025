@@ -183,7 +183,7 @@ main {
     flex: 1;
     padding: 25px;
     border: 1px solid #000000;
-    border-radius: 15px;
+    border-radius: 30px;
     border: 1px solid #DA1984;
     font-size: 25px;
     background-color: #3a3a3a;
@@ -348,4 +348,32 @@ b {
 }
 .menu a {
     color: white
+}
+.phone-input {
+    display: flex;
+    gap: 100px;
+}
+.phone-number {
+    flex: 1;
+    padding: 25px;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    border: 1px solid #DA1984;
+    font-size: 25px;
+    background-color: #3a3a3a;
+    font-size: 26px; 
+}
+.phone-number:focus {
+    border-color: #DA1984;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.phone-number::placeholder {
+    color: #ffffff; /* Розовый, как ваша граница */
+    
+
+}
+.form-group {
+    display: flex;
+    gap: 100px;
 }

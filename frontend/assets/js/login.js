@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация маски для телефона
-    const phoneInput = document.getElementById('phone');
+    const phoneInput = document.getElementById('phone-input');
     $(phoneInput).inputmask("+7 (999) 999-99-99");
 
     // Обработка показа/скрытия пароля
