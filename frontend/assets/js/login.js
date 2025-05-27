@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const rawPhone = phoneInput.value.trim();
         const cleanedPhone = rawPhone.replace(/\D/g, '');
         const password = passwordInput.value;
-
+        console.log(cleanedPhone);
+        console.log(password);
+        
         // Валидация
         if (!cleanedPhone || cleanedPhone.length !== 11 || !/^7\d{10}$/.test(cleanedPhone)) {
             errorBlock.textContent = 'Введите корректный номер телефона';
@@ -38,8 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('http://localhost:7777/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     phone: '+' + cleanedPhone,
@@ -50,11 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.log('Ответ сервера:', errorData);
                 throw new Error(errorData?.detail || `Ошибка: ${response.status}`);
             }
 
             // Если ответ успешный, сразу перенаправляем на dashboard
-            window.location.href = '../profile/dashboard.html';
+            window.location.href = '../profile/standart.html';
             
         } catch (error) {
             errorBlock.textContent = error.message || 'Ошибка при входе';
