@@ -328,6 +328,13 @@ function openAddReviewModal() {
         cancelAddReviewButton = document.getElementById('cancelAddReview');
         saveNewReviewButton = document.getElementById('saveNewReview');
 
+        // Добавляем обработчик клика для закрытия по клику вне модального окна
+        addReviewModalOverlay.addEventListener('click', (event) => {
+            if (event.target === addReviewModalOverlay) {
+                closeAddModal();
+            }
+        });
+
         // Добавляем обработчики событий
         if (cancelAddReviewButton) {
             cancelAddReviewButton.addEventListener('click', closeAddModal);
@@ -588,6 +595,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     addReviewScoreInput.placeholder = 'Сначала выберите экзамен';
                     scoreHint.textContent = '';
                 }
+            }
+        });
+    }
+
+    // Добавляем обработчик клика для модального окна добавления отзыва
+    const addReviewModal = document.getElementById('addReviewModalOverlay');
+    if (addReviewModal) {
+        addReviewModal.addEventListener('click', (event) => {
+            if (event.target === addReviewModal) {
+                closeAddModal();
             }
         });
     }

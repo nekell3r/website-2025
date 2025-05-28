@@ -1,7 +1,7 @@
 // Функция для проверки авторизации пользователя
 async function checkAuth() {
     try {
-        const response = await fetch('http://localhost:7777/me', {
+        const response = await fetch('http://localhost:7777/me/info', {
             credentials: 'include'
         });
         return response.ok;
