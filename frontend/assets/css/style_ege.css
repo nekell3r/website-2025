@@ -103,7 +103,6 @@ body {
     width: 100%; 
     align-items: center; 
     text-align: center;
-    border-bottom: 4px solid rgb(255, 255, 255);
 }
 .ege_work3_container {
     position: relative;
@@ -269,3 +268,22 @@ input.error {
     margin-bottom: 0px;
     transform: translateX(-50%);
   }
+
+/* Copied from style_oge.css for consistent heading style */
+.text_and_over-line {
+    position: relative;
+    padding-top: 15px; /* Отступ для линии */
+    margin-top: 20px;  /* Отступ от предыдущего элемента */
+}
+
+.text_and_over-line::before {
+    content: "";
+    position: absolute;
+    top: -20px; /* Поднимаем линию выше текста */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; /* Ensures line spans the container */
+    height: 4px;
+    background: rgb(255, 255, 255);
+    z-index: -1;
+}

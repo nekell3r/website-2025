@@ -149,7 +149,7 @@ body {
     top: -20px; /* Поднимаем линию выше текста */
     left: 50%;
     transform: translateX(-50%);
-    width: 100vw; /* На всю ширину viewport */
+    width: 100%; /* На всю ширину viewport - изменено на 100% родительского элемента */
     height: 4px;
     background: rgb(255, 255, 255);
     z-index: -1;
