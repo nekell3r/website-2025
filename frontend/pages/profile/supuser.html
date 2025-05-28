@@ -260,6 +260,38 @@
         .product-modal-content .close-button {
             display: none;
         }
+
+        .dropdown {
+            position: absolute;
+            top: 80px;
+            right: 25px;
+            background: #e42b9a;
+            padding: 10px;
+            border-radius: 20px;
+            opacity: 0.5;
+            transform: translateY(-30px);
+            visibility: collapse;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown.active {
+            opacity: 1;
+            transform: translateY(0px);
+            visibility: visible;
+        }
+
+        .dropdown a {
+            display: block;
+            margin: 6px 10px;
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+        }
+
+        .close {
+            cursor: pointer;
+            font-size: 20px;
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -273,8 +305,8 @@
             <a href="../materials/questions.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
-            <button class="hamburger-button" onclick="toggleMenu()">
-                <img src="../../assets/img/burger.jpg" alt="кнопка бургер">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" alt="кнопка меню">
             </button>
         </div>
     </div>
@@ -365,6 +397,16 @@
             var menu = document.getElementById("dropdown");
             menu.classList.toggle("active");
         }
+
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', function(event) {
+            var menu = document.getElementById("dropdown");
+            var menuButton = document.querySelector('.menu-button');
+            
+            if (!menu.contains(event.target) && !menuButton.contains(event.target) && menu.classList.contains('active')) {
+                menu.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html> 

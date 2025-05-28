@@ -4,10 +4,15 @@ async function checkAuth() {
         const response = await fetch('http://localhost:7777/me/info', {
             credentials: 'include'
         });
-        return response.ok;
+        if (!response.ok) return { isAuthenticated: false };
+        const userData = await response.json();
+        return { 
+            isAuthenticated: true, 
+            isSuperuser: userData.is_superuser 
+        };
     } catch (error) {
         console.error('Ошибка при проверке авторизации:', error);
-        return false;
+        return { isAuthenticated: false };
     }
 }
 
@@ -16,11 +21,11 @@ async function updateAuthLink() {
     const authLink = document.getElementById('auth-link');
     if (!authLink) return;
 
-    const isAuthenticated = await checkAuth();
+    const { isAuthenticated, isSuperuser } = await checkAuth();
     
     if (isAuthenticated) {
         authLink.textContent = 'личный кабинет';
-        authLink.href = '/pages/profile/standart.html';
+        authLink.href = isSuperuser ? '/pages/profile/supuser.html' : '/pages/profile/standart.html';
     } else {
         authLink.textContent = 'авторизация';
         authLink.href = '/pages/auth/login.html';
