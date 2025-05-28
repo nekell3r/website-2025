@@ -39,31 +39,22 @@ function createReviewCard(review) {
     card.className = 'card';
     card.setAttribute('data-review-id', review.id);
     card.style.minWidth = '300px';
+    // Если у card есть background-color, то padding будет виден.
+    // Убедимся, что нет лишнего padding-bottom у самой card.
+    // card.style.padding = '15px 15px 0 15px'; // Пример, если общий padding был 15px
 
     // Создаем заголовок карточки
     const cardHeader = document.createElement('div');
     cardHeader.className = 'card-header';
+    // Предполагаем, что стили для cardHeader (включая padding) заданы в CSS или ранее и они корректны
 
     const cardHeaderContent = document.createElement('div');
     cardHeaderContent.className = 'card-header-content-wrapper';
     cardHeaderContent.style.cssText = 'display: flex; width: 100%; justify-content: space-between; align-items: flex-start;';
 
-    // Информация о пользователе (левая часть заголовка)
     const info = document.createElement('div');
     info.className = 'info';
-    // Добавляем flex-контейнер для info, чтобы элементы внутри располагались вертикально
-    info.style.cssText = 'display: flex; flex-direction: column; align-items: flex-start;';
     
-    const editButton = document.createElement('a');
-    editButton.href = '#';
-    editButton.className = 'edit-review-link';
-    editButton.textContent = 'Редактировать';
-    editButton.style.cssText = 'display: inline-block; font-size: 10px; color: #fff; text-decoration: none; border: 1px solid #fff; padding: 2px 5px; border-radius: 10px; margin-bottom: 5px;';
-    editButton.onclick = (e) => {
-        e.preventDefault();
-        editReview(review.id);
-    };
-
     const examInfo = document.createElement('div');
     examInfo.className = 'exam';
     examInfo.innerHTML = `${review.exam}: <strong>${review.result}</strong>`;
@@ -72,14 +63,13 @@ function createReviewCard(review) {
     dateInfo.className = 'date';
     dateInfo.innerHTML = `Дата публикации: <strong>${formatDate(review.created_at)}</strong>`;
 
-    info.appendChild(editButton); 
     info.appendChild(examInfo);
     info.appendChild(dateInfo);
 
-    // Аватар (правая часть заголовка)
     const avatar = document.createElement('img');
     avatar.src = '../../assets/img/avatar.jpg'; 
     avatar.alt = 'Аватар';
+    // Предполагаем, что стили для avatar (размеры, border-radius) заданы в CSS или ранее
 
     cardHeaderContent.appendChild(info);
     cardHeaderContent.appendChild(avatar);
@@ -88,24 +78,31 @@ function createReviewCard(review) {
     // Тело карточки
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
+    // Явно устанавливаем padding для cardBody, с минимальным или нулевым padding-bottom
+    // Пример: 15px сверху, 15px по бокам, 5px снизу.
+    // Если нужен другой верхний/боковой padding, его нужно указать здесь.
+    // Если cardBody не должен иметь боковых/верхних отступов от card, то можно поставить padding: 0 0 5px 0;
+    cardBody.style.padding = '15px 15px 5px 15px'; // (top, right, bottom, left)
 
     const reviewContainer = document.createElement('div');
     reviewContainer.className = 'review-container';
+    reviewContainer.style.marginBottom = '0';
 
     const reviewText = document.createElement('div');
     reviewText.className = 'review-text';
     reviewText.textContent = review.review;
     reviewText.style.maxHeight = '100px';
     reviewText.style.overflow = 'hidden';
+    reviewText.style.marginBottom = '5px';
 
     reviewContainer.appendChild(reviewText);
 
-    // Добавляем кнопки под текстом отзыва
     const buttonsContainer = document.createElement('div');
-    buttonsContainer.style.cssText = 'display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;';
+    buttonsContainer.style.cssText = 'display: flex; justify-content: space-between; align-items: flex-start; width: 100%; margin-top: 0; margin-bottom: 0;';
 
     const leftButtonsSubContainer = document.createElement('div');
     const rightButtonsSubContainer = document.createElement('div');
+    rightButtonsSubContainer.style.cssText = 'display: flex; flex-direction: column; align-items: flex-end; gap: 0px;';
 
     if (review.review.length > 100) { 
         const readMoreBtn = document.createElement('button');
@@ -127,9 +124,20 @@ function createReviewCard(review) {
     const deleteButton = document.createElement('button');
     deleteButton.className = 'delete-review'; 
     deleteButton.textContent = 'Удалить';
-    deleteButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer;';
+    deleteButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer; margin-bottom: 5px;';
     deleteButton.onclick = () => deleteReview(review.id);
+    
+    const editButton = document.createElement('button');
+    editButton.className = 'edit-review';
+    editButton.textContent = 'Редактировать';
+    editButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer;';
+    editButton.onclick = (e) => {
+        e.preventDefault(); 
+        editReview(review.id);
+    };
+
     rightButtonsSubContainer.appendChild(deleteButton);
+    rightButtonsSubContainer.appendChild(editButton);
 
     buttonsContainer.appendChild(leftButtonsSubContainer);
     buttonsContainer.appendChild(rightButtonsSubContainer);
