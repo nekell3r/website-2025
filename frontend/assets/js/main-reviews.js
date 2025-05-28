@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <div class="exam">${examName}: <strong>${item.result}</strong></div>
                             <div class="date">Дата публикации: <strong>${formatDate(item.created_at) || "Неизвестно"}</strong></div>
                         </div>
-                        <img src="assets/img/avatar.jpg" alt="Аватар" />
+                        <img src="/assets/img/avatar.jpg" alt="Аватар" />
                     </div>
                     <div class="card-body">
                         <div class="review-container">

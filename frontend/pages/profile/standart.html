@@ -3,36 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ошибка 404</title>
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="../../assets/css/style_profile.css">
     <link rel="stylesheet" href="../../assets/css/style_basic.css">
+
     <style>
         /* Устанавливаем стили для body */
         body {
             display: flex;
             flex-direction: column; 
-            justify-content: flex-start; /* Изменено на flex-start для выравнивания содержимого сверху */
+            justify-content: flex-start;
             align-items: center; 
             font-family: Comic Sans MS, Comic Sans, cursive;
             margin: 0;
             padding: 0;
             background-color: #3A3A3A;
-            height: 100vh; /* Занимаем всю высоту экрана */
+            height: 100vh;
+        }
+        
+        .review-text {
+            color: #ffffff;
+            max-height: 100px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 40px; /* Добавляем отступ для кнопок управления */
+        }
+        .review-text.expanded {
+            max-height: none;
+            overflow: visible;
+        }
+        .review-container {
+            position: relative;
+            padding-bottom: 50px; /* Добавляем место для кнопок управления */
+        }
+        .read-more {
+            background-color: transparent;
+            color: #d83787;
+            border: none;
+            padding: 5px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Стили для модального окна из red.html */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #3A3A3A;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #3A3A3A;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+            color: white;
+            border: 2px solid #e42b9a;
+        }
+
+        .modal-content h2 {
+            color: white;
+            margin-bottom: 20px;
+            border: 2px solid #e42b9a;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .modal-content input[type="number"],
+        .modal-content textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e42b9a;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #3A3A3A;
+            color: white;
+        }
+
+        .modal-content textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Стили для полосы прокрутки */
+        .modal-content textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content textarea::-webkit-scrollbar-track {
+            background: #2A2A2A;
+            border-radius: 4px;
+        }
+
+        .modal-content textarea::-webkit-scrollbar-thumb {
+            background: #4A4A4A;
+            border-radius: 4px;
+            border: 1px solid #e42b9a;
+        }
+
+        .modal-content textarea::-webkit-scrollbar-thumb:hover {
+            background: #5A5A5A;
+        }
+
+        .modal-content .button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-content button {
+            padding: 8px 16px;
+            border: 2px solid #e42b9a;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #3A3A3A;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background: #e42b9a;
+        }
+
+        .modal-content button#cancelEditReview {
+            background: #3A3A3A;
+        }
+
+        .modal-content button#saveReviewChanges {
+            background: #3A3A3A;
         }
     </style>
 </head>
 <body>
     <div class="header2">
         <div class="logo">
-            <a href="basic.html"><img src="img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+            <a href="../basic.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
         </div>
         <div class="menu">
-            <a href="oge.html">ОГЭ</a>
-            <a href="ege.html">ЕГЭ</a>
-            <a href="materials.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="../materials/questions.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
         </div>
         <div class="buttons">
             <button class="hamburger-button" onclick="toggleMenu()">
-                <img src="img/burger.jpg" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка бургер">
+                <img src="../../assets/img/burger.jpg" alt="кнопка бургер">
             </button>
         </div>
     </div>
@@ -42,19 +172,15 @@
     <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Личная информация</h1></b>
 
     <div class="profile-container">
-
         <div class="avatar">
-            <img src="img/ava3.jpg" alt="Аватар пользователя">
+            <img src="../../assets/img/ava3.jpg" style="border-radius: 50%;" alt="Аватар пользователя">
         </div>
 
- 
         <div class="info" style="font-size: 23px">
-
              <div class="info-row">
                 <span>Имя: Павел</span>
                 <span>Телефон: +79567320543</span>
              </div>
-
 
              <div class="info-row">
                 <span>Фамилия: Жабский</span>
@@ -66,21 +192,17 @@
      </div>
      <br><br><br>
 
-     <!-- Белая полоска снизу -->
      <div style="border-bottom: 4px solid #ffff; width: 100%"></div>
 
      <br>
 
-     <!-- Заголовок "Купленные продукты" -->
      <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px">Купленные продукты</h1></b>
      
-
      <br>
 
      <div class="reviews-header">
         <b><h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin-right: 10px; text-align: center;">Мои отзывы</h1></b>
-        <a href="add.html"><img src="img/plus2.png" style="margin-top: 17px; margin-left: 6px"></a>
-        </a>
+        <a href="../materials/add.html"><img src="../../assets/img/plus2.png" style="margin-top: 17px; margin-left: 6px"></a>
     </div>
     <div class="container">
         <div class="card">
@@ -129,66 +251,53 @@
         </div>
     </div> 
     
+    <!-- Модальное окно для редактирования отзыва -->
+    <div id="editReviewModalOverlay" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #3A3A3A; z-index: 1000; justify-content: center; align-items: center;">
+        <div id="editReviewModalContent" class="modal-content">
+            <h2>Редактировать отзыв</h2>
+            <input type="hidden" id="editingReviewId">
+            <div>
+                <label for="editReviewScore">Оценка:</label>
+                <input type="number" id="editReviewScore" min="1" max="5">
+            </div>
+            <div>
+                <label for="editReviewText">Текст отзыва:</label>
+                <textarea id="editReviewText"></textarea>
+            </div>
+            <div class="button-container">
+                <button id="cancelEditReview">Отмена</button>
+                <button id="saveReviewChanges">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="the_end" style="padding-top: 10px">
         <h1 style="flex: 1; text-align: center;">Служебная информация</h1>
         <img src="../../assets/img/злой рус.png" class="zloy" alt="злой рус">
     </footer>
 
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <a href="../materials/questions.html">FAQ</a>
+    </div>
 
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/user-reviews.js"></script>
+    <script src="../../assets/js/reviews-redirect.js"></script>
+    <script src="../../assets/js/auth-toggle.js"></script>
 
-<div class="dropdown" id="dropdown">
-    <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="#" id="auth-link">авторизация/личный кабинет</a>
-    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
-    <a href="../materials/questions.html">FAQ</a>
-</div>
-
-<script>
-    function toggleMenu() {
-        var menu = document.getElementById("dropdown");
-        menu.classList.toggle("active");
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-    const reviewContainers = document.querySelectorAll('.review-container');
-    
-    reviewContainers.forEach(container => {
-        const reviewText = container.querySelector('.review-text');
-        const fullText = reviewText.textContent.trim();
+    <script>
+        // Установка параметров для загрузки отзывов
+        document.body.setAttribute('data-endpoint', 'api/user/reviews');
         
-        // Создаем кнопку
-        const readMoreBtn = document.createElement('button');
-        readMoreBtn.className = 'read-more';
-        readMoreBtn.textContent = 'Читать полностью';
-        container.appendChild(readMoreBtn);
-        
-        if (fullText.length > 100) {
-            // Добавляем класс для усеченного текста
-            reviewText.classList.add('truncated');
-            
-            // Показываем кнопку
-            readMoreBtn.style.display = 'inline-block';
-            
-            // Обработчик клика
-            readMoreBtn.addEventListener('click', function() {
-                if (reviewText.style.maxHeight) {
-                    reviewText.style.maxHeight = null;
-                    this.textContent = 'Читать полностью';
-                    reviewText.classList.add('truncated');
-                } else {
-                    reviewText.style.maxHeight = 'none';
-                    this.textContent = 'Свернуть';
-                    reviewText.classList.remove('truncated');
-                }
-            });
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown");
+            menu.classList.toggle("active");
         }
-    });
-});
-function toggleMenu() {
-    var menu = document.getElementById("dropdown");
-    menu.classList.toggle("active");
-}
-</script>
-<script src="../../assets/js/reviews-redirect.js"></script>
+    </script>
   
 </html>  
