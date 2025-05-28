@@ -44,6 +44,110 @@
             cursor: pointer;
             font-size: 16px;
         }
+
+        /* Стили для модального окна из red.html */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #3A3A3A;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #3A3A3A;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+            color: white;
+            border: 2px solid #e42b9a;
+        }
+
+        .modal-content h2 {
+            color: white;
+            margin-bottom: 20px;
+            border: 2px solid #e42b9a;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .modal-content input[type="number"],
+        .modal-content textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e42b9a;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #3A3A3A;
+            color: white;
+        }
+
+        .modal-content textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Стили для полосы прокрутки */
+        .modal-content textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content textarea::-webkit-scrollbar-track {
+            background: #2A2A2A;
+            border-radius: 4px;
+        }
+
+        .modal-content textarea::-webkit-scrollbar-thumb {
+            background: #4A4A4A;
+            border-radius: 4px;
+            border: 1px solid #e42b9a;
+        }
+
+        .modal-content textarea::-webkit-scrollbar-thumb:hover {
+            background: #5A5A5A;
+        }
+
+        .modal-content .button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-content button {
+            padding: 8px 16px;
+            border: 2px solid #e42b9a;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #3A3A3A;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background: #e42b9a;
+        }
+
+        .modal-content button#cancelEditReview {
+            background: #3A3A3A;
+        }
+
+        .modal-content button#saveReviewChanges {
+            background: #3A3A3A;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +210,26 @@
     </div>
     <div id="sentinel">Загрузка...</div>
     
+    <!-- Модальное окно для редактирования отзыва -->
+    <div id="editReviewModalOverlay" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #3A3A3A; z-index: 1000; justify-content: center; align-items: center;">
+        <div id="editReviewModalContent" class="modal-content">
+            <h2>Редактировать отзыв</h2>
+            <input type="hidden" id="editingReviewId">
+            <div>
+                <label for="editReviewScore">Оценка:</label>
+                <input type="number" id="editReviewScore" min="1" max="5">
+            </div>
+            <div>
+                <label for="editReviewText">Текст отзыва:</label>
+                <textarea id="editReviewText"></textarea>
+            </div>
+            <div class="button-container">
+                <button id="cancelEditReview">Отмена</button>
+                <button id="saveReviewChanges">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="the_end" style="padding-top: 10px">
         <h1 style="flex: 1; text-align: center;">Служебная информация</h1>
         <img src="../../assets/img/злой рус.png" class="zloy" alt="злой рус">
@@ -129,28 +253,6 @@
         // Установка параметров для загрузки отзывов
         document.body.setAttribute('data-endpoint', 'api/user/reviews');
         
-        // Добавляем обработчик для добавления кнопок управления к каждой карточке отзыва
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    mutation.addedNodes.forEach(function(node) {
-                        if (node.classList && node.classList.contains('card')) {
-                            // Получаем ID отзыва из data-атрибута
-                            const reviewId = node.getAttribute('data-review-id');
-                            if (reviewId) {
-                                addManagementButtons(node, reviewId);
-                            }
-                        }
-                    });
-                });
-            });
-
-            observer.observe(document.getElementById('container'), {
-                childList: true,
-                subtree: true
-            });
-        });
-
         function toggleMenu() {
             var menu = document.getElementById("dropdown");
             menu.classList.toggle("active");

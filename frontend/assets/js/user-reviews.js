@@ -28,10 +28,98 @@ async function deleteReview(reviewId) {
     }
 }
 
-// Функция для редактирования отзыва
-function editReview(reviewId) {
-    window.location.href = `../materials/red.html?reviewId=${reviewId}`;
+// --- Начало кода для модального окна редактирования ---
+// Объявляем переменные здесь, но не инициализируем их сразу
+let editReviewModalOverlay, editReviewModalContent, editingReviewIdInput, 
+    editReviewTextInput, editReviewScoreInput, cancelEditReviewButton, saveReviewChangesButton;
+
+async function openEditModal(review) {
+    // Проверка перенесена внутрь DOMContentLoaded для инициализации элементов
+    if (!editReviewModalOverlay || !editReviewTextInput || !editReviewScoreInput || !editingReviewIdInput) {
+        console.error('Элементы модального окна не найдены! Убедитесь, что HTML добавлен на страницу и ID корректны.');
+        alert('Произошла ошибка при открытии окна редактирования. Элементы не найдены.');
+        return;
+    }
+    editingReviewIdInput.value = review.id;
+    editReviewTextInput.value = review.review;
+    editReviewScoreInput.value = review.result;
+
+    // Устанавливаем ограничения в зависимости от типа экзамена
+    if (review.exam.toLowerCase().includes('огэ')) {
+        editReviewScoreInput.min = 2;
+        editReviewScoreInput.max = 5;
+        editReviewScoreInput.placeholder = 'Оценка от 2 до 5';
+    } else if (review.exam.toLowerCase().includes('егэ')) {
+        editReviewScoreInput.min = 0;
+        editReviewScoreInput.max = 100;
+        editReviewScoreInput.placeholder = 'Баллы от 0 до 100';
+    }
+
+    editReviewModalOverlay.style.display = 'flex';
 }
+
+function closeEditModal() {
+    if (editReviewModalOverlay) {
+        editReviewModalOverlay.style.display = 'none';
+    }
+}
+
+async function saveReviewChangesHandler() {
+    if (!editingReviewIdInput || !editReviewTextInput || !editReviewScoreInput) {
+        console.error('Поля для сохранения изменений не найдены!');
+        return;
+    }
+
+    const reviewId = editingReviewIdInput.value;
+    const updatedReviewText = editReviewTextInput.value;
+    const updatedScore = parseInt(editReviewScoreInput.value, 10);
+
+    // Получаем текущий отзыв для проверки типа экзамена
+    const card = document.querySelector(`[data-review-id="${reviewId}"]`);
+    const examElement = card ? card.querySelector('.exam') : null;
+    const examText = examElement ? examElement.textContent : '';
+    const isOGE = examText.toLowerCase().includes('огэ');
+    const isEGE = examText.toLowerCase().includes('егэ');
+
+    // Проверяем валидность оценки в зависимости от типа экзамена
+    if (isOGE && (isNaN(updatedScore) || updatedScore < 2 || updatedScore > 5)) {
+        alert('Для ОГЭ оценка должна быть от 2 до 5.');
+        return;
+    } else if (isEGE && (isNaN(updatedScore) || updatedScore < 0 || updatedScore > 100)) {
+        alert('Для ЕГЭ баллы должны быть от 0 до 100.');
+        return;
+    } else if (!isOGE && !isEGE) {
+        if (isNaN(updatedScore) || updatedScore < 1 || updatedScore > 5) {
+            alert('Пожалуйста, введите корректную оценку от 1 до 5.');
+            return;
+        }
+    }
+
+    try {
+        const response = await fetch(`http://localhost:7777/reviews/${reviewId}`, {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                review: updatedReviewText,
+                result: updatedScore,
+            }),
+        });
+
+        if (response.ok) {
+            window.location.href = '/pages/profile/standart.html';
+        } else {
+            const errorData = await response.text();
+            throw new Error(`Ошибка при сохранении отзыва: ${response.status} ${errorData}`);
+        }
+    } catch (error) {
+        console.error('Ошибка при сохранении:', error);
+        alert(`Не удалось сохранить изменения. ${error.message}`);
+    }
+}
+// --- Конец кода для модального окна редактирования ---
 
 // Функция для создания карточки отзыва
 function createReviewCard(review) {
@@ -127,17 +215,14 @@ function createReviewCard(review) {
     deleteButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer; margin-bottom: 5px;';
     deleteButton.onclick = () => deleteReview(review.id);
     
-    const editButton = document.createElement('button');
-    editButton.className = 'edit-review';
-    editButton.textContent = 'Редактировать';
-    editButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer;';
-    editButton.onclick = (e) => {
-        e.preventDefault(); 
-        editReview(review.id);
-    };
+    const editCardButton = document.createElement('button'); // Переименовал, чтобы не конфликтовать с editButton из scope выше, если он был
+    editCardButton.className = 'edit-review';
+    editCardButton.textContent = 'Редактировать';
+    editCardButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer;';
+    editCardButton.onclick = () => openEditModal(review); // Передаем весь объект review
 
     rightButtonsSubContainer.appendChild(deleteButton);
-    rightButtonsSubContainer.appendChild(editButton);
+    rightButtonsSubContainer.appendChild(editCardButton);
 
     buttonsContainer.appendChild(leftButtonsSubContainer);
     buttonsContainer.appendChild(rightButtonsSubContainer);
@@ -205,4 +290,51 @@ async function loadUserReviews() {
 }
 
 // Загружаем отзывы при загрузке страницы
-document.addEventListener('DOMContentLoaded', loadUserReviews); 
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded event fired. Initializing modal elements...'); // Лог выполнения DOMContentLoaded
+
+    editReviewModalOverlay = document.getElementById('editReviewModalOverlay');
+    console.log('editReviewModalOverlay:', editReviewModalOverlay); // Лог для overlay
+
+    editReviewModalContent = document.getElementById('editReviewModalContent');
+    console.log('editReviewModalContent:', editReviewModalContent); // Лог для content
+
+    editingReviewIdInput = document.getElementById('editingReviewId');
+    console.log('editingReviewIdInput:', editingReviewIdInput); // Лог для hidden input id
+
+    editReviewTextInput = document.getElementById('editReviewText');
+    console.log('editReviewTextInput:', editReviewTextInput); // Лог для textarea
+
+    editReviewScoreInput = document.getElementById('editReviewScore');
+    console.log('editReviewScoreInput:', editReviewScoreInput); // Лог для input score
+
+    cancelEditReviewButton = document.getElementById('cancelEditReview');
+    console.log('cancelEditReviewButton:', cancelEditReviewButton); // Лог для cancel button
+
+    saveReviewChangesButton = document.getElementById('saveReviewChanges');
+    console.log('saveReviewChangesButton:', saveReviewChangesButton); // Лог для save button
+
+    if (editReviewModalOverlay) {
+        editReviewModalOverlay.addEventListener('click', function(event) {
+            if (event.target === editReviewModalOverlay) {
+                closeEditModal();
+            }
+        });
+    } else {
+        console.error('editReviewModalOverlay is null, cannot attach event listener.');
+    }
+
+    if (cancelEditReviewButton) {
+        cancelEditReviewButton.addEventListener('click', closeEditModal);
+    } else {
+        console.error('cancelEditReviewButton is null, cannot attach event listener.');
+    }
+
+    if (saveReviewChangesButton) {
+        saveReviewChangesButton.addEventListener('click', saveReviewChangesHandler);
+    } else {
+        console.error('saveReviewChangesButton is null, cannot attach event listener.');
+    }
+
+    loadUserReviews(); // Загружаем отзывы
+}); 
