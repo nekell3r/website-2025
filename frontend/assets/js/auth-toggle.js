@@ -8,7 +8,7 @@ async function checkAuth() {
         const userData = await response.json();
         return { 
             isAuthenticated: true, 
-            isSuperuser: userData.is_superuser 
+            isSuperuser: userData.is_super_user 
         };
     } catch (error) {
         console.error('Ошибка при проверке авторизации:', error);

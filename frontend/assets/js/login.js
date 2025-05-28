@@ -55,8 +55,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(errorData?.detail || `Ошибка: ${response.status}`);
             }
 
-            // Если ответ успешный, сразу перенаправляем на dashboard
-            window.location.href = '../profile/standart.html';
+            // После успешного входа, проверяем роль пользователя
+            const userInfoResponse = await fetch('http://localhost:7777/me/info', {
+                credentials: 'include'
+            });
+
+            if (userInfoResponse.ok) {
+                const userData = await userInfoResponse.json();
+                // Перенаправляем в зависимости от роли
+                window.location.href = userData.is_super_user ? '../profile/supuser.html' : '../profile/standart.html';
+            } else {
+                // Если не удалось получить информацию о пользователе, перенаправляем на стандартную страницу
+                window.location.href = '../profile/standart.html';
+            }
             
         } catch (error) {
             errorBlock.textContent = error.message || 'Ошибка при входе';
