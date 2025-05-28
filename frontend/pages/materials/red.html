@@ -61,10 +61,13 @@
 
 
     <div class="dropdown" id="dropdown">
-        <a href="login.html" id="auth-link">авторизация/личный кабинет</a>
-        <a href="response_ege.html">отзывы</a>
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
         <a href="questions.html">FAQ</a>
     </div>
+
+    <script src="../../assets/js/auth-token.js" defer></script>
 </body>
 <script>
     function toggleMenu() {
@@ -72,3 +75,4 @@
         menu.classList.toggle("active");
     }
 </script>
+<script src="../../assets/js/reviews-redirect.js"></script>

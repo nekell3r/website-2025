@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         .button-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             margin-top: 10px;
             gap: 10px;
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
             font-family: inherit;
             font-size: 16px;
             padding: 0;
-            margin-left: auto;
         }
         .delete-button:hover {
             color: #ff0000;
@@ -101,6 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="review-text ${needsReadMore ? 'collapsed' : ''}">${review.review}</div>
                     <div class="button-container">
                         <button class="read-more" style="display: ${needsReadMore ? 'inline-block' : 'none'}">Читать полностью</button>
+                    </div>
+                    <div class="delete-button-container" style="text-align: right; margin-top: 10px;">
                         <button class="delete-button" onclick="deleteReview('${review.id}')">Удалить</button>
                     </div>
                 </div>

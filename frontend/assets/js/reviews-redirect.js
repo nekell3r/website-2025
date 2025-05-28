@@ -20,8 +20,8 @@ async function checkUserAndRedirect(event) {
         const userData = await response.json();
         
         if (userData.is_super_user) {
-            // Если пользователь админ, перенаправляем на админскую страницу отзывов
-            window.location.href = '/pages/exams/responses/sup-ege-response.html';
+            // Если пользователь админ, перенаправляем на страницу sup-ege-response.html
+            window.location.href = '/pages/exams/responses/sup-responses.html';
         } else {
             // Если обычный пользователь, перенаправляем на обычные отзывы
             window.location.href = '/pages/exams/responses/ege-response.html';

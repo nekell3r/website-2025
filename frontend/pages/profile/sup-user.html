@@ -93,46 +93,20 @@
     </footer>
     <div id="myModal" class="modal">
         <div class="modal-content">
-          <span class="close">&times;</span>
-          <div class="modal-header">
-            <div class="modal-header-fields">
-              <div class="modal-field">
-                <label>Название</label>
-                <input type="text" readonly value="ОГЭ">
-              </div>
-              <div class="modal-field">
-                <label>Цена</label>
-                <input type="text" readonly value="3000">
-              </div>
-              <div class="modal-field">
-                <label>Короткое имя</label>
-                <input type="text" readonly value="oge">
-              </div>
-            </div>
-            <button class="modal-edit-button">✏</button>
-          </div>
-          <div class="modal-body">
-            <div class="modal-section">
-              <label>Ссылка:</label>
-              <input type="text" readonly value="https://www.kakoy-to-sait.com">
-            </div>
-            <div class="modal-section">
-              <label>Описание:</label>
-              <textarea readonly>По ссылке находятся файлы 1,2,3... В файле 1 находится --</textarea>
-            </div>
-          </div>
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <textarea id="banReason" placeholder="Введите причину бана"></textarea>
+            <button onclick="confirmBan()">Забанить</button>
         </div>
     </div>
 
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <a href="../materials/questions.html">FAQ</a>
+    </div>
 
 </body>
-
-<div class="dropdown" id="dropdown">
-    <span class="close" onclick="toggleMenu()">&times;</span>
-    <a href="../../pages/login/login.html" id="auth-link">авторизация/личный кабинет</a>
-    <a href="../../pages/exams/responses/ege-response.html">отзывы</a>
-    <a href="#">FAQ</a>
-</div>
 
 <script>
     function toggleMenu() {
@@ -189,4 +163,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
 </script>
+<script src="../../assets/js/reviews-redirect.js"></script>
   

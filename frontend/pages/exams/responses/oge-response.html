@@ -44,8 +44,9 @@
     </footer>
 
     <div class="dropdown" id="dropdown">
-        <a href="../../auth/login.html">авторизация/личный кабинет</a>
-        <a href="oge-response.html">отзывы</a>
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
         <a href="../../materials/questions.html">FAQ</a>
     </div>
 
@@ -59,6 +60,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
     <script src="../../../assets/js/script.js"></script>
     <script src="../../../assets/js/response.js"></script>
+    <script src="../../../assets/js/reviews-redirect.js"></script>
 </body>
 </html>
   
