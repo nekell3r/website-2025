@@ -7,15 +7,41 @@
     <link rel="stylesheet" href="../../assets/css/style_questions.css">
     <link rel="stylesheet" href="../../assets/css/style_basic.css">
     <style>
+        html {
+            min-height: 100vh;
+        }
         body {
             display: flex;
             flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
+            align-items: center;
             font-family: Comic Sans MS, Comic Sans, cursive;
             margin:0px;
             padding: 0px;
-            background-color: #3A3A3A
+            background-color: #3A3A3A;
+            min-height: 100vh;
+        }
+        #main-page-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        footer.the_end {
+            margin-top: auto;
+            width: 100%;
+        }
+        .faq-footer-text {
+            max-width: 1200px;
+            width: 95%;
+            margin: 30px auto 20px auto;
+            text-align: center;
+            color: #f0f0f0;
+        }
+        .faq-footer-text h2 {
+            margin: 0;
+            font-size: 1em;
         }
     </style>
 </head>
@@ -35,67 +61,70 @@
             </button>
         </div>
     </div>
-    <img src="../../assets/img/many_questions.png" style="margin-top: 50px; width: 550px;" alt="many_questions">
 
-    <div class="support-block">
-        <div class="support-text">
-            <h1>Будет ли какое-то сопровождение на протяжении подготовки?</h1>
-        </div>
-        <button class="expand-btn" data-target="content1">
-            <img src="../../assets/img/push_plus.png" class="toggle-icon" alt="Раскрыть">
-        </button>
-        <div class="hidden-content" id="content1">
-            <h2>К сожалению, продукты "что-то с ЕГЭ" и "что-то с ОГЭ" не включают в себя поддержку кураторов. Однако вы можете перейти в телеграм канал Злой 
-                Русский, где расположены видеоразборы сочинений, изложений и заданий тестовых частей.</h2>
-        </div>
-    </div>
+    <main id="main-page-content">
+        <img src="../../assets/img/many_questions.png" style="margin-top: 50px; width: 550px;" alt="many_questions">
 
-    <div class="support-block">
-        <div class="support-text">
-            <h1>Будут ли какие-то практические материалы?</h1>
+        <div class="support-block">
+            <div class="question-container">
+                <div class="support-text">
+                    <h1>Будет ли какое-то сопровождение на протяжении подготовки?</h1>
+                </div>
+                <button class="expand-btn" data-target="content1">
+                    <img src="../../assets/img/push_plus.png" class="toggle-icon" alt="Раскрыть">
+                </button>
+            </div>
+            <div class="hidden-content" id="content1">
+                <h2>К сожалению, продукты "что-то с ЕГЭ" и "что-то с ОГЭ" не включают в себя поддержку кураторов. Однако вы можете перейти в телеграм канал Злой 
+                    Русский, где расположены видеоразборы сочинений, изложений и заданий тестовых частей.</h2>
+            </div>
         </div>
-        <button class="expand-btn" data-target="content2">
-            <img src="../../assets/img/push_plus.png" class="toggle-icon" alt="Раскрыть">
-        </button>
-        <div class="hidden-content" id="content2">
-            <h2>Да, в дополнение к продуктам "что-то с ЕГЭ" и "что-то с ОГЭ" вы можете получить возможность использовать telegram-бота, заточенного на нарешивание типовых заданий тестовой части.
+
+        <div class="support-block">
+            <div class="question-container">
+                <div class="support-text">
+                    <h1>Будут ли какие-то практические материалы?</h1>
+                </div>
+                <button class="expand-btn" data-target="content2">
+                    <img src="../../assets/img/push_plus.png" class="toggle-icon" alt="Раскрыть">
+                </button>
+            </div>
+            <div class="hidden-content" id="content2">
+                <h2>Да, в дополнение к продуктам "что-то с ЕГЭ" и "что-то с ОГЭ" вы можете получить возможность использовать telegram-бота, заточенного на нарешивание типовых заданий тестовой части.
 Чтобы получить доступ к нему, воспользуйтесь специальным предложением.</h2>
+            </div>
         </div>
-    </div>
 
-    <div class="support-block">
-        <div class="support-text">
-            <h1>Вопрос 3</h1>
+        <div class="support-block">
+            <div class="question-container">
+                <div class="support-text">
+                    <h1>Вопрос 3</h1>
+                </div>
+                <button class="expand-btn" data-target="content3">
+                    <img src="../../assets/img/push_plus.png" class="toggle-icon" alt="Раскрыть">
+                </button>
+            </div>
+            <div class="hidden-content" id="content3">
+                <h2>Ответ 3</h2>
+            </div>
         </div>
-        <button class="expand-btn" data-target="content3">
-            <img src="../../assets/img/push_plus.png" class="toggle-icon" style="margin-bottom: 40px;" alt="Раскрыть">
-        </button>
-        <div class="hidden-content" id="content3">
-            <h2>Ответ 3</h2>
+
+        <div class="faq-footer-text">
+            <h2>Если вы не нашли ответ на свой вопрос, можете написать в telegram @accountname. Мы постараемся вам помочь)</h2>
         </div>
-    </div>
-
-
-    <h2 style="position: relative;
-    text-align: center;">Если вы не нашли ответ на свой вопрос, можете написать в telegram @accountname. Мы постараемся вам помочь)</h2>
-
-    <div class="full-width-line"></div>
+    </main>
 
     <footer class="the_end">
         <h1>Служебная информация</h1>
-        <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
+        <img src="../../assets/img/злой рус.png" class="zloy" alt="злой рус">
     </footer>
     
-    
-
-
     <script>
         function toggleMenu() {
             var menu = document.getElementById("dropdown");
             menu.classList.toggle("active");
         }
     </script>
-
 
 <div class="dropdown" id="dropdown">
     <span class="close" onclick="toggleMenu()">&times;</span>
