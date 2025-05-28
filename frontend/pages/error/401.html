@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЕГЭ</title>
+    
+    <link rel="stylesheet" href="../../assets/css/style_lk.css">
+    <link rel="stylesheet" href="../../assets/css/style_basic.css">
+    <style>
+        /* Устанавливаем стили для body */
+        body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; /* Изменено на flex-start для выравнивания содержимого сверху */
+            align-items: center; 
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin: 0;
+            padding: 0;
+            background-color: #3A3A3A;
+            height: 100vh; /* Занимаем всю высоту экрана */
+        }
+
+        .header2 {
+            width: 100%; /* Ширина заголовка на весь экран */
+            display: flex;
+            justify-content: space-between; /* Распределяем элементы по краям */
+            align-items: center; /* Центрируем по вертикали */
+            padding: 10px; /* Отступы внутри заголовка */
+        }
+
+
+        .profile-container {
+            display: flex;
+            align-items: center; /* Центрируем по вертикали */
+            margin-top: 20px; /* Отступ сверху для профиля */
+        }
+
+        .avatar img {
+            width: 200px; /* Установите нужный размер аватара */
+            height: auto; /* Сохраняем пропорции изображения аватара */
+            margin-right: 60px;
+            border-radius: 150px;
+        }
+
+        .info {
+            margin-left: 20px; /* Отступ слева от информации о пользователе */
+        }
+
+        .info-row {
+            margin-bottom: 10px; /* Отступ между строками информации */
+        }
+
+        .add-review-button {
+            margin-left: 10px; /* Отступ слева от кнопки добавления отзыва */
+        }
+        img {
+            width: 700px;
+            height: auto;
+        }
+        .zag {
+            font-size: 90px;
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            color: #e42b9a;
+            font-weight: bold;
+            margin-top: 70px;
+        }
+        .descr {
+            font-size: 30px;
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            text-align: center;
+            color: white;
+        }
+        </style>
+</head>
+<body>
+    <div class="header2">
+        <div class="logo">
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+        </div>
+        <div class="menu">
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+            </button>
+        </div>
+    </div>
+    <div>
+        <!-- <img src="/assets/img/404.jpg" alt="error 404"> -->
+        <div class="zag">
+            Ошибка 401
+        </div>
+        <div class="descr">
+            Не авторизованы для этого действия(((
+        </div>
+        
+    </div>
+</body>
+<footer class="the_end">
+    <h1>Служебная информация</h1>
+    <img src="../../assets/img/злой рус.png" class="zloy_ru" alt="злой рус">
+</footer>
+
+
+
+<div class="dropdown" id="dropdown">
+    <span class="close" onclick="toggleMenu()">&times;</span>
+    <a href="../auth/login.html">авторизация/личный кабинет</a>
+    <a href="../exams/responses/ege-response.html" onclick="checkUserAndRedirect(event)">отзывы</a>
+    <a href="../materials/questions.html">FAQ</a>
+</div>
+
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById("dropdown");
+        menu.classList.toggle("active");
+    }
+</script>
+    <script src="../../assets/js/auth-token.js" defer></script>
+</html>

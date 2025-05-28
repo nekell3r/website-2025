@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <title>АВТОРИЗАЦИЯ</title>
-    <script src="../../assets/js/auth-token.js" defer></script>
     <link rel="stylesheet" href="../../assets/css/style_login.css">
     <link rel="stylesheet" href="../../assets/css/style_basic.css">
 </head>
@@ -76,8 +75,9 @@
     </footer>
 
     <div class="dropdown" id="dropdown">
-        <a href="#">авторизация/личный кабинет</a>
-        <a href="../exams/responses/ege-response.html" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
         <a href="../materials/questions.html">FAQ</a>
     </div>
 
@@ -93,5 +93,6 @@
     <script src="../../assets/js/script.js"></script>
     <script src="../../assets/js/login.js"></script>
     <script src="../../assets/js/reviews-redirect.js"></script>
+    <script src="../../assets/js/auth-token.js"></script>
 </body>
 </html>

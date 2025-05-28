@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="../../assets/js/script.js"></script>
-    <script src="../../assets/js/reviews-redirect.js"></script>
     <title>ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</title>
     <link rel="stylesheet" href="../../assets/css/style_questions.css">
+    <link rel="stylesheet" href="../../assets/css/style_basic.css">
     <style>
         body {
             display: flex;
@@ -33,7 +31,7 @@
         </div>
         <div class="buttons">
             <button class="menu-button" onclick="toggleMenu()">
-                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+                <img src="../../assets/img/new_hambur.png"alt="кнопка меню">
             </button>
         </div>
     </div>
@@ -57,7 +55,7 @@
             <h1>Будут ли какие-то практические материалы?</h1>
         </div>
         <button class="expand-btn" data-target="content2">
-            <img src="../../assets/img/push_plus.png" class="toggle-icon" style="margin-bottom: 40px;" alt="Раскрыть">
+            <img src="../../assets/img/push_plus.png" class="toggle-icon" alt="Раскрыть">
         </button>
         <div class="hidden-content" id="content2">
             <h2>Да, в дополнение к продуктам "что-то с ЕГЭ" и "что-то с ОГЭ" вы можете получить возможность использовать telegram-бота, заточенного на нарешивание типовых заданий тестовой части.
@@ -99,13 +97,16 @@
     </script>
 
 
-    <div class="dropdown" id="dropdown">
-        <span class="close" onclick="toggleMenu()">&times;</span>
-        <a href="../auth/login.html">авторизация/личный кабинет</a>
-        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
-        <a href="questions.html">FAQ</a>
-    </div>
+<div class="dropdown" id="dropdown">
+    <span class="close" onclick="toggleMenu()">&times;</span>
+    <a href="#" id="auth-link">авторизация/личный кабинет</a>
+    <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+    <a href="../materials/questions.html">FAQ</a>
+</div>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/reviews-redirect.js"></script>
+    <script src="../../assets/js/auth-token.js"></script>
 </body>
 </html>

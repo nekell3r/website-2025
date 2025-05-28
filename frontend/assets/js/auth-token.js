@@ -11,10 +11,14 @@ document.getElementById('auth-link').addEventListener('click', async function(e)
             }
         });
         console.log(response);
-
+        console.log(response.detail);
         if (response.status === 401) {
             // Пользователь не авторизован
-            window.location.href = '/auto.html';
+            window.location.href = '/pages/error/401.html';
+            return;
+        }
+        if (response.status === 404) {
+            window.location.href = '/pages/auth/login.html';
             return;
         }
 

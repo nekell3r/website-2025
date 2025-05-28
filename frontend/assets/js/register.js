@@ -1,18 +1,4 @@
-function toggleMenu() {
-            const menu = document.getElementById("dropdown");
-            menu.classList.toggle("active");
-        }
 
-        document.addEventListener("click", function(event) {
-            const menu = document.getElementById("dropdown");
-            const menuButton = document.querySelector(".menu-button");
-            
-            if (menu.classList.contains("active") &&
-                !menu.contains(event.target) &&
-                !menuButton.contains(event.target)) {
-                menu.classList.remove("active");
-            }
-        });
 
 
 
