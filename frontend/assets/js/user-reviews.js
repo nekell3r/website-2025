@@ -31,7 +31,8 @@ async function deleteReview(reviewId) {
 // --- Начало кода для модального окна редактирования ---
 // Объявляем переменные здесь, но не инициализируем их сразу
 let editReviewModalOverlay, editReviewModalContent, editingReviewIdInput, 
-    editReviewTextInput, editReviewScoreInput, cancelEditReviewButton, saveReviewChangesButton;
+    editReviewTextInput, editReviewScoreInput, cancelEditReviewButton, saveReviewChangesButton,
+    editServerError;
 
 async function openEditModal(review) {
     // Проверка перенесена внутрь DOMContentLoaded для инициализации элементов
@@ -44,6 +45,12 @@ async function openEditModal(review) {
     editReviewTextInput.value = review.review;
     editReviewScoreInput.value = review.result;
 
+    // Очищаем сообщение об ошибке при открытии модального окна
+    if (editServerError) {
+        editServerError.textContent = '';
+        editServerError.classList.remove('visible');
+    }
+
     // Устанавливаем ограничения в зависимости от типа экзамена
     if (review.exam.toLowerCase().includes('огэ')) {
         editReviewScoreInput.min = 2;
@@ -55,20 +62,32 @@ async function openEditModal(review) {
         editReviewScoreInput.placeholder = 'Баллы от 0 до 100';
     }
 
+    // Автоматически устанавливаем высоту textarea
+    editReviewTextInput.style.height = 'auto';
+    editReviewTextInput.style.height = editReviewTextInput.scrollHeight + 'px';
+
     editReviewModalOverlay.style.display = 'flex';
 }
 
 function closeEditModal() {
     if (editReviewModalOverlay) {
         editReviewModalOverlay.style.display = 'none';
+        if (editServerError) {
+            editServerError.textContent = '';
+            editServerError.classList.remove('visible');
+        }
     }
 }
 
 async function saveReviewChangesHandler() {
-    if (!editingReviewIdInput || !editReviewTextInput || !editReviewScoreInput) {
+    if (!editingReviewIdInput || !editReviewTextInput || !editReviewScoreInput || !editServerError) {
         console.error('Поля для сохранения изменений не найдены!');
         return;
     }
+
+    // Очищаем сообщение об ошибке перед сохранением
+    editServerError.textContent = '';
+    editServerError.classList.remove('visible');
 
     const reviewId = editingReviewIdInput.value;
     const updatedReviewText = editReviewTextInput.value;
@@ -112,11 +131,13 @@ async function saveReviewChangesHandler() {
             window.location.href = '/pages/profile/standart.html';
         } else {
             const errorData = await response.text();
-            throw new Error(`Ошибка при сохранении отзыва: ${response.status} ${errorData}`);
+            editServerError.textContent = `Ошибка сервера: ${errorData}`;
+            editServerError.classList.add('visible');
         }
     } catch (error) {
         console.error('Ошибка при сохранении:', error);
-        alert(`Не удалось сохранить изменения. ${error.message}`);
+        editServerError.textContent = `Ошибка сети: ${error.message}`;
+        editServerError.classList.add('visible');
     }
 }
 // --- Конец кода для модального окна редактирования ---
@@ -289,6 +310,179 @@ async function loadUserReviews() {
     }
 }
 
+// Переменные для модального окна добавления отзыва
+let addReviewModalOverlay, addReviewModalContent, addReviewExamSelect, 
+    addReviewTextInput, addReviewError, cancelAddReviewButton, saveNewReviewButton,
+    addReviewScoreInput, scoreHint, serverError;
+
+function openAddReviewModal() {
+    if (!addReviewModalOverlay) {
+        addReviewModalOverlay = document.getElementById('addReviewModalOverlay');
+        addReviewModalContent = document.getElementById('addReviewModalContent');
+        addReviewExamSelect = document.getElementById('addReviewExam');
+        addReviewScoreInput = document.getElementById('addReviewScore');
+        scoreHint = document.querySelector('.score-hint');
+        addReviewTextInput = document.getElementById('addReviewText');
+        addReviewError = document.getElementById('addReviewError');
+        serverError = document.getElementById('serverError');
+        cancelAddReviewButton = document.getElementById('cancelAddReview');
+        saveNewReviewButton = document.getElementById('saveNewReview');
+
+        // Добавляем обработчики событий
+        if (cancelAddReviewButton) {
+            cancelAddReviewButton.addEventListener('click', closeAddModal);
+        }
+        if (saveNewReviewButton) {
+            saveNewReviewButton.addEventListener('click', saveNewReviewHandler);
+        }
+        if (addReviewTextInput) {
+            addReviewTextInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        }
+        if (addReviewExamSelect) {
+            addReviewExamSelect.addEventListener('change', function() {
+                const selectedExam = this.value;
+                if (addReviewScoreInput && scoreHint) {
+                    if (selectedExam === 'ЕГЭ') {
+                        addReviewScoreInput.disabled = false;
+                        addReviewScoreInput.min = 0;
+                        addReviewScoreInput.max = 100;
+                        addReviewScoreInput.value = 97;
+                        addReviewScoreInput.placeholder = 'Введите баллы';
+                        scoreHint.textContent = 'Баллы ЕГЭ: от 0 до 100';
+                    } else if (selectedExam === 'ОГЭ') {
+                        addReviewScoreInput.disabled = false;
+                        addReviewScoreInput.min = 2;
+                        addReviewScoreInput.max = 5;
+                        addReviewScoreInput.value = 5;
+                        addReviewScoreInput.placeholder = 'Введите оценку';
+                        scoreHint.textContent = 'Оценка ОГЭ: от 2 до 5';
+                    } else {
+                        addReviewScoreInput.disabled = true;
+                        addReviewScoreInput.value = '';
+                        addReviewScoreInput.placeholder = 'Сначала выберите экзамен';
+                        scoreHint.textContent = '';
+                    }
+                }
+            });
+        }
+    }
+
+    if (addReviewModalOverlay) {
+        addReviewModalOverlay.style.display = 'flex';
+        if (addReviewTextInput) {
+            addReviewTextInput.style.height = 'auto';
+            addReviewTextInput.style.height = addReviewTextInput.scrollHeight + 'px';
+        }
+        if (addReviewError) {
+            addReviewError.textContent = '';
+        }
+        if (serverError) {
+            serverError.textContent = '';
+            serverError.classList.remove('visible');
+        }
+        // Сброс значений
+        if (addReviewExamSelect) {
+            addReviewExamSelect.value = '';
+        }
+        if (addReviewScoreInput) {
+            addReviewScoreInput.disabled = true;
+            addReviewScoreInput.value = '';
+            addReviewScoreInput.placeholder = 'Сначала выберите экзамен';
+        }
+        if (scoreHint) {
+            scoreHint.textContent = '';
+        }
+    } else {
+        console.error('Элементы модального окна не найдены!');
+    }
+}
+
+function closeAddModal() {
+    if (addReviewModalOverlay) {
+        addReviewModalOverlay.style.display = 'none';
+        if (serverError) {
+            serverError.textContent = '';
+            serverError.classList.remove('visible');
+        }
+    }
+}
+
+async function saveNewReviewHandler() {
+    if (!addReviewExamSelect || !addReviewTextInput || !addReviewError || !addReviewScoreInput || !serverError) {
+        console.error('Элементы формы не найдены!');
+        return;
+    }
+
+    // Сбрасываем сообщения об ошибках
+    addReviewError.textContent = '';
+    serverError.textContent = '';
+    serverError.classList.remove('visible');
+
+    const exam = addReviewExamSelect.value;
+    const review = addReviewTextInput.value.trim();
+    const score = parseInt(addReviewScoreInput.value, 10);
+
+    // Проверяем тип экзамена
+    if (!exam) {
+        addReviewError.textContent = 'Пожалуйста, выберите тип экзамена';
+        return;
+    }
+    if (exam !== 'ЕГЭ' && exam !== 'ОГЭ') {
+        addReviewError.textContent = 'Неверный тип экзамена';
+        return;
+    }
+
+    // Проверяем баллы
+    if (isNaN(score)) {
+        addReviewError.textContent = 'Пожалуйста, введите баллы';
+        return;
+    }
+    if (exam === 'ЕГЭ' && (score < 0 || score > 100)) {
+        addReviewError.textContent = 'Баллы ЕГЭ должны быть от 0 до 100';
+        return;
+    }
+    if (exam === 'ОГЭ' && (score < 2 || score > 5)) {
+        addReviewError.textContent = 'Оценка ОГЭ должна быть от 2 до 5';
+        return;
+    }
+
+    // Проверяем наличие текста отзыва
+    if (!review) {
+        addReviewError.textContent = 'Пожалуйста, напишите текст отзыва';
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:7777/reviews', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                exam: exam,
+                result: score,
+                review: review
+            }),
+        });
+
+        if (response.ok) {
+            window.location.href = '/pages/profile/standart.html';
+        } else {
+            const errorData = await response.text();
+            serverError.textContent = `Ошибка сервера: ${errorData}`;
+            serverError.classList.add('visible');
+        }
+    } catch (error) {
+        console.error('Ошибка при сохранении:', error);
+        serverError.textContent = `Ошибка сети: ${error.message}`;
+        serverError.classList.add('visible');
+    }
+}
+
 // Загружаем отзывы при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded event fired. Initializing modal elements...'); // Лог выполнения DOMContentLoaded
@@ -307,6 +501,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     editReviewScoreInput = document.getElementById('editReviewScore');
     console.log('editReviewScoreInput:', editReviewScoreInput); // Лог для input score
+
+    editServerError = document.getElementById('editServerError');
+    console.log('editServerError:', editServerError); // Лог для server error
 
     cancelEditReviewButton = document.getElementById('cancelEditReview');
     console.log('cancelEditReviewButton:', cancelEditReviewButton); // Лог для cancel button
@@ -334,6 +531,65 @@ document.addEventListener('DOMContentLoaded', () => {
         saveReviewChangesButton.addEventListener('click', saveReviewChangesHandler);
     } else {
         console.error('saveReviewChangesButton is null, cannot attach event listener.');
+    }
+
+    if (editReviewTextInput) {
+        editReviewTextInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
+
+    // Инициализация элементов модального окна добавления
+    addReviewModalOverlay = document.getElementById('addReviewModalOverlay');
+    addReviewModalContent = document.getElementById('addReviewModalContent');
+    addReviewExamSelect = document.getElementById('addReviewExam');
+    addReviewScoreInput = document.getElementById('addReviewScore');
+    scoreHint = document.querySelector('.score-hint');
+    addReviewTextInput = document.getElementById('addReviewText');
+    addReviewError = document.getElementById('addReviewError');
+    serverError = document.getElementById('serverError');
+    cancelAddReviewButton = document.getElementById('cancelAddReview');
+    saveNewReviewButton = document.getElementById('saveNewReview');
+
+    if (cancelAddReviewButton) {
+        cancelAddReviewButton.addEventListener('click', closeAddModal);
+    }
+    if (saveNewReviewButton) {
+        saveNewReviewButton.addEventListener('click', saveNewReviewHandler);
+    }
+    if (addReviewTextInput) {
+        addReviewTextInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
+    if (addReviewExamSelect) {
+        addReviewExamSelect.addEventListener('change', function() {
+            const selectedExam = this.value;
+            if (addReviewScoreInput && scoreHint) {
+                if (selectedExam === 'ЕГЭ') {
+                    addReviewScoreInput.disabled = false;
+                    addReviewScoreInput.min = 0;
+                    addReviewScoreInput.max = 100;
+                    addReviewScoreInput.value = 97;
+                    addReviewScoreInput.placeholder = 'Введите баллы';
+                    scoreHint.textContent = 'Баллы ЕГЭ: от 0 до 100';
+                } else if (selectedExam === 'ОГЭ') {
+                    addReviewScoreInput.disabled = false;
+                    addReviewScoreInput.min = 2;
+                    addReviewScoreInput.max = 5;
+                    addReviewScoreInput.value = 5;
+                    addReviewScoreInput.placeholder = 'Введите оценку';
+                    scoreHint.textContent = 'Оценка ОГЭ: от 2 до 5';
+                } else {
+                    addReviewScoreInput.disabled = true;
+                    addReviewScoreInput.value = '';
+                    addReviewScoreInput.placeholder = 'Сначала выберите экзамен';
+                    scoreHint.textContent = '';
+                }
+            }
+        });
     }
 
     loadUserReviews(); // Загружаем отзывы
