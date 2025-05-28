@@ -43,6 +43,13 @@ function openProductModal(product) {
     downloadLink.href = product.download_link;
 
     modal.style.display = 'flex';
+
+    // Добавляем обработчик клика вне модального окна
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeProductModal();
+        }
+    });
 }
 
 // Функция для закрытия модального окна продукта
@@ -98,15 +105,8 @@ async function loadPurchases() {
     }
 }
 
-// Закрытие модального окна при клике вне его содержимого
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('productModalOverlay');
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closeProductModal();
-        }
-    });
-
     // Загружаем покупки при загрузке страницы
     loadPurchases();
 }); 

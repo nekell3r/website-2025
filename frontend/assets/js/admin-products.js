@@ -18,6 +18,7 @@ function createProductCard(product) {
         <img src="${getProductImage(product.name)}" alt="${product.name}">
         <div class="purchase-info">
             <h3 class="purchase-title">${product.name}</h3>
+            <p class="purchase-price">${product.price} ₽</p>
         </div>
     `;
 
@@ -28,13 +29,19 @@ function createProductCard(product) {
 // Функция для открытия модального окна редактирования продукта
 function openProductModal(product) {
     const modal = document.getElementById('productModalOverlay');
+    const name = document.getElementById('productName');
+    const price = document.getElementById('productPrice');
     const description = document.getElementById('productDescription');
     const link = document.getElementById('productLink');
     const productId = document.getElementById('editingProductId');
+    const productSlug = document.getElementById('editingProductSlug');
 
+    name.value = product.name || '';
+    price.value = product.price || '';
     description.value = product.description || '';
     link.value = product.download_link || '';
-    productId.value = product.id;
+    productId.value = product.id || '';
+    productSlug.value = product.slug || '';
 
     modal.style.display = 'flex';
 
@@ -54,18 +61,22 @@ function closeProductModal() {
 
 // Функция для сохранения изменений продукта
 async function saveProductChanges() {
-    const productId = document.getElementById('editingProductId').value;
+    const productSlug = document.getElementById('editingProductSlug').value;
+    const name = document.getElementById('productName').value;
+    const price = document.getElementById('productPrice').value;
     const description = document.getElementById('productDescription').value;
     const downloadLink = document.getElementById('productLink').value;
 
     try {
-        const response = await fetch(`http://localhost:7777/admin/products/${productId}`, {
+        const response = await fetch(`http://localhost:7777/admin/products/${productSlug}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                name: name,
+                price: parseInt(price),
                 description: description,
                 download_link: downloadLink
             })
