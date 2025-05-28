@@ -25,10 +25,10 @@
     </header>
 
     <main class="main-content">
-    <b><h1 style="color: #DA1984;font-family: 'Arial', sans-serif; ">Авторизация</h1></b>
+    <b><h1 style="color: #DA1984;">Авторизация</h1></b>
 
     <div class="phone-input">
-        <input type="text" id="phone-input" class="phone-number" placeholder="Телефон">
+        <input type="text" id="phone-input" class="phone-number"  placeholder="Телефон">
     </div>
 
     <div class="wrapper">
@@ -39,9 +39,11 @@
                 id="password"
                 class="text-input password-input"
                 placeholder="Пароль"
+                style="width: 390px;
+                       transform: translateX(-50px);"
                 >
                 <button class="toggle-password" aria-label="Показать пароль" type="button">
-                    <span class="eye-icon">👁️</span>
+                    <span class="eye-icon" style="transform: translateX(-20px)">👁️</span>
                 </button>
             </div>
         </div>
@@ -57,13 +59,13 @@
 
     <div class="help_info" >
         <div style="display: flex; flex-wrap: nowrap">
-        <b><h2 class="but_reg">Еще не зарегистрированы?</h2></b>
-        <a class="but_reg" href="register.html" style="color:#DA1984; margin-left: 30px;"><b><h2>Регистрация</h2></b></a>
+        <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive; padding-top: 30px">Еще не зарегистрированы?</h2></b>
+        <a class="but_reg" href="register.html" style="color:#DA1984; margin-left: 30px; font-family: Comic Sans MS, Comic Sans, cursive;padding-top: 30px"><b><h2>Регистрация</h2></b></a>
         </div>
 
         <div style="display: flex">
-            <b><h2 class="but_reg">Забыли пароль?</h2></b>
-            <a class="but_reg" href="password-recovery.html" style="margin-left: 30px;
+            <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive;">Забыли пароль?</h2></b>
+            <a class="but_reg" href="password-recovery.html" style="margin-left: 30px;font-family: Comic Sans MS, Comic Sans, cursive;
             color: #DA1984;"><b><h2>Восстановить пароль</h2></b></a>
         </div>
     </div>
@@ -94,5 +96,16 @@
     <script src="../../assets/js/login.js"></script>
     <script src="../../assets/js/reviews-redirect.js"></script>
     <script src="../../assets/js/auth-token.js"></script>
+    <script>
+        document.getElementById('password').addEventListener('focus', function() {
+        this.removeAttribute('placeholder');
+        });
+
+        document.getElementById('password').addEventListener('blur', function() {
+        if (this.value === '') {
+            this.setAttribute('placeholder', 'Пароль');
+        }
+        });
+    </script>
 </body>
 </html>
