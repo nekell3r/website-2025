@@ -191,11 +191,12 @@ b {
     flex: 1;
     padding: 25px;
     border: 1px solid #000000;
-    border-radius: 15px;
+    border-radius: 30px;
     border: 1px solid #DA1984;
     font-size: 25px;
     background-color: #3a3a3a;
     font-size: 26px; 
+    color: white;
 }
 .phone-number:focus {
     border-color: #DA1984;
@@ -203,7 +204,7 @@ b {
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 .phone-number::placeholder {
-    color: #ffffff; /* Розовый, как ваша граница */
+    color: #8a8686; /* Розовый, как ваша граница */
     
 
 }
@@ -230,7 +231,7 @@ b {
 
 /* Стили для поля email */
 .text-input[type="email"]::placeholder {
-    color: #ffffff; /* Цвет placeholder'а */
+    color: #918c8c; /* Цвет placeholder'а */
     transition: all 0.3s ease;
 }
 

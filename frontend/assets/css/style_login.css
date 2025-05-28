@@ -16,7 +16,10 @@ body {
     flex-direction: column;
     font-family: Comic Sans MS, Comic Sans, cursive;
   }
-  
+
+  h1, h2, h3, h4, h5, h6, p, span, b, a {
+    font-family: inherit;
+  }
 
 input[type="text"] {
     font-family: Comic Sans MS, Comic Sans, cursive;
@@ -29,10 +32,10 @@ input[type="text"] {
     border: 1px solid  #e42b9a;
     border-radius: 20px;
     background-color: #333; /* Темный фон поля ввода */
-    color: white; /* Цвет текста в поле ввода */
+    color: rgb(17, 111, 0); /* Цвет текста в поле ввода */
 }
 input[type="text"]::placeholder {
-    color: #aaa; /* Цвет текста-подсказки */
+    color: #22ba00; /* Цвет текста-подсказки */
 }
 
 input.error {
@@ -82,7 +85,6 @@ main {
     display: flex;
     align-items: center;
     gap: 14px;
-    font-family: Comic Sans MS, Comic Sans, cursive;
 }
 .menu-button{
     cursor: pointer;
@@ -92,8 +94,6 @@ main {
     border-radius: 100%;
     align-items: flex-start;
     justify-content: center;
-    font-size: 19px;
-    font-family: Comic Sans MS, Comic Sans, cursive;
     color: #e42b9a
 }
 
@@ -172,13 +172,11 @@ main {
 .help_info{
     display: flex;
     min-width: 400px;
-    gap: 50px;
+    gap: 30px;
     flex-direction: column;
+    padding-bottom: 30px;
 }
-.form-group {
-    display: flex;
-    gap: 100px;
-}
+
 .text-input {
     flex: 1;
     padding: 25px;
@@ -187,13 +185,22 @@ main {
     border: 1px solid #DA1984;
     font-size: 25px;
     background-color: #3a3a3a;
-    font-size: 26px; 
+    font-size: 26px;
+    font-size: 25px !important; /* такой же размер шрифта */
+    width: 200px; /* аналогичная ширина */
+    height: 80px; /* такая же высота */
+    line-height: 1.2;
+    color: #ffffff;/* белый текст как у phone-number */
+    font-family: Comic Sans MS, Comic Sans, cursive; /* тот же шрифт */
 }
 
 .text-input:focus {
     border-color: #DA1984;
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.text-input::placeholder {
+    color: #a8aba6; /* Зелёный placeholder */
 }
 
 /* Стили для поля email */
@@ -212,6 +219,7 @@ main {
     position: relative;
     display: flex;
     align-items: center;
+    width: 400px;
 }
 .toggle-password {
     position: absolute;
@@ -223,10 +231,11 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
+    width: 80px;
     height: 30px;
     color: #DA1984;
     font-size: 26px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
 }
 
 .toggle-password:hover {
@@ -359,7 +368,8 @@ b {
     padding: 35px 25px; /* ↑ Увеличиваем вертикальный padding (первое значение) */
     font-size: 40px;    /* Можно увеличить размер шрифта */
     line-height: 1.5;   /* Опционально: регулирует межстрочный интервал */
-    height: 165px      /* Автоматическая высота на основе padding и font-size */
+    height: 165px;
+    color:#22ba00     /* Автоматическая высота на основе padding и font-size */
 }
 .phone-input input.phone-number {
     flex: 1;
@@ -371,7 +381,7 @@ b {
     width: 200px; /* Исправляем ширину */
     height: 80px; /* Автоматическая высота */
     line-height: 1.2;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .phone-number {
@@ -385,11 +395,18 @@ b {
     font-size: 40px; 
     width: 100px;
     height: 60px;
+    color:rgba(0, 123, 255, 0.25);
 }
 .phone-number:focus {
     border-color: #DA1984;
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    font-size: 25px !important; /* такой же размер шрифта */
+    width: 200px; /* аналогичная ширина */
+    height: 80px; /* такая же высота */
+    line-height: 1.2;
+    color: rgba(0, 123, 255, 0.25); /* белый текст как у phone-number */
+    font-family: Comic Sans MS, Comic Sans, cursive; /* тот же шрифт */
 }
 .phone-number::placeholder {
     color: #ffffff; /* Розовый, как ваша граница */
@@ -398,7 +415,8 @@ b {
 }
 .form-group {
     display: flex;
-    gap: 100px;
+    gap: 110px;
+    width: 290px;
 }
 .the_end {
     display: flex;

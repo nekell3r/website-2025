@@ -35,29 +35,31 @@
             </button>
         </div>
     </div>
-
-    <h1 style="color: #DA1984; font-family: 'Arial', sans-serif;">Регистрация</h1>
-
-    <div class="phone-input">
-        <input type="text" id="phone-input" class="phone-number" placeholder="Телефон">
+    <br><br>
+    <h1 style="color: #DA1984; font-family: 'Arial', sans-serif; font-family: Comic Sans MS, Comic Sans, cursive;">Регистрация</h1>
+    <br>
+    <div class="phone-input" >
+        <input type="text" id="phone-input" class="phone-number" style="font-family: Comic Sans MS, Comic Sans, cursive;"placeholder="Телефон">
     </div>
 
     <div class="phone-input">
-        <input type="text" id="code-phone" class="phone-number" placeholder="Код/телефон">
+        <input type="text" id="code-phone" class="phone-number"style="font-family: Comic Sans MS, Comic Sans, cursive;" placeholder="Код/телефон">
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="border-radius: 30px">
         <input
             type="email"
             id="email-input"
             class="text-input"
             placeholder="Email (необязательно)"
             data-placeholder-focus="example@mail.com"
+            style="font-family: Comic Sans MS, Comic Sans, cursive;
+            border-radius: 30px"
         >
     </div>
 
     <div class="phone-input">
-        <input type="text" id="code-email" class="phone-number" placeholder="Код/email (необязательно)">
+        <input type="text" id="code-email" style="font-family: Comic Sans MS, Comic Sans, cursive;" class="phone-number" placeholder="Код/email (необязательно)">
     </div>
 
     <div class="form-group">
@@ -68,9 +70,11 @@
                 inputmode="password"
                 class="text-input password-input"
                 placeholder="Пароль"
+                style="font-family: Comic Sans MS, Comic Sans, cursive;
+                border-radius: 30px;"
             >
             <button class="toggle-password" aria-label="Показать пароль" type="button">
-                <span class="eye-icon">👁️</span>
+                <span class="eye-icon"style="transform: translateX(-5px)">👁️</span>
             </button>
         </div>
     </div>
@@ -83,20 +87,24 @@
                     inputmode="password"
                     class="text-input password-input"
                     placeholder="Повторите пароль"
+                    style="font-family: Comic Sans MS, Comic Sans, cursive;
+                    transform: translateX(-25px);
+                    border-radius: 30px;"
+                    
                 >
                 <button class="toggle-password" aria-label="Показать пароль" type="button">
-                    <span class="eye-icon">👁️</span>
+                    <span class="eye-icon" style="transform: translateX(-30px);">👁️</span>
                 </button>
             </div>
         </div>
 
         <div class="form-footer">
-            <button type="button" id="submit-data" class="submit-icon-btn">
+            <button style="transform: translateY(10px)" type="button" id="submit-data" class="submit-icon-btn">
                 <img src="../../assets/img/кнопкарег.png" alt="Завершить регистрацию">
             </button>
         </div>
     </div>
-
+    <br>
     <div id="submit-error" style="color: red; margin-top: 10px;"></div>
 
     <button id="send-phone" style="color: #DA1984;
@@ -105,7 +113,8 @@
     text-decoration: underline;
     cursor: pointer;
     padding: 0;
-    font-size: inherit; "><b><h2>Отправить код/телефон</h2></b></button>
+    font-size: inherit;
+    font-family: Comic Sans MS, Comic Sans, cursive;" "><b><h2>Отправить код/телефон</h2></b></button>
 
     <div id="phone-error" style="color: red; margin-top: 10px;"></div>
 
@@ -115,21 +124,22 @@
     text-decoration: underline;
     cursor: pointer;
     padding: 0;
-    font-size: inherit; "><b><h2>Отправить код/email</h2></b></button>
+    font-size: inherit; 
+    font-family: Comic Sans MS, Comic Sans, cursive;"><b><h2>Отправить код/email</h2></b></button>
 
     <div id="email-error" style="color: red; margin-top: 10px;"></div>
-
+    <BR>
     <div class="help_info">
         <div style="display: flex; flex-wrap: nowrap">
-            <b><h2 class="but_reg">Уже зарегистрированы?</h2></b>
-            <a class="but_reg" href="login.html" style="color:#DA1984; margin-left: 30px;"><b><h2>Войти</h2></b></a>
+            <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive;">Уже зарегистрированы?</h2></b>
+            <a class="but_reg" href="login.html" style="color:#DA1984; margin-left: 30px;font-family: Comic Sans MS, Comic Sans, cursive;"><b><h2>Войти</h2></b></a>
         </div>
     </div>
 
     <div style="display: flex;">
-        <b><h2 class="but_reg">Забыли пароль?</h2></b>
+        <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive;">Забыли пароль?</h2></b>
         <a class="but_reg" href="passrec.html" style="margin-left: 30px;
-        color: #DA1984;"><b><h2>Восстановить пароль</h2></b></a>
+        color: #DA1984; font-family: Comic Sans MS, Comic Sans, cursive;"><b><h2>Восстановить пароль</h2></b></a>
     </div>
 
     <div class="full-width-line"></div>
