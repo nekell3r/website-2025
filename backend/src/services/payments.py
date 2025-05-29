@@ -60,7 +60,10 @@ class PaymentsService:
 
         payload = {
             "amount": {"value": f"{product.price:.2f}", "currency": "RUB"},
-            "confirmation": {"type": "redirect", "return_url": "https://example.com"},
+            "confirmation": {
+                "type": "redirect",
+                "return_url": "http://localhost:3000/pages/profile/standart.html",
+            },
             "description": product.name,
             "metadata": {"invoice_id": payment_id},
         }
@@ -139,7 +142,10 @@ class PaymentsService:
 
         payload = {
             "amount": {"value": f"{product.price:.2f}", "currency": "RUB"},
-            "confirmation": {"type": "redirect", "return_url": "https://example.com"},
+            "confirmation": {
+                "type": "redirect",
+                "return_url": "http://localhost:3000/pages/profile/standart.html",
+            },
             "description": product.name,
             "metadata": {"invoice_id": payment_id},
         }
