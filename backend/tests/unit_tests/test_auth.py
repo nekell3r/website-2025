@@ -219,11 +219,14 @@ async def test_send_registration_phone_code_new_user(
     parsed_phone_obj = phonenumbers.parse(phone_str, "RU")
     mock_db_dep.users.get_one_or_none.return_value = None
     auth_service.redis.ttl.return_value = 0
-    with mock.patch.object(
-        auth_service, "validate_russian_phone", return_value=parsed_phone_obj
-    ) as mock_validate, mock.patch.object(
-        auth_service, "send_phone_code", new_callable=mock.AsyncMock
-    ) as mock_send_phone_code_method:
+    with (
+        mock.patch.object(
+            auth_service, "validate_russian_phone", return_value=parsed_phone_obj
+        ) as mock_validate,
+        mock.patch.object(
+            auth_service, "send_phone_code", new_callable=mock.AsyncMock
+        ) as mock_send_phone_code_method,
+    ):
         _ = mock_validate
         mock_send_phone_code_method.return_value = {"status": "Ok"}
         result = await auth_service.send_registration_phone_code(data, mock_db_dep)
@@ -267,11 +270,14 @@ async def test_send_reset_phone_code_user_exists(
     mock_db_dep.users.get_one.side_effect = None
     mock_db_dep.users.get_one.return_value = mock.Mock(id=1)
     auth_service.redis.ttl.return_value = 0
-    with mock.patch.object(
-        auth_service, "validate_russian_phone", return_value=parsed_phone_obj
-    ) as mock_validate, mock.patch.object(
-        auth_service, "send_phone_code", new_callable=mock.AsyncMock
-    ) as mock_send_phone_code_method:
+    with (
+        mock.patch.object(
+            auth_service, "validate_russian_phone", return_value=parsed_phone_obj
+        ) as mock_validate,
+        mock.patch.object(
+            auth_service, "send_phone_code", new_callable=mock.AsyncMock
+        ) as mock_send_phone_code_method,
+    ):
         mock_send_phone_code_method.return_value = {"status": "Ok"}
         result = await auth_service.send_reset_phone_code(data, mock_db_dep)
         assert result == {"status": "Ok"}
@@ -376,14 +382,17 @@ async def test_verify_registration_phone_success(
         id=1, is_super_user=False, phone=PhoneNumber(phone_str), email=None
     )
 
-    with mock.patch.object(
-        auth_service, "validate_russian_phone", return_value=parsed_phone_obj
-    ) as mock_validate, mock.patch.object(  # noqa: F841
-        auth_service, "verify_code_phone"
-    ) as mock_verify_code_phone, mock.patch.object(
-        auth_service, "delete_verified_phone_code"
-    ) as mock_delete_code:
-
+    with (
+        mock.patch.object(
+            auth_service, "validate_russian_phone", return_value=parsed_phone_obj
+        ),
+        mock.patch.object(  # noqa: F841
+            auth_service, "verify_code_phone"
+        ) as mock_verify_code_phone,
+        mock.patch.object(
+            auth_service, "delete_verified_phone_code"
+        ) as mock_delete_code,
+    ):
         mock_verify_code_phone.return_value = {
             "status": "Код подтверждён"
         }  # Мокаем успешную верификацию
@@ -435,13 +444,16 @@ async def test_verify_registration_code_verification_fails_phone(
     parsed_phone_obj = phonenumbers.parse(phone_str, "RU")
     mock_db_dep.users.get_one_or_none.return_value = None  # Пользователя нет
 
-    with mock.patch.object(
-        auth_service, "validate_russian_phone", return_value=parsed_phone_obj
-    ) as mock_validate, mock.patch.object(
-        auth_service,
-        "verify_code_phone",
-        side_effect=AuthCodeInvalidServiceException(detail="Test error"),
-    ) as mock_verify_code_phone:
+    with (
+        mock.patch.object(
+            auth_service, "validate_russian_phone", return_value=parsed_phone_obj
+        ) as mock_validate,
+        mock.patch.object(
+            auth_service,
+            "verify_code_phone",
+            side_effect=AuthCodeInvalidServiceException(detail="Test error"),
+        ) as mock_verify_code_phone,
+    ):
         _ = mock_validate
         with pytest.raises(
             RegistrationValidationServiceException,
@@ -491,11 +503,12 @@ async def test_get_current_user_payload_success_access_token(
         "exp": datetime.now(timezone.utc) + timedelta(minutes=15),
     }
     request_mock = mock_request_with_token("fake_access_token", None)
-    with mock.patch.object(
-        auth_service, "decode_access_token", return_value=user_payload_dict
-    ) as mock_decode_access, mock.patch.object(
-        auth_service, "decode_refresh_token"
-    ) as mock_decode_refresh:
+    with (
+        mock.patch.object(
+            auth_service, "decode_access_token", return_value=user_payload_dict
+        ) as mock_decode_access,
+        mock.patch.object(auth_service, "decode_refresh_token") as mock_decode_refresh,
+    ):
         payload_dict_result = await auth_service.get_current_user_payload(
             request_mock, mock_response_obj
         )
@@ -519,13 +532,16 @@ async def test_get_current_user_payload_success_refresh_token(
     request_mock = mock_request_with_token(
         "expired_or_invalid_access", "fake_refresh_token"
     )
-    with mock.patch.object(
-        auth_service,
-        "decode_access_token",
-        side_effect=AuthTokenExpiredServiceException(token_type="Access"),
-    ) as mock_decode_access, mock.patch.object(
-        auth_service, "decode_refresh_token", return_value=refresh_payload_dict
-    ) as mock_decode_refresh:
+    with (
+        mock.patch.object(
+            auth_service,
+            "decode_access_token",
+            side_effect=AuthTokenExpiredServiceException(token_type="Access"),
+        ) as mock_decode_access,
+        mock.patch.object(
+            auth_service, "decode_refresh_token", return_value=refresh_payload_dict
+        ) as mock_decode_refresh,
+    ):
         payload_dict_result = await auth_service.get_current_user_payload(
             request_mock, mock_response_obj
         )
@@ -549,13 +565,14 @@ async def test_get_current_user_payload_access_expired_refresh_absent(
     auth_service: AuthService, mock_request_with_token, mock_response_obj: Response
 ):
     request_mock = mock_request_with_token("fake_expired_access_token", None)
-    with mock.patch.object(
-        auth_service,
-        "decode_access_token",
-        side_effect=AuthTokenExpiredServiceException(token_type="Access"),
-    ) as mock_decode_access, pytest.raises(
-        AuthTokenMissingServiceException
-    ) as exc_info:
+    with (
+        mock.patch.object(
+            auth_service,
+            "decode_access_token",
+            side_effect=AuthTokenExpiredServiceException(token_type="Access"),
+        ) as mock_decode_access,
+        pytest.raises(AuthTokenMissingServiceException) as exc_info,
+    ):
         await auth_service.get_current_user_payload(request_mock, mock_response_obj)
     mock_decode_access.assert_called_once_with("fake_expired_access_token")
     assert exc_info.value.token_type == "Refresh"
@@ -566,17 +583,19 @@ async def test_get_current_user_payload_access_expired_refresh_expired(
     auth_service: AuthService, mock_request_with_token, mock_response_obj: Response
 ):
     request_mock = mock_request_with_token("fake_access_token", "fake_refresh_token")
-    with mock.patch.object(
-        auth_service,
-        "decode_access_token",
-        side_effect=AuthTokenExpiredServiceException(token_type="Access"),
-    ) as mock_decode_access, mock.patch.object(
-        auth_service,
-        "decode_refresh_token",
-        side_effect=AuthTokenExpiredServiceException(token_type="Refresh"),
-    ) as mock_decode_refresh, pytest.raises(
-        AuthTokenExpiredServiceException
-    ) as exc_info:
+    with (
+        mock.patch.object(
+            auth_service,
+            "decode_access_token",
+            side_effect=AuthTokenExpiredServiceException(token_type="Access"),
+        ) as mock_decode_access,
+        mock.patch.object(
+            auth_service,
+            "decode_refresh_token",
+            side_effect=AuthTokenExpiredServiceException(token_type="Refresh"),
+        ) as mock_decode_refresh,
+        pytest.raises(AuthTokenExpiredServiceException) as exc_info,
+    ):
         await auth_service.get_current_user_payload(request_mock, mock_response_obj)
     mock_decode_access.assert_called_once_with("fake_access_token")
     mock_decode_refresh.assert_called_once_with("fake_refresh_token")
@@ -588,13 +607,14 @@ async def test_get_current_user_payload_access_invalid_no_refresh(
     auth_service: AuthService, mock_request_with_token, mock_response_obj: Response
 ):
     request_mock = mock_request_with_token("invalid_access_token", None)
-    with mock.patch.object(
-        auth_service,
-        "decode_access_token",
-        side_effect=AuthTokenInvalidServiceException(token_type="Access"),
-    ) as mock_decode_access, pytest.raises(
-        AuthTokenInvalidServiceException
-    ) as exc_info:
+    with (
+        mock.patch.object(
+            auth_service,
+            "decode_access_token",
+            side_effect=AuthTokenInvalidServiceException(token_type="Access"),
+        ) as mock_decode_access,
+        pytest.raises(AuthTokenInvalidServiceException) as exc_info,
+    ):
         await auth_service.get_current_user_payload(request_mock, mock_response_obj)
     mock_decode_access.assert_called_once_with("invalid_access_token")
     assert exc_info.value.token_type == "Access"
@@ -605,17 +625,19 @@ async def test_get_current_user_payload_access_expired_refresh_invalid(
     auth_service: AuthService, mock_request_with_token, mock_response_obj: Response
 ):
     request_mock = mock_request_with_token("fake_access_token", "invalid_refresh_token")
-    with mock.patch.object(
-        auth_service,
-        "decode_access_token",
-        side_effect=AuthTokenExpiredServiceException(token_type="Access"),
-    ) as mock_decode_access, mock.patch.object(
-        auth_service,
-        "decode_refresh_token",
-        side_effect=AuthTokenInvalidServiceException(token_type="Refresh"),
-    ) as mock_decode_refresh, pytest.raises(
-        AuthTokenInvalidServiceException
-    ) as exc_info:
+    with (
+        mock.patch.object(
+            auth_service,
+            "decode_access_token",
+            side_effect=AuthTokenExpiredServiceException(token_type="Access"),
+        ) as mock_decode_access,
+        mock.patch.object(
+            auth_service,
+            "decode_refresh_token",
+            side_effect=AuthTokenInvalidServiceException(token_type="Refresh"),
+        ) as mock_decode_refresh,
+        pytest.raises(AuthTokenInvalidServiceException) as exc_info,
+    ):
         await auth_service.get_current_user_payload(request_mock, mock_response_obj)
     mock_decode_access.assert_called_once_with("fake_access_token")
     mock_decode_refresh.assert_called_once_with("invalid_refresh_token")
@@ -693,16 +715,18 @@ async def test_set_new_password_after_reset_phone_success(
     mock_db_dep.users.get_one.return_value = mock_user_instance
     mock_db_dep.users.edit.return_value = None
 
-    with mock.patch.object(
-        auth_service, "validate_russian_phone", return_value=parsed_phone_obj
-    ) as mock_validate, mock.patch.object(
-        auth_service, "validate_password_strength"
-    ) as mock_validate_pass, mock.patch.object(
-        auth_service, "hash_password", return_value="new_hashed_password"
-    ) as mock_hash_pass, mock.patch.object(
-        auth_service.redis, "delete"
-    ) as mock_redis_delete:
-
+    with (
+        mock.patch.object(
+            auth_service, "validate_russian_phone", return_value=parsed_phone_obj
+        ) as mock_validate,
+        mock.patch.object(
+            auth_service, "validate_password_strength"
+        ) as mock_validate_pass,
+        mock.patch.object(
+            auth_service, "hash_password", return_value="new_hashed_password"
+        ) as mock_hash_pass,
+        mock.patch.object(auth_service.redis, "delete") as mock_redis_delete,
+    ):
         result = await auth_service.set_password_after_reset(data, mock_db_dep)
 
         assert result == {"status": "OK, password has been reset"}

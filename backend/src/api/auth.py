@@ -2,8 +2,6 @@ import sys
 
 from fastapi import APIRouter, Body, Response, HTTPException, Request
 from pathlib import Path
-import phonenumbers
-from phonenumbers.phonenumberutil import NumberParseException
 
 from src.dependencies.db import DBDep
 from src.schemas.users import (

@@ -237,7 +237,7 @@ cd backend # если вы в корне репозитория
 ```
 Активируйте виртуальное окружение Poetry:
 ```bash
-poetry shell
+poetry env activate
 ```
 Запустите тесты:
 ```bash

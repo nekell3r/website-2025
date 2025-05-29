@@ -461,13 +461,15 @@ class AuthService:
             raise AuthTokenInvalidServiceException(token_type="Refresh")
         except Exception:
             raise AuthTokenInvalidServiceException(token_type="Refresh")
+
     async def login_user(self, data: UserLogin, db: DBDep):
         try:
             phone_str_to_search = str(data.phone)
             parsed_num = phonenumbers.parse(phone_str_to_search, None)
             if not phonenumbers.is_valid_number(parsed_num):
                 raise Exception(
-                    status_code=400, detail="Неверный формат номера телефона для логина."
+                    status_code=400,
+                    detail="Неверный формат номера телефона для логина.",
                 )
 
             phone_e164_for_search = phonenumbers.format_number(
@@ -489,7 +491,4 @@ class AuthService:
 
         payload = {"id": user.id, "is_super_user": user.is_super_user}
         access_token, refresh_token = self.create_tokens(payload)
-        return {
-            "access_token": access_token,
-            "refresh_token": refresh_token
-        }
+        return {"access_token": access_token, "refresh_token": refresh_token}

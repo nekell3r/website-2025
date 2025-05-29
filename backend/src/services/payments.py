@@ -113,7 +113,6 @@ class PaymentsService:
         db: DBDep,
         user_id: UserIdDep,
     ) -> CreatePaymentResponse:
-
         if data.email is None:
             raise PaymentValidationServiceException(detail="Email is required")
         if data.product_slug is None:
