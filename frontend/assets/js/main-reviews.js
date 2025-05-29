@@ -10,8 +10,18 @@ document.addEventListener('DOMContentLoaded', async function() {
                 fetch('http://localhost:7777/reviews/ege?page=1&per_page=1', {credentials: 'include'})
             ]);
 
+            // Проверяем на случай, если оба вернули 404
+            if (ogeResponse.status === 404 && egeResponse.status === 404) {
+                sentinel.textContent = "Отзывов пока нет.";
+                sentinel.style.display = 'block'; // Убедимся, что sentinel видим
+                return; // Выходим, так как отзывов нет
+            }
+
+            // Если хотя бы один запрос неудачен (но это не случай двух 404, обработанный выше)
             if (!ogeResponse.ok && !egeResponse.ok) {
-                throw new Error('Ошибка загрузки отзывов');
+                // Эта ошибка теперь будет поймана общим catch, 
+                // но можно оставить специфичную обработку, если это не 404
+                throw new Error('Ошибка загрузки отзывов: оба запроса неудачны');
             }
 
             const [ogeData, egeData] = await Promise.all([
@@ -67,7 +77,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         } catch (error) {
             console.error('Ошибка при загрузке отзывов:', error);
-            sentinel.textContent = "Ошибка загрузки отзывов";
+            // Если sentinel не был уже установлен в "Отзывов пока нет.", то ставим "Ошибка загрузки"
+            if (sentinel.textContent !== "Отзывов пока нет.") {
+                sentinel.textContent = "Ошибка загрузки отзывов";
+            }
+            sentinel.style.display = 'block'; // Убедимся, что sentinel видим
         }
     }
 
