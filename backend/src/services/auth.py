@@ -386,17 +386,22 @@ class AuthService:
             return self.decode_access_token(access_token)
         except AuthTokenExpiredServiceException:
             if not refresh_token:
+                print("DEBUG: No refresh token found in cookies.")
                 raise AuthTokenMissingServiceException(token_type="Refresh")
             try:
                 payload = self.decode_refresh_token(refresh_token)
                 return payload
             except AuthTokenExpiredServiceException:
+                print("DEBUG: Refresh token expired.")
                 raise AuthTokenExpiredServiceException(token_type="Refresh")
             except AuthTokenInvalidServiceException:
+                print("DEBUG: Refresh token is invalid.")
                 raise AuthTokenInvalidServiceException(token_type="Refresh")
         except AuthTokenInvalidServiceException:
+            print("DEBUG: Access token is invalid.")
             raise AuthTokenInvalidServiceException(token_type="Access")
         except Exception as e:
+            print(f"DEBUG: Error decoding access token: {e}")
             raise MadRussianServiceException(detail=f"Ошибка при обработке токена: {e}")
 
     def create_tokens(self, payload: dict):

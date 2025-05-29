@@ -3,6 +3,8 @@ services:
     build:
       context: ./backend # Указывает на папку с Dockerfile
       dockerfile: Dockerfile
+    volumes:
+        - ./backend:/app # Монтирует папку backend в контейнер
     env_file:
       - ./.env # Использует .env из корня репозитория
     ports:

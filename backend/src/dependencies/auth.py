@@ -18,10 +18,14 @@ def get_current_user_dp(dp: str):
     async def dependency(
         request: Request,
         response: Response,
-        auth_service: AuthService = Depends(AuthService),
+        auth_service: AuthService = Depends(AuthService)
     ):
-        payload: dict = await auth_service.get_current_user_payload(request, response)
-        return payload[dp]
+        try:
+            payload: dict = await auth_service.get_current_user_payload(request, response)
+
+            return payload[dp]
+        except Exception as e:
+            print(f"DEBUG: Failed to get current user payload: {e}")
 
     return dependency
 
