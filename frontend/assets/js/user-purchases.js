@@ -67,7 +67,7 @@ async function loadPurchases() {
                 'Content-Type': 'application/json'
             }
         });
-
+        console.log(response);
         if (!response.ok) {
             if (response.status === 401) {
                 console.error('Пользователь не авторизован');

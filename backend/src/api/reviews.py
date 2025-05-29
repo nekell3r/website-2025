@@ -24,7 +24,7 @@ router = APIRouter(prefix="/reviews", tags=["Отзывы"])
     "Эти параметры опциональны, но на фронте мы реализуем именно такой механизм",
 )
 async def get_reviews_by_exam_type(
-    exam_type: str, db: DBDep, pagination: PaginationDep, user_id: UserIdDep
+    exam_type: str, db: DBDep, pagination: PaginationDep
 ):
     return await ReviewsService().get_reviews(exam_type, db, pagination)
 

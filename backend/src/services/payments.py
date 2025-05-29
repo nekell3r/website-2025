@@ -16,6 +16,7 @@ from src.exceptions.service_exceptions import (
     PaymentAlreadyCreatedServiceException,
     PaymentAlreadyPaidServiceException,
     YooKassaServiceException,
+    UserNotAuthenticatedServiceException,
 )
 from src.dependencies.auth import UserIdDep
 from src.dependencies.db import DBDep
@@ -235,10 +236,11 @@ class PaymentsService:
 
     async def get_purchases(self, user_id: UserIdDep, db: DBDep):
         try:
+            if user_id == None:
+                raise UserNotAuthenticatedServiceException
             purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
         except PurchaseNotFoundException:
             raise PurchaseNotFoundServiceException
-
         answer = []
         for p in purchases:
             try:

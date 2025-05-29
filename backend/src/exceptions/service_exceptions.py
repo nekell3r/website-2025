@@ -12,7 +12,10 @@ class ReviewNotFoundServiceException(MadRussianServiceException):
     status_code = 404
     detail = "Отзыв не найден"
 
-
+class UserNotAuthenticatedServiceException(MadRussianServiceException):
+    status_code = 401
+    detail = "Пользователь не авторизован"
+    
 class ReviewWrongFormatServiceException(MadRussianServiceException):
     status_code = 400
     detail = "Неверный формат: продукты должны быть только ОГЭ или ЕГЭ"
