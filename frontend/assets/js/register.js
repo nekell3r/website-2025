@@ -1,7 +1,3 @@
-
-
-
-
         document.getElementById("send-phone").addEventListener("click", function () {
             const phoneInput = document.getElementById("phone-input");
             const rawPhone = phoneInput.value.trim();
@@ -18,7 +14,7 @@
                 errorDiv.textContent = "";
             }
 
-            fetch("https://a824-185-153-181-236.ngrok-free.app/auth/register/phone_code", {
+            fetch("http://localhost:7777/auth/register/phone_code", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ phone: "+" + cleanedPhone })
@@ -56,7 +52,7 @@
                 errorDiv.textContent = "";
             }
 
-            fetch("https://a824-185-153-181-236.ngrok-free.app/auth/register/email_code", {
+            fetch("http://localhost:7777/auth/register/email_code", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: email })
@@ -119,18 +115,18 @@
 
             const payload = {
                 phone: "+" + cleanedPhone,
-                code_phone: codePhone,
+                phone_code: parseInt(codePhone),
                 password: password,
                 password_repeat: passwordRepeat
             };
 
             if (email) {
                 payload.email = email;
-                payload.code_email = codeEmail;
+                payload.email_code = parseInt(codeEmail);
             }
 
             try {
-                const response = await fetch("https://a824-185-153-181-236.ngrok-free.app/auth/register/verify", {
+                const response = await fetch("http://localhost:7777/auth/register/verify", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
