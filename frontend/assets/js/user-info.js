@@ -19,16 +19,14 @@ function toggleEditMode() {
         // Включаем режим редактирования
         editButton.textContent = 'Сохранить изменения';
         editableFields.forEach(field => {
-            const textSpan = field.querySelector('.field-text');
+            const textElement = field.querySelector('.field-value');
             const input = field.querySelector('.edit-input');
-            const fieldName = field.getAttribute('data-field');
             
-            // Получаем текущее значение без метки (например, "Имя: Павел" -> "Павел")
-            const currentValue = textSpan.textContent.split(': ')[1] || '';
-            
-            input.value = currentValue;
-            textSpan.style.display = 'none';
-            input.style.display = 'block';
+            if (textElement && input) {
+                input.value = textElement.textContent || '';
+                textElement.style.display = 'none';
+                input.style.display = 'block';
+            }
         });
     } else {
         // Сохраняем изменения
@@ -36,7 +34,9 @@ function toggleEditMode() {
         editableFields.forEach(field => {
             const input = field.querySelector('.edit-input');
             const fieldName = field.getAttribute('data-field');
-            updatedData[fieldName] = input.value;
+            if (input && fieldName) {
+                updatedData[fieldName] = input.value;
+            }
         });
 
         saveUserInfo(updatedData);
@@ -67,15 +67,19 @@ async function saveUserInfo(data) {
         
         // Возвращаем кнопку в исходное состояние
         const editButton = document.querySelector('.edit-button');
-        editButton.textContent = 'Редактировать профиль';
+        if (editButton) {
+            editButton.textContent = 'Редактировать профиль';
+        }
         
         // Скрываем поля ввода и показываем текст
         const editableFields = document.querySelectorAll('.editable');
         editableFields.forEach(field => {
-            const textSpan = field.querySelector('.field-text');
+            const textElement = field.querySelector('.field-value');
             const input = field.querySelector('.edit-input');
-            textSpan.style.display = 'inline';
-            input.style.display = 'none';
+            if (textElement && input) {
+                textElement.style.display = 'block';
+                input.style.display = 'none';
+            }
         });
 
     } catch (error) {
@@ -106,23 +110,15 @@ async function loadUserInfo() {
         currentUserInfo = userInfo;
         
         // Обновляем информацию на странице
-        const nameSpan = document.querySelector('[data-field="name"] .field-text');
-        const surnameSpan = document.querySelector('[data-field="surname"] .field-text');
-        const phoneSpan = document.querySelector('[data-field="phone"]');
-        const emailSpan = document.querySelector('[data-field="email"]');
+        const nameElement = document.querySelector('[data-field="name"] .field-value');
+        const surnameElement = document.querySelector('[data-field="surname"] .field-value');
+        const phoneElement = document.querySelector('[data-field="phone"] .field-value');
+        const emailElement = document.querySelector('[data-field="email"] .field-value');
 
-        if (nameSpan) {
-            nameSpan.textContent = `Имя: ${userInfo.name || ''}`;
-        }
-        if (surnameSpan) {
-            surnameSpan.textContent = `Фамилия: ${userInfo.surname || ''}`;
-        }
-        if (phoneSpan) {
-            phoneSpan.textContent = `Телефон: ${formatPhoneNumber(userInfo.phone) || ''}`;
-        }
-        if (emailSpan) {
-            emailSpan.textContent = `Почта: ${userInfo.email || ''}`;
-        }
+        if (nameElement) nameElement.textContent = userInfo.name || '';
+        if (surnameElement) surnameElement.textContent = userInfo.surname || '';
+        if (phoneElement) phoneElement.textContent = formatPhoneNumber(userInfo.phone) || '';
+        if (emailElement) emailElement.textContent = userInfo.email || '';
 
     } catch (error) {
         console.error('Ошибка при загрузке информации о пользователе:', error);
