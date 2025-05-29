@@ -15,6 +15,7 @@ from src.dependencies.db import DBDep
 from src.config import settings
 from src.init import redis_manager
 from src.schemas.users import (
+    UserLogin,
     UserAdd,
     PhoneInput,
     EmailInput,
@@ -38,6 +39,7 @@ from src.exceptions.service_exceptions import (
     MadRussianServiceException,
     RegistrationValidationServiceException,
     IncorrectPasswordServiceException,
+    UserNotFoundServiceException,
 )
 
 phone_code_storage = {}
@@ -459,3 +461,35 @@ class AuthService:
             raise AuthTokenInvalidServiceException(token_type="Refresh")
         except Exception:
             raise AuthTokenInvalidServiceException(token_type="Refresh")
+    async def login_user(self, data: UserLogin, db: DBDep):
+        try:
+            phone_str_to_search = str(data.phone)
+            parsed_num = phonenumbers.parse(phone_str_to_search, None)
+            if not phonenumbers.is_valid_number(parsed_num):
+                raise Exception(
+                    status_code=400, detail="Неверный формат номера телефона для логина."
+                )
+
+            phone_e164_for_search = phonenumbers.format_number(
+                parsed_num, phonenumbers.PhoneNumberFormat.E164
+            )
+            print(
+                f"DEBUG (login_user API): Ищем пользователя по нормализованному номеру: {phone_e164_for_search}"
+            )
+        except NumberParseException:
+            raise Exception(
+                status_code=400,
+                detail="Неверный формат номера телефона при парсинге для логина.",
+            )
+        user = await db.users.get_user_with_hashed_password(phone=phone_e164_for_search)
+        if not user:
+            raise UserNotFoundServiceException
+        if not AuthService().verify_password(data.password, user.hashed_password):
+            raise IncorrectPasswordServiceException
+
+        payload = {"id": user.id, "is_super_user": user.is_super_user}
+        access_token, refresh_token = self.create_tokens(payload)
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }
