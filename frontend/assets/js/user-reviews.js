@@ -231,9 +231,9 @@ function createReviewCard(review) {
     }
 
     const deleteButton = document.createElement('button');
-    deleteButton.className = 'delete-review'; 
+    deleteButton.className = 'delete-button';
     deleteButton.textContent = 'Удалить';
-    deleteButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer; margin-bottom: 5px;';
+    deleteButton.style.cssText = 'color: #E0407B; font-size: 0.9em; background: transparent; border: none; padding: 0; cursor: pointer;';
     deleteButton.onclick = () => deleteReview(review.id);
     
     const editCardButton = document.createElement('button'); // Переименовал, чтобы не конфликтовать с editButton из scope выше, если он был

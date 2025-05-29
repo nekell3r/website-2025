@@ -101,10 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="button-container">
                         <button class="read-more" style="display: ${needsReadMore ? 'inline-block' : 'none'}">Читать полностью</button>
                     </div>
-                    <div class="delete-button-container" style="text-align: right; margin-top: 10px;">
-                        <button class="delete-button" onclick="deleteReview('${review.id}')">Удалить</button>
-                    </div>
                 </div>
+                <button class="delete-button" onclick="deleteReview('${review.id}')">Удалить</button>
             </div>
         `;
 
