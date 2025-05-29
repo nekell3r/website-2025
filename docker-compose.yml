@@ -1,0 +1,53 @@
+services:
+  web:
+    build:
+      context: ./backend # Указывает на папку с Dockerfile
+      dockerfile: Dockerfile
+    volumes:
+        - ./backend:/app # Монтирует папку backend в контейнер
+    env_file:
+      - ./.env # Использует .env из корня репозитория
+    ports:
+      - "7777:8000" # Порт хоста 7777, порт контейнера 8000
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    networks:
+      - myNetwork
+
+  db:
+    image: postgres:15
+    env_file: # Возвращаем env_file
+      - ./.env 
+    ports:
+      - "5433:5432" # Порт хоста 5433, стандартный порт PG 5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - myNetwork
+
+  cache:
+    image: redis:7
+    ports:
+      - "6380:6379" # Порт хоста 6380, стандартный порт Redis 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - myNetwork
+
+volumes:
+  pg-data:
+
+networks:
+  myNetwork:
+    driver: bridge 

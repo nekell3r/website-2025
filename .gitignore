@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environments
+.venv/
+.env
+
+# Pytest
+.pytest_cache/
+htmlcov/ # Если генерируете отчеты о покрытии в HTML
+.coverage # Файл данных о покрытии
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Bytecode/Cache
+*.pyc
+*.pyo
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Scripts
+*.bat
+
+# Логи
+*.log
