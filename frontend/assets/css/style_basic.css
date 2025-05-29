@@ -1,0 +1,851 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html{
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #3a3a3a;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Comic Sans MS, Comic Sans, cursive;
+  min-height: 100vh;
+}
+
+.zloy {
+  display: inline-block;
+  width: 10px;
+  height: auto;
+  border-radius: 3%;
+}
+.text_who_are_we {
+    position: relative;
+    text-align: center;
+}
+
+.full-width-line {
+    width: 100vw;
+    height: 4px;
+    background: #ffffff;
+    margin: 30px 0;
+    position: relative;
+    left: 50%;
+    margin-bottom: 0px;
+    transform: translateX(-50%);
+  }
+  .header2 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 20px;
+    border-bottom: 4px solid rgb(255, 255, 255);
+    margin-bottom: 20px;
+  }
+
+.menu {
+    display: flex;
+    gap: 60px;
+    font-weight: bold;
+}
+.menu a {
+    text-decoration: none;  
+    color: white;  
+    cursor: pointer; 
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+}
+.menu-button, .hamburger-button {
+    cursor: pointer;
+    border: none;
+    background: #3a3a3a;
+    padding: 10px;
+    border-radius: 90%;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 19px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    color: #e42b9a
+}
+
+.hamburger-button {
+    width: 48px;
+    height: 42px;
+    color: #e42b9a
+}
+.hamburger-button div {
+    width: 28px;
+    height: 3px;
+    background: rgb(255, 255, 255);
+    margin: 3px 0;
+    color: #e42b9a
+
+}
+.dropdown {
+    position: absolute;
+    top: 80px;
+    right: 25px;
+    background: #e42b9a;
+    padding: 10px;
+    border-radius: 20px;
+
+    opacity: 0.5;
+    transform: translateY(-30px);
+    visibility:collapse;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+}
+.dropdown.active {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+}
+.dropdown a {
+    display: block;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+.close {
+    cursor: pointer;
+    font-size: 20px;
+    float: right;
+}
+h1 {
+    color: #f0f0f0
+}
+h2 {
+    color: #f0f0f0
+}
+h3 {
+    color: #f0f0f0
+}
+h4 {
+    color: #f0f0f0
+}
+h5 {
+    color: #f0f0f0
+}
+h6 {
+    color: #f0f0f0
+}
+span {
+    color: #f0f0f0
+}
+b {
+    color: #f0f0f0
+}
+.menu a {
+    color: white
+}
+input {
+    width: 96%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: black;
+    color: white;
+    font-weight: bold;  
+}
+
+span {
+    margin-left: 93px;
+}
+
+input.error {
+    border-color: #ff0000;
+    box-shadow: 0 0 5px rgba(255,0,0,0.5);
+}
+
+
+.two-column-block {
+    display: flex;           /* Включаем flex-контейнер */
+    gap: 30px;              /* Расстояние между колонками */
+    margin: 20px 0;
+  }
+  
+  .column {
+    flex: 1;                /* Колонки занимают равное пространство */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем содержимое колонки */
+    text-align: center; /* Элементы внутри колонки идут вертикально */
+  }
+  
+  .column img {
+    width: 90%;            /* Картинки занимают всю ширину колонки */
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 6%;     /* Скругленные углы */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Тень для картинок */
+  }
+
+  
+  /* Адаптация для мобильных */
+  @media (max-width: 850px) {
+    .two-column-block {
+      flex-direction: column; /* Меняем направление на вертикальное */
+    }
+    
+    .column {
+      margin-bottom: 20px;
+    }
+    
+    .column:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}   
+.card {
+
+    border-radius: 20px;
+    color: white;
+    border: 2px solid #444;
+    margin: 25px 0px;
+    width: 85%;
+    border: 7px #ffff solid;
+
+}
+
+.card-header {
+    background-color: #d83787;
+    padding: 20px;
+    display: flex; 
+    flex-direction: row; /* Changed from column */
+    justify-content: space-between; /* Changed from flex-start, to put info left and avatar right */
+    align-items: flex-start; /* Changed from center, to align top */
+    font-size: 20px;
+    border-radius: 20px;
+    margin: -8px;
+}
+
+
+.edit-review-link {
+  color: white;
+  text-decoration: none; /* Or underline, if preferred */
+  border: 2px #ffffff solid;
+  border-radius: 12px;
+  font-size: 12px;
+  padding: 0px;
+}
+
+.edit-review-link:hover {
+  text-decoration: underline;
+}
+
+
+/* Ensure the avatar within the new wrapper still has no top margin */
+.card-header .card-header-content-wrapper img {
+    margin-top: 0px; 
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.header-top img {
+    align-self: flex-end; /* Выравнивание по нижнему краю контейнера */
+    margin-bottom: -30px; /* Дополнительная корректировка при необходимости */
+}
+
+.card-header .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* выравнивание по левому краю */
+    margin-left: 10px; /* смещаем всю колонку чуть правее */
+}
+
+/* Стили для имени пользователя в карточке отзыва */
+.card-header .info .name {
+    color: black;
+    margin-bottom: 0px; /* Убираем нижний отступ */
+    /* Если имя пользователя слишком высокое, можно добавить: */
+    /* height: auto; */ 
+    /* display: block; */
+    /* text-align: left; */
+}
+
+.card-header .info .exam {
+    margin-top: 0px; /* Убираем верхний отступ */
+    color: black;
+}
+
+.date {
+    color: #1e1e1e;
+
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+}
+
+.card-body {
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+}
+.review-text {
+  color: #ffffff;
+  max-height: 100px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.review-text.expanded {
+  max-height: none;
+}
+.read-more {
+  background-color: transparent;
+  color: #d83787;
+  border: none;
+  padding: 5px 0;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 16px;
+  font-family: Comic Sans MS, Comic Sans;
+  display: inline-block;
+}
+
+.first {
+    display:grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+
+}
+
+.first_1 {
+    color:#d83787;
+    border-bottom: 1px rgb(255, 255, 255) solid;
+    font-size: 20px;
+
+
+}
+
+.first_2 {
+    color:rgb(255, 255, 255);
+    font-size: 20px;
+    border-radius: 23px;
+    padding: 12px 7px;
+    font-weight: 800;
+    font-size: 28px;
+
+}
+
+/* img {
+    width:80px;
+    height:auto;
+} */
+
+.container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+
+}
+
+.card {
+
+    border-radius: 20px;
+    color: white;
+    border: 2px solid #444;
+    margin: 25px 0px;
+    width: 85%;
+    border: 7px #ffff solid;
+
+}
+
+.card-header {
+    background-color: #d83787;
+    padding: 20px;
+    display: flex; 
+    flex-direction: row; /* Changed from column */
+    justify-content: space-between; /* Changed from flex-start, to put info left and avatar right */
+    align-items: flex-start; /* Changed from center, to align top */
+    font-size: 20px;
+    border-radius: 20px;
+    margin: -8px;
+}
+
+
+.edit-review-link {
+  color: white;
+  text-decoration: none; /* Or underline, if preferred */
+  border: 2px #ffffff solid;
+  border-radius: 12px;
+  font-size: 12px;
+  padding: 0px;
+}
+
+.edit-review-link:hover {
+  text-decoration: underline;
+}
+.name {
+  color: black;
+}
+/* Ensure the avatar within the new wrapper still has no top margin */
+.card-header .card-header-content-wrapper img {
+    margin-top: 0px; 
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.header-top img {
+    align-self: flex-end; /* Выравнивание по нижнему краю контейнера */
+    margin-bottom: -30px; /* Дополнительная корректировка при необходимости */
+}
+
+.card-header .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* выравнивание по левому краю */
+    margin-left: 10px; /* смещаем всю колонку чуть правее */
+}
+
+/* Стили для имени пользователя в карточке отзыва */
+.card-header .info .name {
+    color: black;
+    margin-bottom: 0px; /* Убираем нижний отступ */
+    /* Если имя пользователя слишком высокое, можно добавить: */
+    /* height: auto; */ 
+    /* display: block; */
+    /* text-align: left; */
+}
+
+.card-header .info .exam {
+    margin-top: 0px; /* Убираем верхний отступ */
+    color: black;
+}
+
+.date {
+    color: #1e1e1e;
+
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+}
+
+.card-body {
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+}
+
+
+
+/* === Read More Functionality for Reviews === */
+.review-container {
+    position: relative;
+}
+
+.review-text {
+    line-height: 1.5;
+    max-height: 6em; /* Ограничение по высоте (примерно 4 строки) */
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.review-text.expanded {
+    max-height: none; /* Снимаем ограничение по высоте для показа полного текста */
+    overflow: visible;
+}
+
+.review-text.truncated {
+    position: relative;
+}
+
+/* === End Read More === */
+.header2 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 20px;
+    border-bottom: 4px solid rgb(255, 255, 255);
+  }
+  
+  .menu {
+    display: flex;
+    gap: 60px;
+    font-weight: bold;
+  }
+  .menu a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+  }
+  #sentinel {
+    padding: 20px;
+    color: #d83787;
+    font-size: 24px;
+  }
+  #sentinel::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    margin-top: 2px; /* необязательно, просто для отступа */
+  }
+  
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+  }
+  .menu-button, .hamburger-button {
+    cursor: pointer;
+    border: none;
+    background: #3a3a3a;
+    padding: 10px;
+    border-radius: 90%;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 19px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    color: #d83787;
+  }
+  
+  .hamburger-button {
+    width: 48px;
+    height: 42px;
+    color: #d83787;
+  }
+  .hamburger-button div {
+    width: 28px;
+    height: 3px;
+    background: rgb(255, 255, 255);
+    margin: 3px 0;
+    color: #d83787;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    width: 100%;
+    /* max-width: 1280px; */
+    padding: 20px;
+    box-sizing: border-box;
+    /* justify-items: center; */
+    align-items: start;
+  }
+  
+  .card {
+    background-color: #3a3a3a; /* Чёрный фон */
+    color: #fff;              /* Белый текст */
+    border: 1px solid #fff;   /* Белая граница */
+    border-radius: 20px;
+    padding: 7px;
+    margin: 20px;
+    width: 100%;
+  }
+  
+  .card-header {
+    background-color: #d83787;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 20px;
+    margin: -8px;
+    margin-bottom: 12px;
+  }
+  
+  .card-header img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+  }
+  
+  .card-header .info {
+    max-width: 70%; /* или 60%, или 300px — по ситуации */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .edit-review-link {
+    color: white;
+    text-decoration: none; /* Or underline, if preferred */
+    text-align: center;
+    transform: tranlateX(50px);
+    border: 2px #ffffff solid;
+    border-radius: 12px;
+    font-size: 12px;
+    padding: 0px;
+    width: 90px;
+    transform: translateX(81px);
+  }
+  
+  .edit-review-link:hover {
+    text-decoration: underline;
+    text-align: center;
+    transform: tranlateX(50px);
+  }
+  .name {
+    color: black;
+  }
+  
+  .exam {
+    margin-top: 4px;
+    color: black;
+  }
+  
+  .date {
+    color: #1e1e1e;
+    white-space: nowrap;       /* запрещает перенос текста */
+    overflow: hidden;          /* скрывает выходящий за границу текст */
+    text-overflow: ellipsis;
+  }
+  .date strong {
+    display: block;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+  }
+  
+  .card-body {
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+  }
+  
+  .review-container {
+    position: relative;
+  }
+  
+  .review-text {
+    color: #ffffff;
+    max-height: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .review-text.collapsed {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .read-more {
+    background-color: transparent;
+    color: #d83787;
+    border: none;
+    border-bottom: 1px solid #d83787;
+    padding: 5px 0;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 14px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    display: inline-block;
+  }
+  
+  .first {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+  }
+  
+  .first_1 {
+    color: #d83787;
+    border-bottom: 1px rgb(255, 255, 255) solid;
+    font-size: 20px;
+  }
+  
+  .first_2 {
+    color: rgb(255, 255, 255);
+    font-size: 28px;
+    border-radius: 23px;
+    padding: 12px 7px;
+    font-weight: 800;
+  }
+  
+  img {
+    margin: 0;
+    width: 50px;
+  }
+  
+  .the_end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    color: #ffff;
+    border-top: 4px #ffff solid;
+    margin-top: 30px;
+  }
+  
+  .zloy {
+    display: inline-block;
+    width: 140px;
+    height: auto;
+    border-radius: 3%;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 80px;
+    right: 25px;
+    background: #d83787;
+    padding: 10px;
+    border-radius: 20px;
+    border: 4px #ffff solid;
+    opacity: 0.5;
+    transform: translateY(-50px);
+    visibility: collapse;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .dropdown.active {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+  }
+  
+  .dropdown a {
+    display: block;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+  }
+  
+  .close {
+    cursor: pointer;
+    font-size: 20px;
+    float: right;
+  }
+  
+  .delete-button {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    color: rgb(153, 153, 153); /* Цвет как в дизайне */
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.3s;
+    border-bottom: 1px #d83787 solid;
+  }
+  
+  .delete-button:hover {
+    color: #ff0000; /* Красный при наведении */
+    text-decoration: underline;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    margin: 0;
+    padding: 0;
+    background-color: #3a3a3a;
+  }
+   
+  .the_end {
+    width: 100%;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10px;
+    margin-top: auto;
+    box-sizing: border-box;
+    border-top: 4px #ffffff solid;
+  }
+  
+  .the_end h1 {
+    margin: 0;
+    line-height: 100px;
+    flex: 1;
+    text-align: center;
+  }
+
+.server-error-container {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 15px;
+    display: none;
+}
+
+.server-error-message {
+    color: #dc3545;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+}

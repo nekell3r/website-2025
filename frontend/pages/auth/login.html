@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>АВТОРИЗАЦИЯ</title>
+    <link rel="stylesheet" href="../../assets/css/style_login.css">
+    <link rel="stylesheet" href="../../assets/css/style_basic.css">
+</head>
+<body>
+    <header class="header2">
+        <div class="logo">
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+        </div>
+        <div class="menu">
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" style="margin: -18px 0px 10px -10px; width: 50px;" alt="кнопка меню">
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+    <b><h1 style="color: #DA1984;">Авторизация</h1></b>
+
+    <div class="phone-input">
+        <input type="text" id="phone-input" class="phone-number"  placeholder="Телефон">
+    </div>
+
+    <div class="wrapper">
+        <div class="form-group">
+            <div class="password-container">
+                <input
+                type="password"
+                id="password"
+                class="text-input password-input"
+                placeholder="Пароль"
+                style="width: 390px;
+                       transform: translateX(-50px);"
+                >
+                <button class="toggle-password" aria-label="Показать пароль" type="button">
+                    <span class="eye-icon" style="transform: translateX(-20px)">👁️</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="login-error" style="color: red; margin-top: 10px;"></div>
+
+        <div class="form-footer">
+            <button type="button" id="submit-login" class="submit-icon-btn" style="margin-bottom: 15px;">
+                <img src="../../assets/img/кнопкарег.png" alt="Войти">
+            </button>
+        </div>
+    </div>
+
+    <div class="help_info" >
+        <div style="display: flex; flex-wrap: nowrap">
+        <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive; padding-top: 30px">Еще не зарегистрированы?</h2></b>
+        <a class="but_reg" href="register.html" style="color:#DA1984; margin-left: 30px; font-family: Comic Sans MS, Comic Sans, cursive;padding-top: 30px"><b><h2>Регистрация</h2></b></a>
+        </div>
+
+        <div style="display: flex">
+            <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive;">Забыли пароль?</h2></b>
+            <a class="but_reg" href="password-recovery.html" style="margin-left: 30px;font-family: Comic Sans MS, Comic Sans, cursive;
+            color: #DA1984;"><b><h2>Восстановить пароль</h2></b></a>
+        </div>
+    </div>
+    </main>
+
+    <footer class="the_end" style="padding-top: 10px;">
+        <h1 style="flex: 1; text-align: center;">Служебная информация</h1>
+        <img src="../../assets/img/злой рус.png" class="zloy" alt="злой рус">
+    </footer>
+
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <a href="../materials/questions.html">FAQ</a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown");
+            menu.classList.toggle("active");
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/login.js"></script>
+    <script src="../../assets/js/reviews-redirect.js"></script>
+    <script src="../../assets/js/auth-token.js"></script>
+    <script src="../../assets/js/auth-toggle.js"></script>
+
+    <script>
+        document.getElementById('password').addEventListener('focus', function() {
+        this.removeAttribute('placeholder');
+        });
+
+        document.getElementById('password').addEventListener('blur', function() {
+        if (this.value === '') {
+            this.setAttribute('placeholder', 'Пароль');
+        }
+        });
+    </script>
+</body>
+</html>

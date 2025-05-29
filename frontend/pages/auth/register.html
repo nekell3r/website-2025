@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>РЕГИСТРАЦИЯ</title>
+    <link rel="stylesheet" href="../../assets/css/style_registr.css">
+    <link rel="stylesheet" href="../../assets/css/style_basic.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Comic Sans MS, Comic Sans, cursive;
+            margin:0px;
+            padding: 0px;
+            background-color: #3A3A3A
+        }
+    </style>
+</head>
+<body>
+    <div class="header2">
+        <div class="logo">
+            <a href="../../index.html"><img src="../../assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+        </div>
+        <div class="menu">
+            <a href="../exams/oge.html">ОГЭ</a>
+            <a href="../exams/ege.html">ЕГЭ</a>
+            <a href="../materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="../../assets/img/new_hambur.png" alt="кнопка меню">
+            </button>
+        </div>
+    </div>
+    <br><br>
+    <h1 style="color: #DA1984; font-family: 'Arial', sans-serif; font-family: Comic Sans MS, Comic Sans, cursive;">Регистрация</h1>
+    <br>
+    <div class="phone-input" >
+        <input type="text" id="phone-input" class="phone-number" style="font-family: Comic Sans MS, Comic Sans, cursive;"placeholder="Телефон">
+    </div>
+
+    <div class="phone-input">
+        <input type="text" id="code-phone" class="phone-number"style="font-family: Comic Sans MS, Comic Sans, cursive;" placeholder="Код/телефон">
+    </div>
+
+    <div class="form-group" style="border-radius: 30px">
+        <input
+            type="email"
+            id="email-input"
+            class="text-input"
+            placeholder="Email (необязательно)"
+            data-placeholder-focus="example@mail.com"
+            style="font-family: Comic Sans MS, Comic Sans, cursive;
+            border-radius: 30px"
+        >
+    </div>
+
+    <div class="phone-input">
+        <input type="text" id="code-email" style="font-family: Comic Sans MS, Comic Sans, cursive;" class="phone-number" placeholder="Код/email (необязательно)">
+    </div>
+
+    <div class="form-group">
+        <div class="password-container">
+            <input
+                type="text"
+                id="password"
+                inputmode="password"
+                class="text-input password-input"
+                placeholder="Пароль"
+                style="font-family: Comic Sans MS, Comic Sans, cursive;
+                border-radius: 30px;"
+            >
+            <button class="toggle-password" aria-label="Показать пароль" type="button">
+                <span class="eye-icon"style="transform: translateX(-5px)">👁️</span>
+            </button>
+        </div>
+    </div>
+    <div style="display: flex; margin-left: 130px;">
+        <div class="form-group">
+            <div class="password-container">
+                <input
+                    type="text"
+                    id="password-repeat"
+                    inputmode="password"
+                    class="text-input password-input"
+                    placeholder="Повторите пароль"
+                    style="font-family: Comic Sans MS, Comic Sans, cursive;
+                    transform: translateX(-25px);
+                    border-radius: 30px;"
+                    
+                >
+                <button class="toggle-password" aria-label="Показать пароль" type="button">
+                    <span class="eye-icon" style="transform: translateX(-30px);">👁️</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button style="transform: translateY(10px)" type="button" id="submit-data" class="submit-icon-btn">
+                <img src="../../assets/img/кнопкарег.png" alt="Завершить регистрацию">
+            </button>
+        </div>
+    </div>
+    <br>
+    <div id="submit-error" style="color: red; margin-top: 10px;"></div>
+
+    <button id="send-phone" style="color: #DA1984;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    font-family: Comic Sans MS, Comic Sans, cursive;" "><b><h2>Отправить код/телефон</h2></b></button>
+
+    <div id="phone-error" style="color: red; margin-top: 10px;"></div>
+
+    <button id="send-email" style="color: #DA1984;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit; 
+    font-family: Comic Sans MS, Comic Sans, cursive;"><b><h2>Отправить код/email</h2></b></button>
+
+    <div id="email-error" style="color: red; margin-top: 10px;"></div>
+    <BR>
+    <div class="help_info">
+        <div style="display: flex; flex-wrap: nowrap">
+            <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive;">Уже зарегистрированы?</h2></b>
+            <a class="but_reg" href="login.html" style="color:#DA1984; margin-left: 30px;font-family: Comic Sans MS, Comic Sans, cursive;"><b><h2>Войти</h2></b></a>
+        </div>
+    </div>
+
+    <div style="display: flex;">
+        <b><h2 class="but_reg" style="font-family: Comic Sans MS, Comic Sans, cursive;">Забыли пароль?</h2></b>
+        <a class="but_reg" href="password-recovery.html" style="margin-left: 30px;
+        color: #DA1984; font-family: Comic Sans MS, Comic Sans, cursive;"><b><h2>Восстановить пароль</h2></b></a>
+    </div>
+
+    <div class="full-width-line"></div>
+
+    <footer class="the_end" style="padding-top: 10px">
+        <h1 style="flex: 1; text-align: center;">Служебная информация</h1>
+        <img src="../../assets/img/злой рус.png" class="zloy" alt="злой рус">
+    </footer>
+
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <a href="../materials/questions.html">FAQ</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/register.js"></script>
+    <script src="../../assets/js/auth-token.js"></script>
+    <script src="../../assets/js/reviews-redirect.js"></script>
+    <script src="../../assets/js/auth-toggle.js"></script>
+</body>
+</html>

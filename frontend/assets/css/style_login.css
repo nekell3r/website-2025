@@ -1,0 +1,438 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+html{
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #3a3a3a;
+  }
+  
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+  }
+
+  h1, h2, h3, h4, h5, h6, p, span, b, a {
+    font-family: inherit;
+  }
+
+input[type="text"] {
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    font-size: 14px;
+    transform: translateX(-30px);
+    height: 50%;
+    width: 117%;
+    padding: 15px 12px;
+    margin-top: 20px;
+    border: 1px solid  #e42b9a;
+    border-radius: 20px;
+    background-color: #333; /* Темный фон поля ввода */
+    color: rgb(17, 111, 0); /* Цвет текста в поле ввода */
+}
+input[type="text"]::placeholder {
+    color: #22ba00; /* Цвет текста-подсказки */
+}
+
+input.error {
+    border-color: #ff0000;
+    box-shadow: 0 0 5px rgba(255,0,0,0.5);
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* по желанию — чтобы контент был по центру */
+}
+main {
+  flex: 1; /* Занимает всё доступное пространство между header и footer */
+
+  display: flex;          /* Включаем флексбокс */
+  justify-content: center; /* Горизонтальное центрирование */
+  align-items: center;     /* Вертикальное центрирование */
+  flex-direction: column;
+  /* Если нужно, чтобы контент не растягивался по ширине */
+  text-align: center;
+  padding: 20px; /* Отступы по желанию */
+}
+
+.header2 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 20px;
+    border-bottom: 4px solid rgb(255, 255, 255);
+}
+
+.menu {
+    display: flex;
+    gap: 30px;
+    font-weight: bold;
+}
+.menu a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.menu-button{
+    cursor: pointer;
+    border: none;
+    background: #3a3a3a;
+    padding: 10px;
+    border-radius: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    color: #e42b9a
+}
+
+.menu-button {
+    width: 48px;
+    height: 42px;
+    color: #e42b9a
+}
+.menu-button div {
+    width: 28px;
+    height: 3px;
+    background: rgb(255, 255, 255);
+    margin: 3px 0;
+    color: #e42b9a
+
+}
+.dropdown {
+    position: absolute;
+    top: 80px;
+    right: 25px;
+    background: #e42b9a;
+    padding: 10px;
+    border-radius: 20px;
+
+    opacity: 0.5;
+    transform: translateY(-30px);
+    visibility:collapse;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+}
+.dropdown.active {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+}
+.dropdown a {
+    display: block;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+.close {
+    cursor: pointer;
+    font-size: 20px;
+    float: right;
+}
+.zloy_ru {
+    display: inline-block;
+    width: 50%;
+    height: auto;
+    border-radius: 3%;
+}
+.zloy {
+    display: inline-block;
+    width: 180px;
+    height: auto;
+    border-radius: 3%;
+}
+.full-width-line {
+    width: 100vw;
+    height: 4px;
+    background: #ffffff;
+    margin: 30px 0;
+    position: relative;
+    left: 50%;
+    margin-bottom: 0px;
+    transform: translateX(-50%);
+  }
+.wrapper { /* обертка всего блока */
+  display: flex;
+  margin-left: 130px;
+  min-width: 350px; /* минимальная ширина всей конструкции */
+  gap: 50px; /* расстояние между полем и кнопкой */
+  flex-wrap: nowrap; /* запретить перенос элементов на новую строку */
+}
+.help_info{
+    display: flex;
+    min-width: 400px;
+    gap: 30px;
+    flex-direction: column;
+    padding-bottom: 30px;
+}
+
+.text-input {
+    flex: 1;
+    padding: 25px;
+    border: 1px solid #000000;
+    border-radius: 30px;
+    border: 1px solid #DA1984;
+    font-size: 25px;
+    background-color: #3a3a3a;
+    font-size: 26px;
+    font-size: 25px !important; /* такой же размер шрифта */
+    width: 200px; /* аналогичная ширина */
+    height: 80px; /* такая же высота */
+    line-height: 1.2;
+    color: #ffffff;/* белый текст как у phone-number */
+    font-family: Comic Sans MS, Comic Sans, cursive; /* тот же шрифт */
+}
+
+.text-input:focus {
+    border-color: #DA1984;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.text-input::placeholder {
+    color: #a8aba6; /* Зелёный placeholder */
+}
+
+/* Стили для поля email */
+.text-input[type="email"]::placeholder {
+    color: #ffffff; /* Цвет placeholder'а */
+    transition: all 0.3s ease;
+}
+
+/* Стиль при фокусе */
+.text-input[type="email"]:focus::placeholder {
+    color: #ffffff; /* Серый цвет при фокусе */
+    content: attr(data-placeholder-focus); /* Будет работать только с JS */
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 400px;
+}
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    color: #DA1984;
+    font-size: 26px;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+}
+
+.toggle-password:hover {
+    opacity: 0.8;
+}
+
+/* Для иконок вместо эмодзи (опционально) */
+.eye-icon {
+    font-size: 20px;
+    transition: transform 0.2s;
+}
+
+.toggle-password.active .eye-icon {
+    transform: scale(0.9);
+}
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+.submit-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 80px;
+    height: 80px;
+    transition: transform 0.3s;
+}
+
+.submit-icon-btn:hover {
+    transform: scale(1.1);
+}
+
+.submit-icon-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.but_reg {
+    font-family: 'Arial', sans-serif;
+    flex-wrap: nowrap;
+} 
+.the_end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+input {
+    width: 96%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: black;
+    color: white;
+    font-weight: bold;
+}
+button {
+    font-weight: bold;
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    background: purple;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+}
+span {
+    margin-left: 93px;
+}
+input[type="text"] {
+    font-family: Comic Sans MS, Comic Sans, cursive;
+    font-size: 14px;
+    transform: translateX(-30px);
+    height: 50%;
+    width: 130%;
+    padding: 15px 12px;
+    margin-top: 20px;
+    border: 1px solid  #e42b9a; 
+    border-radius: 20px;
+    background-color: #3a3a3a; /* Темный фон поля ввода */
+    color: white; /* Цвет текста в поле ввода */
+}
+input[type="text"]::placeholder {
+    color: #979797; /* Цвет текста-подсказки */
+}
+
+input.error {
+    border-color: #ff0000;
+    box-shadow: 0 0 5px rgba(255,0,0,0.5);
+}
+h1 {
+    color: #f0f0f0
+}
+h2 {
+    color: #f0f0f0
+}
+h3 {
+    color: #f0f0f0
+}
+h4 {
+    color: #f0f0f0
+}
+h5 {
+    color: #f0f0f0
+}
+h6 {
+    color: #f0f0f0
+}
+span {
+    color: #f0f0f0
+}
+b {
+    color: #f0f0f0
+}
+.menu a {
+    color: white
+}
+.phone-input {
+    transform: translateX(5px);
+    display: flex;
+    gap: 100px;
+    width: 90%; /* Занимает всю доступную ширину */
+    max-width: 440px; /* Ограничиваем максимальную ширину */
+    margin: 0 auto;
+    padding: 35px 25px; /* ↑ Увеличиваем вертикальный padding (первое значение) */
+    font-size: 40px;    /* Можно увеличить размер шрифта */
+    line-height: 1.5;   /* Опционально: регулирует межстрочный интервал */
+    height: 165px;
+    color:#22ba00     /* Автоматическая высота на основе padding и font-size */
+}
+.phone-input input.phone-number {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #DA1984;
+    border-radius: 30px;
+    background-color: #3a3a3a;
+    font-size: 25px !important; /* Принудительно устанавливаем размер */
+    width: 200px; /* Исправляем ширину */
+    height: 80px; /* Автоматическая высота */
+    line-height: 1.2;
+    color: rgb(255, 255, 255);
+}
+
+.phone-number {
+    flex: 1;
+    padding: 25px;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    border: 1px solid #DA1984;
+    font-size: 25px;
+    background-color: #3a3a3a;
+    font-size: 40px; 
+    width: 100px;
+    height: 60px;
+    color:rgba(0, 123, 255, 0.25);
+}
+.phone-number:focus {
+    border-color: #DA1984;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    font-size: 25px !important; /* такой же размер шрифта */
+    width: 200px; /* аналогичная ширина */
+    height: 80px; /* такая же высота */
+    line-height: 1.2;
+    color: rgba(0, 123, 255, 0.25); /* белый текст как у phone-number */
+    font-family: Comic Sans MS, Comic Sans, cursive; /* тот же шрифт */
+}
+.phone-number::placeholder {
+    color: #ffffff; /* Розовый, как ваша граница */
+    
+
+}
+.form-group {
+    display: flex;
+    gap: 110px;
+    width: 290px;
+}
+.the_end {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    padding-top: -10px;
+    height: 103px;
+  }
+  .the_end .zloy {
+    position: absolute;      
+    right: 0;               /* Прижимаем к правому краю */
+top: 50%;               /* Выравниваем по вертикали */
+    transform: translateY(-50%); /* Точное центрирование по вертикали */
+  }
+  .the_end h1 {
+    margin-top: 0px;
+  }

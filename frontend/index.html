@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <title>ГЛАВНАЯ</title>
+        <link rel="stylesheet" href="assets/css/style_basic.css">
+        <style>
+            img.zloy {
+                display: inline-block;
+                width: 140px !important;
+                height: auto;
+                border-radius: 3%;
+            }
+            .review-text {
+                color: #ffffff;
+                max-height: 100px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+            }
+            .review-text.expanded {
+                max-height: none;
+                overflow: visible;
+            }
+            .review-container {
+                position: relative;
+            }
+            .read-more {
+                background-color: transparent;
+                color: #d83787;
+                border: none;
+                padding: 5px 0;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            
+        </style>
+    </head>
+<body>
+    <header class="header2">
+        <div class="logo">
+            <a href="index.html"><img src="assets/img/злой рус.png" class="zloy" alt="Злой Русский"></a>
+        </div>
+        <div class="menu">
+            <a href="pages/exams/oge.html">ОГЭ</a>
+            <a href="pages/exams/ege.html">ЕГЭ</a>
+            <a href="pages/materials/list.html"><b>МАТЕРИАЛЫ ДЛЯ УРОКОВ</b></a>
+        </div>
+        <div class="buttons">
+            <button class="menu-button" onclick="toggleMenu()">
+                <img src="assets/img/new_hambur.png" alt="кнопка меню">
+            </button>
+        </div>
+    </header>
+
+    <br><img src = "assets/img/кто мы.png" style="width: 300px;" alt="кто мы">
+    <div class="text_who_are_we">
+        <b><h2>"Злой русский" - это бренд современных методических 
+            материалов по русскому языку и литературе. 
+            Пособия, рабочие листы, презентации, игры и словники - все
+            разработки сочетают стильный дизайн, четкую структуру и 
+            максимальную пользу, чтобы подготовка к уроку, контрольной или 
+            экзамену была максимально продуктивной. 
+            Нет конца правилам и исключениям, именам героев и "что хотел 
+            сказать автор?" - спокойно, и это умеем побеждать. 
+        </h2></b>
+    </div>
+    <div class="two-column-block">
+        <div class="column left-column">
+            <b><h2 style="flex: 1; margin: 40px; margin-left: 80px;">Результаты учеников: тут будут внушительные цифры, которые сейчас не подсчитаны</h2></b>
+        </div>
+        
+        <div class="column right-column">
+            <img src = "assets/img/beautiful_girl.png" style="flex: 1; margin: 40px; width: 500px;" alt="girl">
+        </div>
+    </div>
+
+
+
+    <b><h2>Материалы для подготовки к экзаменам</h2></b>
+    <div class="two-column-block">
+        <div class="column left-column">
+          <a href="pages/exams/oge.html"><img src="assets/img/work_note9.png" alt="Левое изображение"></a>
+          <a href="pages/exams/oge.html" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
+        </div>
+        
+        <div class="column right-column">
+          <a href="pages/exams/ege.html"><img src="assets/img/work_note10.png" alt="Правое изображение"></a>
+          <a href="pages/exams/ege.html" style="color: #DA1984;"><h3>Узнать подробнее</h3></a>
+        </div>
+    </div>
+    <div class = "content">
+    <img src = "assets/img/отзывы.png" style="width: 300px; margin-bottom: 25px;" alt="отзывы">
+    <div id="container" class="container">
+        <!-- Отзывы будут загружены динамически -->
+    </div>
+    <div id="sentinel">Загрузка...</div>
+    </div>
+    <div class="full-width-line"></div>
+    <img src = "assets/img/materials_for_urok.png" style="width: 500px; margin-top: 30px; " alt="материалы для уроков">
+
+    <div class="two-column-block">
+        <div class="column left-column">
+            <a href="pages/materials/list.html"><img src = "assets/img/work_note1_2.png" style="margin: 20px;" alt="girl"></a>
+        </div>
+        <div class="column right-column">
+            <b><h2 style="margin: 20px;"> Разработки для проведения индивидуальных и классных занятий: 
+                <ul style="text-align: left;">
+                    <li>Презентации</li>
+                    <li>Рабочие листы с практикой</li>
+                    <li>Рабочие листы с теорией</li>
+                </ul>
+                Вы можете приобрести материалы по русскому языку и литературе.
+            </h2></b>
+        </div>
+    </div>
+
+
+
+    <footer class="the_end" style="padding-top: 10px">
+        <h1 style="flex: 1; text-align: center;">Служебная информация</h1>
+        <img src="assets/img/злой рус.png" class="zloy" alt="злой рус">
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown");
+            menu.classList.toggle("active");
+        }
+    </script>
+
+
+    <div class="dropdown" id="dropdown">
+        <span class="close" onclick="toggleMenu()">&times;</span>
+        <a href="#" id="auth-link">авторизация/личный кабинет</a>
+        <a href="#" onclick="checkUserAndRedirect(event)">отзывы</a>
+        <a href="pages/materials/questions.html">FAQ</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/main-reviews.js"></script>
+    <script src="assets/js/reviews-redirect.js"></script>
+    <script src="assets/js/auth-toggle.js"></script>
+
+    <script>
+        // Установка параметров для загрузки отзывов
+        document.body.setAttribute('data-endpoint', 'api/reviews');
+    </script>
+
+</body>
+</html>
