@@ -98,6 +98,17 @@ async function saveProductChanges() {
 
 // Функция для загрузки продуктов
 async function loadProducts() {
+    const container = document.getElementById('productsContainer');
+    const sentinel = document.getElementById('productsSentinel'); // Используем новый ID
+
+    if (sentinel) {
+        sentinel.textContent = 'Загрузка...';
+        sentinel.style.display = 'block';
+    }
+    if (container) {
+        container.innerHTML = ''; 
+    }
+
     try {
         const response = await fetch('http://localhost:7777/admin/products', {
             credentials: 'include',
@@ -107,25 +118,31 @@ async function loadProducts() {
         });
 
         if (!response.ok) {
-            if (response.status === 401) {
-                console.error('Пользователь не авторизован');
-                return;
+            console.error(`Ошибка при загрузке продуктов: ${response.status} ${response.statusText}`);
+            if (sentinel) {
+                sentinel.textContent = 'Материалов пока нет.';
+                sentinel.style.display = 'block'; 
             }
-            throw new Error(`Ошибка при загрузке продуктов: ${response.statusText}`);
+            return; 
         }
 
         const products = await response.json();
-        const container = document.getElementById('productsContainer');
         
         if (!container) {
             console.error('Контейнер для продуктов не найден');
+            if (sentinel) {
+                sentinel.textContent = 'Ошибка отображения: контейнер продуктов не найден.';
+                sentinel.style.color = 'red'; // Оставляем красный для явной ошибки
+                sentinel.style.display = 'block';
+            }
             return;
         }
 
-        container.innerHTML = '';
-
         if (products.length === 0) {
-            container.innerHTML = '<p style="color: #fff; text-align: center;">Нет доступных материалов.</p>';
+            if (sentinel) {
+                sentinel.textContent = 'Материалов пока нет.';
+                sentinel.style.display = 'block'; 
+            }
             return;
         }
 
@@ -133,12 +150,15 @@ async function loadProducts() {
             const card = createProductCard(product);
             container.appendChild(card);
         });
+        if (sentinel) {
+            sentinel.style.display = 'none'; 
+        }
 
     } catch (error) {
         console.error('Ошибка при загрузке продуктов:', error);
-        const container = document.getElementById('productsContainer');
-        if (container) {
-            container.innerHTML = '<p style="color: #ff6b6b; text-align: center;">Не удалось загрузить информацию о материалах. Пожалуйста, попробуйте позже.</p>';
+        if (sentinel) {
+            sentinel.textContent = 'Материалов пока нет.'; 
+            sentinel.style.display = 'block'; 
         }
     }
 }

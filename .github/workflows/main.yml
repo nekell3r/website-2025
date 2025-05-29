@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - backend  # <--- Запускать при пуше в ветку backend
+      - main     # <--- Запускать при пуше в ветку main
   pull_request:
     branches:
       - backend  # <--- Опционально: запускать при создании/обновлении Pull Request в ветку backend

@@ -426,6 +426,7 @@
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: flex-start;
             gap: 40px;
             font-size: 23px;
             padding: 10px 0;
@@ -437,7 +438,7 @@
         .info-row {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             width: calc(50% - 20px);
             min-width: 250px;
             max-width: 300px;
@@ -505,6 +506,15 @@
             width: 100%;
         }
 
+        /* Применяем эти стили ко всем полям, не только к .editable */
+        .info-row > span[data-field] {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+            width: 100%;
+        }
+
         @media (max-width: 650px) {
             .info {
                 flex-direction: column;
@@ -540,40 +550,35 @@
 
     <div class="profile-container">
         <div class="info">
-            <div class="info-row">
-               <span data-field="name" class="editable">
-                   <div class="field-label">Имя</div>
-                   <div class="field-text">Павелл</div>
-                   <input type="text" class="edit-input" style="display: none;">
-               </span>
-            </div>
-            <div class="info-row">
-               <span data-field="phone" class="editable">
-                   <div class="field-label">Телефон</div>
-                   <div class="field-text">+7-901-123-45-61</div>
-                   <input type="text" class="edit-input" style="display: none;">
-               </span>
-            </div>
-            <div class="info-row">
-               <span data-field="surname" class="editable">
-                   <div class="field-label">Фамилия</div>
-                   <div class="field-text">Жабский</div>
-                   <input type="text" class="edit-input" style="display: none;">
-               </span>
-            </div>
-            <div class="info-row">
-               <span data-field="email" class="editable">
-                   <div class="field-label">Почта</div>
-                   <div class="field-text">example@mail.com</div>
-                   <input type="text" class="edit-input" style="display: none;">
-               </span>
-            </div>
+             <div class="info-row">
+                <span data-field="name" class="editable">
+                    <span class="field-label">Имя:</span>
+                    <span class="field-value"></span>
+                    <input type="text" class="edit-input" style="display: none;">
+                </span>
+                <span data-field="phone">
+                    <span class="field-label">Телефон:</span>
+                    <span class="field-value"></span>
+                </span>
+             </div>
+
+             <div class="info-row">
+                <span data-field="surname" class="editable">
+                    <span class="field-label">Фамилия:</span>
+                    <span class="field-value"></span>
+                    <input type="text" class="edit-input" style="display: none;">
+                </span>
+                <span data-field="email">
+                    <span class="field-label">Почта:</span>
+                    <span class="field-value"></span>
+                </span>
+             </div>
         </div>
         <div class="edit-button-container">
             <button class="edit-button">Редактировать профиль</button>
         </div>
     </div>
-    <br><br><br>
+     <br><br><br>
 
     <div style="border-bottom: 4px solid #ffff; width: 100%"></div>
 
@@ -581,6 +586,7 @@
 
     <h1 class="profile-title">Купленные продукты</h1>
     
+    <div id="purchasesSentinel" style="text-align: center; padding: 10px;">Загрузка...</div>
     <div class="purchases-container" id="purchasesContainer">
        <!-- Здесь будут отображаться купленные продукты -->
     </div>
@@ -596,10 +602,10 @@
 
     <br>
 
-    <div class="reviews-header">
-       <h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin-right: 10px; text-align: center;">Мои отзывы</h1>
-       <img src="../../assets/img/plus2.png" style="margin-top: 17px; margin-left: 6px; cursor: pointer;" onclick="openAddReviewModal()" alt="Добавить отзыв">
-   </div>
+    <div class="reviews-header" style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+       <h1 style="border: 2px solid #e42b9a; border-radius: 12px; padding:10px; margin: 0;">Мои отзывы</h1>
+       <img src="../../assets/img/plus2.png" style="margin-left: 15px; cursor: pointer; width: 30px; height: 30px;" onclick="openAddReviewModal()" alt="Добавить отзыв">
+    </div>
 
    <div id="container" class="container">
        <!-- Отзывы будут загружены динамически -->

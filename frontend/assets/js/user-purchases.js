@@ -60,6 +60,17 @@ function closeProductModal() {
 
 // Функция для загрузки купленных продуктов
 async function loadPurchases() {
+    const container = document.getElementById('purchasesContainer');
+    const sentinel = document.getElementById('purchasesSentinel'); 
+
+    if (sentinel) {
+        sentinel.textContent = 'Загрузка...';
+        sentinel.style.display = 'block';
+    }
+    if (container) {
+        container.innerHTML = ''; 
+    }
+
     try {
         const response = await fetch('http://localhost:7777/me/purchases', {
             credentials: 'include',
@@ -67,27 +78,33 @@ async function loadPurchases() {
                 'Content-Type': 'application/json'
             }
         });
-        console.log(response);
+
         if (!response.ok) {
-            if (response.status === 401) {
-                console.error('Пользователь не авторизован');
-                return;
+            console.error(`Ошибка при загрузке покупок: ${response.status} ${response.statusText}`);
+            if (sentinel) {
+                sentinel.textContent = 'Покупок пока нет.';
+                sentinel.style.display = 'block';
             }
-            throw new Error(`Ошибка при загрузке покупок: ${response.statusText}`);
+            return; 
         }
 
         const purchases = await response.json();
-        const container = document.getElementById('purchasesContainer');
         
         if (!container) {
             console.error('Контейнер для покупок не найден');
+            if (sentinel) {
+                sentinel.textContent = 'Ошибка отображения: контейнер покупок не найден.';
+                sentinel.style.color = 'red';
+                sentinel.style.display = 'block';
+            }
             return;
         }
 
-        container.innerHTML = '';
-
         if (purchases.length === 0) {
-            container.innerHTML = '<p style="color: #fff; text-align: center;">У вас пока нет купленных продуктов.</p>';
+            if (sentinel) {
+                sentinel.textContent = 'Покупок пока нет.';
+                sentinel.style.display = 'block';
+            }
             return;
         }
 
@@ -95,12 +112,15 @@ async function loadPurchases() {
             const card = createPurchaseCard(purchase);
             container.appendChild(card);
         });
+        if (sentinel) {
+            sentinel.style.display = 'none'; 
+        }
 
     } catch (error) {
-        console.error('Ошибка:', error);
-        const container = document.getElementById('purchasesContainer');
-        if (container) {
-            container.innerHTML = '<p style="color: #ff6b6b; text-align: center;">Не удалось загрузить информацию о покупках. Пожалуйста, попробуйте позже.</p>';
+        console.error('Ошибка при загрузке или обработке покупок:', error);
+        if (sentinel) {
+            sentinel.textContent = 'Покупок пока нет.'; 
+            sentinel.style.display = 'block';
         }
     }
 }

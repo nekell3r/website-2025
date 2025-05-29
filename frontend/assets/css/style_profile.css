@@ -550,20 +550,29 @@ span {
 .avatar {
     width:130px;
     height:auto;
-
-
+    margin-right: 20px;
 }
 
 .info {
     display: flex;
     flex-direction: column; /* Вертикальное расположение строк информации */
+    align-items: center;
+    flex-grow: 1;
 }
 .info-row {
     display: flex;
     justify-content: space-between;
-    gap: 70px; /* Распределяем элементы по краям строки */
+    gap: 20px; /* Уменьшим разрыв, если слишком большой */
     margin-bottom: 10px; /* Отступ между строками информации */
+    width: 100%; /* Растягиваем строку на всю доступную ширину .info */
+    max-width: 500px; /* Ограничим максимальную ширину для лучшего вида */
 }
+
+/* Убираем лишний отступ для всех span внутри info-row */
+.info-row span {
+    margin-left: 0;
+}
+
 .edit-button {
     margin-top: 20px; /* Отступ сверху для кнопки */
     padding: 10px 15px; /* Отступы внутри кнопки */
@@ -572,8 +581,10 @@ span {
     border: none; /* Убираем рамку кнопки */
     border-radius: 5px; /* Закругленные края кнопки */
     cursor: pointer; /* Указатель при наведении на кнопку */
-    width: 500px;
-    transform: translateX(160px);
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* Чтобы margin auto работал для центрирования */
+    width: fit-content; /* Ширина по содержимому, но можно задать конкретную */
 }
 
 .reviews-header {
@@ -1266,4 +1277,44 @@ img {
 /* Final override for modal-header padding */
 .modal-header {
     padding: 10px 20px !important;
+}
+
+.profile-header button:hover {
+    background-color: #e42b9a;
+    border-color: #e42b9a;
+}
+
+/* Добавляем стили для #purchasesSentinel и #productsSentinel сюда */
+#purchasesSentinel {
+    padding: 20px; 
+    color: #d83787;
+    font-size: 24px;
+    text-align: center;
+}
+#purchasesSentinel::after {
+    content: "";
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 1px;
+    background-color: white;
+    margin-top: 2px;
+}
+
+#productsSentinel {
+    padding: 20px; 
+    color: #d83787;
+    font-size: 24px;
+    text-align: center;
+}
+#productsSentinel::after {
+    content: "";
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 1px;
+    background-color: white;
+    margin-top: 2px;
 }

@@ -259,6 +259,17 @@ function createReviewCard(review) {
 
 // Функция для загрузки отзывов
 async function loadUserReviews() {
+    const container = document.getElementById('container');
+    const sentinel = document.getElementById('sentinel');
+
+    if (sentinel) {
+        sentinel.textContent = 'Загрузка...';
+        sentinel.style.display = 'block';
+    }
+    if (container) {
+        container.innerHTML = '';
+    }
+
     try {
         const response = await fetch('http://localhost:7777/me/reviews', {
             credentials: 'include',
@@ -268,44 +279,46 @@ async function loadUserReviews() {
         });
 
         if (!response.ok) {
-            if (response.status === 401) {
-                alert('Сессия истекла или вы не авторизованы. Пожалуйста, войдите снова.');
-                // window.location.href = '/auth/login.html'; // Consider redirecting
-                return;
+            console.error(`Ошибка при загрузке отзывов: ${response.status} ${response.statusText}`);
+            if (sentinel) {
+                sentinel.textContent = 'Отзывов пока нет.';
+                sentinel.style.display = 'block';
             }
-            throw new Error(`Ошибка при загрузке отзывов: ${response.statusText}`);
+            return; 
         }
 
         const reviews = await response.json();
         console.log('Received reviews:', reviews);
 
-        const container = document.getElementById('container');
         if (!container) {
             console.error('Container element not found');
-            alert('Ошибка: Контейнер для отзывов не найден на странице.');
+            if (sentinel) {
+                sentinel.textContent = 'Ошибка отображения: контейнер не найден.';
+                sentinel.style.color = 'red';
+                sentinel.style.display = 'block';
+            }
             return;
         }
-        container.innerHTML = ''; 
 
         if (reviews.length === 0) {
-            container.innerHTML = '<p style="color: #ccc; text-align: center;">У вас пока нет отзывов.</p>';
+            if (sentinel) {
+                sentinel.textContent = 'Отзывов пока нет.';
+                sentinel.style.display = 'block';
+            }
         } else {
             reviews.forEach(review => {
                 const card = createReviewCard(review);
                 container.appendChild(card);
             });
-        }
-
-        const sentinel = document.getElementById('sentinel');
-        if (sentinel) {
-            sentinel.style.display = 'none';
+            if (sentinel) {
+                sentinel.style.display = 'none'; 
+            }
         }
     } catch (error) {
-        console.error('Ошибка:', error);
-        alert(`Не удалось загрузить отзывы. Пожалуйста, попробуйте позже. (${error.message})`);
-        const container = document.getElementById('container');
-        if (container) {
-            container.innerHTML = '<p style="color: red; text-align: center;">Не удалось загрузить отзывы. Пожалуйста, обновите страницу или попробуйте позже.</p>';
+        console.error('Ошибка при загрузке или обработке отзывов:', error);
+        if (sentinel) {
+            sentinel.textContent = 'Отзывов пока нет.'; 
+            sentinel.style.display = 'block';
         }
     }
 }
