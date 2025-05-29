@@ -236,7 +236,7 @@ class PaymentsService:
 
     async def get_purchases(self, user_id: UserIdDep, db: DBDep):
         try:
-            if user_id == None:
+            if user_id is None:
                 raise UserNotAuthenticatedServiceException
             purchases = await db.purchases.get_all(user_id=user_id, status="Paid")
         except PurchaseNotFoundException:
