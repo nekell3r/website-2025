@@ -1,0 +1,16 @@
+[
+  {
+    "user_id": 1,
+    "product_slug": "oge",
+    "email": "example@email.com",
+    "payment_id": 1,
+    "status": "Created"
+  },
+  {
+    "user_id": 1,
+    "product_slug": "ege",
+    "email": "example@email.com",
+    "payment_id": 2,
+    "status": "Created"
+  }
+]

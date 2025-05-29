@@ -8,9 +8,16 @@ __pycache__/
 .venv/
 .env
 
+# Pytest
+.pytest_cache/
+htmlcov/ # Если генерируете отчеты о покрытии в HTML
+.coverage # Файл данных о покрытии
+
 # IDEs
-.idea/
 .vscode/
+.idea/
+*.swp
+*.swo
 
 # Bytecode/Cache
 *.pyc
@@ -23,3 +30,6 @@ Thumbs.db
 
 # Scripts
 *.bat
+
+# Логи
+*.log
